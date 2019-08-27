@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /articles/ 
+Allow: /archives/
+Allow: /tags/ 
+Allow: /books/
+Allow: /about/
+
+Disallow: /js/
+Disallow: /css/
+
+Sitemap: http://gv7.me/sitemap.xml
+Sitemap: http://gv7.me/baidusitemap.xml

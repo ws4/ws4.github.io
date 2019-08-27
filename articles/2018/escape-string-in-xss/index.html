@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="今天在给客户做渗透测试时，遇到了一处XSS。虽然很简单，但有点小意思。引发了我对js转义和html转义在XSS中的思考，故做个小笔记记录一下。两个例子都会以仿写现实场景的代码的说明问题。 0x01 一点知识贮备1.1 关于转义&amp;amp;#**;格式的字符串是html的转义字符,\是JS的转义符,转义的目的就是告诉解析器该符号为字符，而不是代码，防止代码出现歧义。 1.2 浏览器解析原则 若果存在h">
+<meta name="keywords" content="漏洞艺术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XSS中的JS转义和HTML转义">
+<meta property="og:url" content="http://gv7.me/articles/2018/escape-string-in-xss/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="今天在给客户做渗透测试时，遇到了一处XSS。虽然很简单，但有点小意思。引发了我对js转义和html转义在XSS中的思考，故做个小笔记记录一下。两个例子都会以仿写现实场景的代码的说明问题。 0x01 一点知识贮备1.1 关于转义&amp;amp;#**;格式的字符串是html的转义字符,\是JS的转义符,转义的目的就是告诉解析器该符号为字符，而不是代码，防止代码出现歧义。 1.2 浏览器解析原则 若果存在h">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-16T18:06:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XSS中的JS转义和HTML转义">
+<meta name="twitter:description" content="今天在给客户做渗透测试时，遇到了一处XSS。虽然很简单，但有点小意思。引发了我对js转义和html转义在XSS中的思考，故做个小笔记记录一下。两个例子都会以仿写现实场景的代码的说明问题。 0x01 一点知识贮备1.1 关于转义&amp;amp;#**;格式的字符串是html的转义字符,\是JS的转义符,转义的目的就是告诉解析器该符号为字符，而不是代码，防止代码出现歧义。 1.2 浏览器解析原则 若果存在h">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			XSS中的JS转义和HTML转义 | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/articles/2018/ghostscript-rce-20180821/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/articles/2018/think-about-blind-xxe-payload/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/escape-string-in-xss/&text=XSS中的JS转义和HTML转义"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/escape-string-in-xss/&is_video=false&description=XSS中的JS转义和HTML转义"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XSS中的JS转义和HTML转义&body=Check out this article: http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/escape-string-in-xss/&name=XSS中的JS转义和HTML转义&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-一点知识贮备"><span class="toc-number">1.</span> <span class="toc-text">0x01 一点知识贮备</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-关于转义"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.1 关于转义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-浏览器解析原则"><span class="toc-number">1.0.2.</span> <span class="toc-text">1.2 浏览器解析原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-html源码和浏览器解析结果"><span class="toc-number">1.0.3.</span> <span class="toc-text">1.3 html源码和浏览器解析结果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-XSS与JS转义"><span class="toc-number">2.</span> <span class="toc-text">0x02 XSS与JS转义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-测试代码和问题描述"><span class="toc-number">2.0.1.</span> <span class="toc-text">2.1 测试代码和问题描述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-原理分析"><span class="toc-number">2.0.2.</span> <span class="toc-text">2.2 原理分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-XSS与html转义"><span class="toc-number">3.</span> <span class="toc-text">0x03 XSS与html转义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-测试代码与问题描述"><span class="toc-number">3.0.1.</span> <span class="toc-text">3.1 测试代码与问题描述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-原理分析"><span class="toc-number">3.0.2.</span> <span class="toc-text">3.2 原理分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-总结"><span class="toc-number">4.</span> <span class="toc-text">0x04 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">5.</span> <span class="toc-text">参考文章</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        XSS中的JS转义和HTML转义
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-07-19T17:37:56.000Z" itemprop="datePublished">2018-07-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/漏洞艺术/">漏洞艺术</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>今天在给客户做渗透测试时，遇到了一处XSS。虽然很简单，但有点小意思。引发了我对js转义和html转义在XSS中的思考，故做个小笔记记录一下。两个例子都会以仿写现实场景的代码的说明问题。</p>
+<h2 id="0x01-一点知识贮备"><a href="#0x01-一点知识贮备" class="headerlink" title="0x01 一点知识贮备"></a>0x01 一点知识贮备</h2><h4 id="1-1-关于转义"><a href="#1-1-关于转义" class="headerlink" title="1.1 关于转义"></a>1.1 关于转义</h4><p><code>&amp;#**;</code>格式的字符串是html的转义字符,<code>\</code>是JS的转义符,转义的目的就是告诉解析器该符号为字符，而不是代码，防止代码出现歧义。</p>
+<h4 id="1-2-浏览器解析原则"><a href="#1-2-浏览器解析原则" class="headerlink" title="1.2 浏览器解析原则"></a>1.2 浏览器解析原则</h4><ol>
+<li>若果存在html转义字符串，HTML解析引擎会先把转义字符解析为字符串</li>
+<li>HTML解析引擎按照从上到下，从外向里解析html标签</li>
+<li>遇到html标签浏览器会让html解析引擎解析，遇到<code>&lt;script&gt;</code>标签，浏览器会让JS解析引擎对标签内容进行解析。</li>
+</ol>
+<h4 id="1-3-html源码和浏览器解析结果"><a href="#1-3-html源码和浏览器解析结果" class="headerlink" title="1.3 html源码和浏览器解析结果"></a>1.3 html源码和浏览器解析结果</h4><p>在浏览器中我们按住快捷键ctrl+u，看到的是服务器接受我们的请求后返回的html源码。按F12进入开发者工具面板，开发者工具分析出的DOM结构，就是浏览器的解析结果。</p>
+<p>ps：html源代码DOM结构和浏览器解析后的DOM结构是有区别的！</p>
+<h2 id="0x02-XSS与JS转义"><a href="#0x02-XSS与JS转义" class="headerlink" title="0x02 XSS与JS转义"></a>0x02 XSS与JS转义</h2><h4 id="2-1-测试代码和问题描述"><a href="#2-1-测试代码和问题描述" class="headerlink" title="2.1 测试代码和问题描述"></a>2.1 测试代码和问题描述</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;meta http-equiv=<span class="string">"Content-Type"</span> content=<span class="string">"text/html; charset=utf-8"</span>&gt;</span><br><span class="line">	&lt;title&gt;一个XSS&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">		<span class="keyword">var</span> input_str = <span class="string">"&lt;?php echo $_POST['str']?&gt;"</span>;</span><br><span class="line">		<span class="keyword">if</span>(input_str.length&gt;<span class="number">0</span>)&#123;</span><br><span class="line">			document.write(<span class="string">"Your input:"</span>+input_str);</span><br><span class="line">		&#125;</span><br><span class="line">	&lt;/script&gt;</span><br><span class="line">	&lt;form action=<span class="string">""</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">		&lt;input type=<span class="string">"text"</span> name=<span class="string">"str"</span> /&gt;</span><br><span class="line">		&lt;input type=<span class="string">"submit"</span> value=<span class="string">"提交"</span>&gt;		</span><br><span class="line">	&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当我们提交<code>&lt;script&gt;alert(1);&lt;/script&gt;</code>,前端没有出现我们期待的弹窗，而是输出了以下字符串。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;; if(input_str.length&gt;0)&#123; document.write(&quot;Your input:&quot;+input_str); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>而当我们提交<code>&lt;script&gt;alert(1);&lt;\/script&gt;</code>,则可以正常弹框。如何解释这两种情况，我们来思考一下？</p>
+<h4 id="2-2-原理分析"><a href="#2-2-原理分析" class="headerlink" title="2.2 原理分析"></a>2.2 原理分析</h4><p>当我们输入第一个payload提交后，得到的html源码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>一个XSS<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="xml">		var input_str = "<span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1);</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>";</span><br><span class="line">		if(input_str.length&gt;0)&#123;</span><br><span class="line">			document.write("Your input:"+input_str);</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"str"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交"</span>&gt;</span>		</span><br><span class="line">	<span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>当我们的HTML解析器解析到<code>&lt;script&gt;</code>标签时，它会快速去查找离它最近的闭合标签<code>&lt;/script&gt;</code>。这时它查找到是8行中的<code>&lt;/script&gt;</code>,而不是12行的<code>&lt;/script&gt;</code>。这时<code>&lt;script&gt;</code>标签内的<code>var input_str = &quot;&lt;script&gt;alert(1);</code>被交给js引擎去解析。而8行<code>&lt;/script&gt;</code>和12行的<code>&lt;/script&gt;</code>之间的代码被当成字符串输出到前端页面。而由于6行<code>&lt;/script&gt;</code>标签没有配对成功，故不会被浏览器解析为一个合法标签。 <strong>所以最终的解析结果是第8行的<code>&lt;script&gt;</code>被解析为字符串，<code>&lt;/script&gt;</code>被解析为html标签。</strong></p>
+<p>当我们输入第二个payload提交后，得到的html源码如下，与上面代码类似，只是差异只在第8行（多了一个/）。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>XSS与JS编码<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="xml">		var input_str = "<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript">alert(<span class="number">1</span>);<span class="xml"><span class="tag">&lt;<span class="name">\</span>/<span class="attr">script</span>&gt;</span></span><span class="string">";</span></span></span></span><br><span class="line"><span class="javascript">		<span class="keyword">if</span>(input_str.length&gt;<span class="number">0</span>)&#123;</span></span><br><span class="line"><span class="javascript">			<span class="built_in">document</span>.write(<span class="string">"Your input:"</span>+input_str);</span></span><br><span class="line">		&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"str"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交"</span>&gt;</span>		</span><br><span class="line">	<span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>还是同样的解析原则，html解析引擎解析到7行的<code>&lt;script&gt;</code>时，它会快速去查找离它最近的闭合标签<code>&lt;/script&gt;</code>。这是在到第8行时发现<code>&lt;\/script&gt;</code>标签，而不是<code>&lt;/script&gt;</code>,<br>故继续往下，直到找寻到12行的<code>&lt;/script&gt;</code>标签，才完成了配对。这时8行和11行的代码交给了js引起去解析。由于<code>&lt;script&gt;alert(1);&lt;\/script&gt;</code>双引号包围，所以js解析器会把它当字符串处理。 <strong>所以最终的解析结果是第8行中的<code>&lt;script&gt;</code>和<code>&lt;/script&gt;</code>都是字符串而不是标签。</strong></p>
+<p>值得注意的是第8行当中的\字符的引入使得<code>&lt;script&gt;</code>标签在html解析引擎解析时未在第8行被闭合,同时又因为\为js语法中的转义字符，故在js解析引擎解析时，又能正常解析input_str变量的值为<code>&lt;script&gt;alert(1);&lt;/script&gt;</code>字符串，所以最总成功弹窗，很巧妙！</p>
+<p>这些解析结果都是可以使用浏览器自带的F12开发者工具开验证。</p>
+<h2 id="0x03-XSS与html转义"><a href="#0x03-XSS与html转义" class="headerlink" title="0x03 XSS与html转义"></a>0x03 XSS与html转义</h2><h4 id="3-1-测试代码与问题描述"><a href="#3-1-测试代码与问题描述" class="headerlink" title="3.1 测试代码与问题描述"></a>3.1 测试代码与问题描述</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;meta http-equiv=<span class="string">"Content-Type"</span> content=<span class="string">"text/html; charset=utf-8"</span>&gt;</span><br><span class="line">	&lt;title&gt;XSS与html编码&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	<span class="meta">&lt;?php</span></span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]))&#123;</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">"&lt;a href='"</span>.$_POST[<span class="string">'str1'</span>].<span class="string">"'&gt;str1&lt;/a&gt;"</span>;</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">"&lt;br/&gt;"</span>;</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">"str2:"</span>.$_POST[<span class="string">'str2'</span>];</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="meta">?&gt;</span></span><br><span class="line">	&lt;form action=<span class="string">""</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">		str1:&lt;input type=<span class="string">"text"</span> name=<span class="string">"str1"</span> /&gt;</span><br><span class="line">		&lt;br/&gt;</span><br><span class="line">		str2:&lt;input type=<span class="string">"text"</span> name=<span class="string">"str2"</span> /&gt;</span><br><span class="line">		&lt;br/&gt;</span><br><span class="line">		&lt;input type=<span class="string">"submit"</span> name=<span class="string">"submit"</span> value=<span class="string">"提交"</span>&gt;		</span><br><span class="line">	&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们将<code>javascript:alert(1);</code>html转义得到如下字符串，并填写到str1输入框</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#x6a;&amp;#x61;&amp;#x76;&amp;#x61;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3a;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x31;&amp;#x29;&amp;#x3b;</span><br></pre></td></tr></table></figure>
+
+<p>我们将<code>&lt;script&gt;alert(1);&lt;/script&gt;</code>html转义后得到如下字符，并填写到str2输入框</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&amp;#x3c;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x31;&amp;#x29;&amp;#x3b;&amp;#x3c;&amp;#x2f;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;</span><br></pre></td></tr></table></figure>
+
+<p>提交后发现点击str1链接可以弹框，说明前者被当代码来执行了，而后者被当字符串输出了。我们来看这时为何？</p>
+<h4 id="3-2-原理分析"><a href="#3-2-原理分析" class="headerlink" title="3.2 原理分析"></a>3.2 原理分析</h4><p>提交payload之后，服务器返回的html代码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>XSS与编码<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'&amp;#x6a;&amp;#x61;&amp;#x76;&amp;#x61;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3a;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x31;&amp;#x29;&amp;#x3b;'</span>&gt;</span>str1<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span>str2:&amp;#x3c;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x31;&amp;#x29;&amp;#x3b;&amp;#x3c;&amp;#x2f;&amp;#x73;&amp;#x63;&amp;#x72;&amp;#x69;&amp;#x70;&amp;#x74;&amp;#x3e;	<span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">		str1:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"str1"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">		str2:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"str2"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">name</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交"</span>&gt;</span>		</span><br><span class="line">	<span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>而浏览器html解析器解析后的结果如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>XSS与编码<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'javascript:alert(1);'</span>&gt;</span>str2:&amp;lt;script&amp;gt;alert(1);&amp;lt;/script&amp;gt;<span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">""</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line">		str1:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"str1"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">		str2:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"str2"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">name</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"提交"</span>&gt;</span>		</span><br><span class="line">	<span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过解析结果，我们可以很容易看到。payload其实都被当成了字符输出了。只是在点击str1连接时，前者被解码之后的字符被当代码执行了。而后者被浏览器html解析器解码后为<code>&amp;lt;script&amp;gt;alert(1);&amp;lt;/script&amp;gt;</code>,而不是<code>&lt;script&gt;alert(1);&lt;/script&gt;</code>,所以js代码自然无法执行。所以str2应该为<code>&lt;script&gt;&amp;#x61;&amp;#x6c;&amp;#x65;&amp;#x72;&amp;#x74;&amp;#x28;&amp;#x31;&amp;#x29;&amp;#x3b;&lt;/script&gt;</code>,才可以触发XSS。</p>
+<h2 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h2><p>通过对js转义和html转义在XSS中的应用，让我对浏览器解析html代码的解析过程有了更深的了解。可以借鉴其中的原理来构造更简洁，精巧的XSS的payload，也可以尝试用来绕waf。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://blog.csdn.net/hxsstar/article/details/21519301" target="_blank" rel="noopener">XSS绕过学习</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-一点知识贮备"><span class="toc-number">1.</span> <span class="toc-text">0x01 一点知识贮备</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-关于转义"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.1 关于转义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-浏览器解析原则"><span class="toc-number">1.0.2.</span> <span class="toc-text">1.2 浏览器解析原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-html源码和浏览器解析结果"><span class="toc-number">1.0.3.</span> <span class="toc-text">1.3 html源码和浏览器解析结果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-XSS与JS转义"><span class="toc-number">2.</span> <span class="toc-text">0x02 XSS与JS转义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-测试代码和问题描述"><span class="toc-number">2.0.1.</span> <span class="toc-text">2.1 测试代码和问题描述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-原理分析"><span class="toc-number">2.0.2.</span> <span class="toc-text">2.2 原理分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-XSS与html转义"><span class="toc-number">3.</span> <span class="toc-text">0x03 XSS与html转义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-测试代码与问题描述"><span class="toc-number">3.0.1.</span> <span class="toc-text">3.1 测试代码与问题描述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-原理分析"><span class="toc-number">3.0.2.</span> <span class="toc-text">3.2 原理分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-总结"><span class="toc-number">4.</span> <span class="toc-text">0x04 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-number">5.</span> <span class="toc-text">参考文章</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/escape-string-in-xss/&text=XSS中的JS转义和HTML转义"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/escape-string-in-xss/&is_video=false&description=XSS中的JS转义和HTML转义"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XSS中的JS转义和HTML转义&body=Check out this article: http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/escape-string-in-xss/&name=XSS中的JS转义和HTML转义&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2017 ~ 2019 c0ny1
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
