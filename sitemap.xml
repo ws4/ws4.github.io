@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/</loc>
+    
+    <lastmod>2019-08-27T16:27:37.206Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2019/detection-weblogic-version-by-t3/</loc>
     
     <lastmod>2019-08-27T01:52:50.892Z</lastmod>
