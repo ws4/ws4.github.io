@@ -14,19 +14,19 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="最近一直在做渗透测试，发现在使用AWVS去扫描一个使用web services的网站时。最后的扫描结果并没有web services。然而web services由于经常出现一些问题，故我们很有必要去收集到网站的使用web services的信息。下面我们通过编写AWVS脚本的方式去让AWVS探测的网站是否存在。 注意：这里默认大家都了解过AWVS基本语法。如果不了解请移步文章的“编写AWVS脚本">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//add_xml.png">
-<meta property="og:image" content="http://gv7.me/.me//2.png">
-<meta property="og:image" content="http://gv7.me/.me//3.png">
-<meta property="og:image" content="http://gv7.me/.me//4.png">
-<meta property="og:image" content="http://gv7.me/.me//5.png">
-<meta property="og:image" content="http://gv7.me/.me//6.png">
-<meta property="og:image" content="http://gv7.me/.me//7.png">
-<meta property="og:image" content="http://gv7.me/.me//8.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/add_xml.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/2.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/3.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/4.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/5.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/6.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/7.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/8.png">
 <meta property="og:updated_time" content="2019-02-16T18:03:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编写AWVS脚本探测web services">
 <meta name="twitter:description" content="最近一直在做渗透测试，发现在使用AWVS去扫描一个使用web services的网站时。最后的扫描结果并没有web services。然而web services由于经常出现一些问题，故我们很有必要去收集到网站的使用web services的信息。下面我们通过编写AWVS脚本的方式去让AWVS探测的网站是否存在。 注意：这里默认大家都了解过AWVS基本语法。如果不了解请移步文章的“编写AWVS脚本">
-<meta name="twitter:image" content="http://gv7.me/.me//add_xml.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/add_xml.png">
     
     
         
@@ -173,22 +173,22 @@
 <p>注意：这里默认大家都了解过AWVS基本语法。如果不了解请移步文章的“编写AWVS脚本资料”部分。</p>
 <h2 id="0x01思路"><a href="#0x01思路" class="headerlink" title="0x01思路"></a>0x01思路</h2><p>我们让AWVS爬取到的每一个路径都添加/services，然后去访问这个构造好的路径。如果存在该页面，则分析返回结果中是否存在“wdsl”字符，若存在则说明该站点存在web services服务。</p>
 <h2 id="0x02编写代码"><a href="#0x02编写代码" class="headerlink" title="0x02编写代码"></a>0x02编写代码</h2><h3 id="新建报告模板"><a href="#新建报告模板" class="headerlink" title="新建报告模板"></a>新建报告模板</h3><p>AWVS》Tools》Vulnerability Editor</p>
-<p><img src="/.me//add_xml.png" alt="图1-新建报告模板"></p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/add_xml.png" alt="图1-新建报告模板"></p>
 <p>填写好漏洞相关信息</p>
-<p><img src="/.me//2.png" alt="图2-填写漏洞信息"></p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/2.png" alt="图2-填写漏洞信息"></p>
 <h3 id="新建探测脚本"><a href="#新建探测脚本" class="headerlink" title="新建探测脚本"></a>新建探测脚本</h3><p>找到AWVS的/data/script/folder目录</p>
-<p><img src="/.me//3.png" alt="图3-新建探测脚本"></p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/3.png" alt="图3-新建探测脚本"></p>
 <p>由于我们需要AWVS在爬取到目录时就检查一次该目录是否存在web services。所以我们需要在该目录下的PerFolder文件夹，新建一个名为Web_Services.script的脚本文件。代码如下：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> target = <span class="keyword">new</span> THTTPJob(); <span class="comment">//实例化一个HTTP任务</span></span><br><span class="line"><span class="keyword">var</span> dir = getCurrentDirectory();<span class="comment">//获取当前路径</span></span><br><span class="line">target.url = <span class="keyword">new</span> TURL(scanURL.url+ dir.fullPath + <span class="string">"/services"</span>);<span class="comment">//构造请求url</span></span><br><span class="line">target.execute();<span class="comment">//执行http请求</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> wsRes = target.response.body;<span class="comment">//获取http请求内容</span></span><br><span class="line"><span class="keyword">if</span>(!target.wasError &amp;&amp; !target.notFound )&#123;<span class="comment">//判断是否访问错误或者是404</span></span><br><span class="line">	<span class="keyword">if</span>(wsRes.indexOf(<span class="string">'wsdl'</span>) != <span class="number">-1</span>)&#123;</span><br><span class="line">		logWarning(scanURL.url+dir.fullPath+<span class="string">'-----&gt;this web services is exists!!!'</span>);<span class="comment">//在日志栏显示该调式信息</span></span><br><span class="line">		<span class="keyword">var</span> ri = <span class="keyword">new</span> TReportItem();<span class="comment">//新建一个报告结果，返回给扫描器界面</span></span><br><span class="line">		ri.loadFromFile(<span class="string">'Web_Services.xml'</span>);<span class="comment">//载入模板</span></span><br><span class="line">		ri.severity = <span class="string">"high"</span><span class="comment">//影响等级</span></span><br><span class="line">		ri.affects = dir.fullPath + <span class="string">"/services"</span>;</span><br><span class="line">		ri.Request = target.Request.headersString;<span class="comment">//测试请求HTTP头输出到界面</span></span><br><span class="line">		ri.response = target.response.body;<span class="comment">//测试请求HTTP响应内容输出到界面</span></span><br><span class="line">		ri.fullResponse = target.fullResponse;<span class="comment">//测试请求的完整HTTP响应内容输出到界面</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">//ri.description = "web services";</span></span><br><span class="line">		ri.addReference(<span class="string">"how do sql inject web services"</span>,<span class="string">"http://gv7.me/2017/08/12/how-do-sql-inject-web-services/"</span>);</span><br><span class="line">		</span><br><span class="line">		AddReportItem(ri);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		logError(scanURL.url+dir.fullPath+<span class="string">"-----&gt;This's not web services!!!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		logWarning(scanURL.url+dir.fullPath+<span class="string">"notFound web services!!!!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//4.png" alt="图4-代码"></p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/4.png" alt="图4-代码"></p>
 <h2 id="0x3测试"><a href="#0x3测试" class="headerlink" title="0x3测试"></a>0x3测试</h2><p>去网上随便找一个测试站点，该站点/pptx/路径下存在web services的wsdl列表。</p>
-<p><img src="/.me//5.png" alt="图5-测试站点"></p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/5.png" alt="图5-测试站点"></p>
 <p>为了方便测试，我们新建一个test策略，策略包含我们写的脚本。</p>
-<p><img src="/.me//6.png" alt="图6-新建test策略"></p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/6.png" alt="图6-新建test策略"></p>
 <p>扫描选择我们的新建的策略</p>
-<p><img src="/.me//7.png" alt="图7-测试扫描设置"></p>
-<p>扫描结果中发现，已经找到web services<br><img src="/.me//8.png" alt="图8-测试扫描结果"></p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/7.png" alt="图7-测试扫描设置"></p>
+<p>扫描结果中发现，已经找到web services<br><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/8.png" alt="图8-测试扫描结果"></p>
 <p>后面我在这个代码基础上泄露发现SVN泄露的脚本，大家想让AWVS发现更多漏洞，可以自己尝试去写写。</p>
 <h2 id="0x4AWVS脚本编写资料"><a href="#0x4AWVS脚本编写资料" class="headerlink" title="0x4AWVS脚本编写资料"></a>0x4AWVS脚本编写资料</h2><p>如果想了解更多编写脚本的资料。可以下载以下推荐的资料，若你有更好，欢淫共享感激不尽。</p>
 <h3 id="官方SDK文档"><a href="#官方SDK文档" class="headerlink" title="官方SDK文档"></a>官方SDK文档</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.acunetix.com/resources/sdk/</span><br></pre></td></tr></table></figure>

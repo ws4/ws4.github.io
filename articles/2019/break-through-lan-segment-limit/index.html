@@ -14,17 +14,17 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="在内网做渗透测试时，常常遇到访问策略限制，无法直接访问渗透目标。本文算是记录下我上一年的几个解决方案。 0x01 场景说明在做安服驻场时，连入客户内网对另一网段的站点进行渗透。有可能会遇到这种情况，虽然连入了客户内网，但无法直接访问目标站点。因为客户内网做了访问策略限制，不同网段无法直接连通。往往需要通过客户提供的跳板服务器去访问，大概的网络示意图如下：  我们当然可以在跳板服务器上装好java环">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//network.png">
-<meta property="og:image" content="http://gv7.me/.me//shadowsock-client-config.png">
-<meta property="og:image" content="http://gv7.me/.me//add-socks5-server.png">
-<meta property="og:image" content="http://gv7.me/.me//add-proxy-rules.png">
-<meta property="og:image" content="http://gv7.me/.me//install-setting.png">
-<meta property="og:image" content="http://gv7.me/.me//shared-network-card.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/break-through-lan-segment-limit/network.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/break-through-lan-segment-limit/shadowsock-client-config.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/break-through-lan-segment-limit/add-socks5-server.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/break-through-lan-segment-limit/add-proxy-rules.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/break-through-lan-segment-limit/install-setting.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/break-through-lan-segment-limit/shared-network-card.png">
 <meta property="og:updated_time" content="2019-03-15T03:38:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="突破内网渗透中的访问策略限制">
 <meta name="twitter:description" content="在内网做渗透测试时，常常遇到访问策略限制，无法直接访问渗透目标。本文算是记录下我上一年的几个解决方案。 0x01 场景说明在做安服驻场时，连入客户内网对另一网段的站点进行渗透。有可能会遇到这种情况，虽然连入了客户内网，但无法直接访问目标站点。因为客户内网做了访问策略限制，不同网段无法直接连通。往往需要通过客户提供的跳板服务器去访问，大概的网络示意图如下：  我们当然可以在跳板服务器上装好java环">
-<meta name="twitter:image" content="http://gv7.me/.me//network.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/break-through-lan-segment-limit/network.png">
     
     
         
@@ -164,7 +164,7 @@
   <div class="content" itemprop="articleBody">
     <p>在内网做渗透测试时，常常遇到访问策略限制，无法直接访问渗透目标。本文算是记录下我上一年的几个解决方案。</p>
 <h2 id="0x01-场景说明"><a href="#0x01-场景说明" class="headerlink" title="0x01 场景说明"></a>0x01 场景说明</h2><p>在做安服驻场时，连入客户内网对另一网段的站点进行渗透。有可能会遇到这种情况，虽然连入了客户内网，但无法直接访问目标站点。因为客户内网做了访问策略限制，不同网段无法直接连通。往往需要通过客户提供的跳板服务器去访问，大概的网络示意图如下：</p>
-<p><img src="/.me//network.png" alt="网络示意图"></p>
+<p><img src="/articles/2019/break-through-lan-segment-limit/network.png" alt="网络示意图"></p>
 <p>我们当然可以在跳板服务器上装好java环境，方便运行比配的Burp Suite。安装python环境，运行常用的渗透辅助脚本。同时如果你还需要其他工具，得一个一个复制到服务器上……这将非常的繁琐！</p>
 <p><strong>那不能通过某种方法可以使得我们的笔记本直接访问的目标站点呢？</strong>，这样就不用拷贝工具到服务器上了，毕竟还是自己的笔记本渗透舒适。本文就是用于解决这个问题。</p>
 <h2 id="0x02-方案一-HTTP代理"><a href="#0x02-方案一-HTTP代理" class="headerlink" title="0x02 方案一: HTTP代理"></a>0x02 方案一: HTTP代理</h2><h3 id="2-1-跳板服务器配置"><a href="#2-1-跳板服务器配置" class="headerlink" title="2.1 跳板服务器配置"></a>2.1 跳板服务器配置</h3><p>在跳板服务器上搭建Http(s)代理服务器，由于比较简单，就不具体说明如何搭建了。</p>
@@ -182,7 +182,7 @@
 
 <p>将以上两个文件放到与<code>shadowsocks-libqss.exe</code>文件同目录，双击运行该bat脚本，即可在服务器上一键启动Shadowsocks了！</p>
 <h3 id="3-2-笔记本配置"><a href="#3-2-笔记本配置" class="headerlink" title="3.2 笔记本配置"></a>3.2 笔记本配置</h3><p>在我们的笔记本Shadowsocks客户端进行如下设置，即可连接到Shadowsocks服务器。</p>
-<p><img src="/.me//shadowsock-client-config.png" alt="ss客户端配置"></p>
+<p><img src="/articles/2019/break-through-lan-segment-limit/shadowsock-client-config.png" alt="ss客户端配置"></p>
 <p>在渗透时只需要将浏览器,burp等工具代理到<code>127.0.0.1:1080</code>，即可访问到我们的目标站点了。</p>
 <p>注意：只有实现了http(s)/socks5功能或者使用系统代理的工具才能使用Shadowsocks！</p>
 <h3 id="3-3-方案缺点"><a href="#3-3-方案缺点" class="headerlink" title="3.3 方案缺点"></a>3.3 方案缺点</h3><p>如果某个渗透测试工具本身没有http(s)/socks5代理功能，那该怎么办？也许有的朋友可能会想到使用<code>Proxifier/Sockcap</code>这类软件，来为这些软件进程“添加”代理功能。但是由于ss需要在本地有客户端，故在本地再使用Proxifier/Sockcap会出现流量传输死循环的情况。下个方案我们来解决这个问题。</p>
@@ -192,8 +192,8 @@
 <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxy.exe socks -t tcp -p "<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>:<span class="number">38080</span>"</span><br></pre></td></tr></table></figure>
 
 <h3 id="4-2-笔记本配置"><a href="#4-2-笔记本配置" class="headerlink" title="4.2 笔记本配置"></a>4.2 笔记本配置</h3><p>在本机使用Proxifier将需要代理的工具设置好代理，当然如果该工具有代理功能就不用了。</p>
-<p><img src="/.me//add-socks5-server.png" alt="添加代理服务器"></p>
-<p><img src="/.me//add-proxy-rules.png" alt="添加代理规则"></p>
+<p><img src="/articles/2019/break-through-lan-segment-limit/add-socks5-server.png" alt="添加代理服务器"></p>
+<p><img src="/articles/2019/break-through-lan-segment-limit/add-proxy-rules.png" alt="添加代理规则"></p>
 <h3 id="4-3-方案缺点"><a href="#4-3-方案缺点" class="headerlink" title="4.3 方案缺点"></a>4.3 方案缺点</h3><ol>
 <li>渗透中需要使用的工具，我们得一一为它们设置好代理，比较繁琐。</li>
 <li>有些工具，你为它设置代理后，依然不能用，比如nmap。</li>
@@ -201,10 +201,10 @@
 <p>下个方案我们来解决这些问题。</p>
 <h2 id="0x05-方案四：VPN"><a href="#0x05-方案四：VPN" class="headerlink" title="0x05 方案四：VPN"></a>0x05 方案四：VPN</h2><p>以上方案，优点很明显，缺点也很明显。为了实现对目标站点的全端口渗透无疑最好的方案是将跳板服务器搭建成VPN服务器了，然后笔记本直接通过VPN来访问目标站点，其他无需设置。即可使得所有工具都能访问到目标站点服务器的所有端口。</p>
 <h3 id="5-1下载安装"><a href="#5-1下载安装" class="headerlink" title="5.1下载安装"></a>5.1下载安装</h3><p>去官网下载OpenVPN(我下载是openvpn-install-2.3.10-I601-x86_64.exe)，并在客户端和服务器按照以下同样的方式安装OpenVPN。安装过程没啥好说的，主要注意到以下这一步时，要选择红方框中的两个选项，不然安装完无法使用命令行制作证书。</p>
-<p><img src="/.me//install-setting.png" alt="OpenVPN安装时需要选择的两项"></p>
+<p><img src="/articles/2019/break-through-lan-segment-limit/install-setting.png" alt="OpenVPN安装时需要选择的两项"></p>
 <p>安装完成后系统会多出一张网卡TAP-Windows Adapter V9。</p>
 <h3 id="5-2-系统设置"><a href="#5-2-系统设置" class="headerlink" title="5.2 系统设置"></a>5.2 系统设置</h3><p>设置跳板服务器用于访问目标站点的网卡共享给OpenVPN的虚拟网卡<code>TAP-Windows Adapter V9</code>，这步很重要！</p>
-<p><img src="/.me//shared-network-card.png" alt="设置网卡共享"></p>
+<p><img src="/articles/2019/break-through-lan-segment-limit/shared-network-card.png" alt="设置网卡共享"></p>
 <p>网上说需要修改注册表，测试发现不改也行，这里做个记录，说不定有的环境需要。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters</span><br><span class="line">将IPEnableRouter改为1</span><br></pre></td></tr></table></figure>
 

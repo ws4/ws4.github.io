@@ -14,15 +14,15 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="识别weblogic版本有什么用呢？ 在检测weblogic漏洞之前，我们往往需要探测下weblogic版本。好判断是否在漏洞版本范围，同时也为我们构造EXP做准备（相同漏洞，可能因为weblogic版本不同需要的对应的EXP，比如CVE-2019-2725）">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//login.png">
-<meta property="og:image" content="http://gv7.me/.me//10.3.6.0.png">
-<meta property="og:image" content="http://gv7.me/.me//12.1.3.0.png">
-<meta property="og:image" content="http://gv7.me/.me//result.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/detection-weblogic-version-by-t3/login.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/detection-weblogic-version-by-t3/10.3.6.0.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/detection-weblogic-version-by-t3/12.1.3.0.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/detection-weblogic-version-by-t3/result.png">
 <meta property="og:updated_time" content="2019-08-27T01:52:50.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过t3协议识别weblogic版本">
 <meta name="twitter:description" content="识别weblogic版本有什么用呢？ 在检测weblogic漏洞之前，我们往往需要探测下weblogic版本。好判断是否在漏洞版本范围，同时也为我们构造EXP做准备（相同漏洞，可能因为weblogic版本不同需要的对应的EXP，比如CVE-2019-2725）">
-<meta name="twitter:image" content="http://gv7.me/.me//login.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/detection-weblogic-version-by-t3/login.png">
     
     
         
@@ -164,11 +164,11 @@
 <a id="more"></a>
 <h2 id="0x01-以前的方法"><a href="#0x01-以前的方法" class="headerlink" title="0x01 以前的方法"></a>0x01 以前的方法</h2><p>以前的方法是访问控制台登录页面，页面底部便有版本号！这里注意404页面的<code>10.4.5</code>并不是版本号。</p>
 <p>http://<em>.</em>.<em>.</em>:7001/console/login/LoginForm.jsp</p>
-<p><img src="/.me//login.png" alt="控制台登录页面"></p>
+<p><img src="/articles/2019/detection-weblogic-version-by-t3/login.png" alt="控制台登录页面"></p>
 <p>然而这个页面可能会被删除或禁止访问，那有没有其他方法呢？</p>
 <h2 id="0x02-通过t3协议识别"><a href="#0x02-通过t3协议识别" class="headerlink" title="0x02 通过t3协议识别"></a>0x02 通过t3协议识别</h2><p>最近在学习t3协议时，使用wireshark抓包时发现，协议报文中带有weblogic的版本</p>
-<p><img src="/.me//10.3.6.0.png" alt="使用t3协议10.3.6.0版本通信"></p>
-<p><img src="/.me//12.1.3.0.png" alt="使用t3协议12.1.3.0版本通信"></p>
+<p><img src="/articles/2019/detection-weblogic-version-by-t3/10.3.6.0.png" alt="使用t3协议10.3.6.0版本通信"></p>
+<p><img src="/articles/2019/detection-weblogic-version-by-t3/12.1.3.0.png" alt="使用t3协议12.1.3.0版本通信"></p>
 <p>所以只需要通过t3协议发送以下数据包，即可从返回包中获取Weblogic版本。</p>
 <pre><code>t3 10.3.6
 AS: 255
@@ -243,7 +243,7 @@ HL: 19</code></pre><p>这里需要注意，有时候发送数据包时，可能�
 <span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
     weblogic(sys.argv[<span class="number">1</span>])
 </code></pre>
-<p><img src="/.me//result.png" alt="脚本探测结果"></p>
+<p><img src="/articles/2019/detection-weblogic-version-by-t3/result.png" alt="脚本探测结果"></p>
 <p>如果未探测到，以下几种可能情况：</p>
 <ol>
 <li>t3协议未启用</li>

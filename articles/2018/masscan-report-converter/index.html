@@ -14,12 +14,12 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="由于nmap扫描比较慢，有时候需要使用masscan对大段ip进行快速扫描。为了后续方便数据处理，往往需要将数据以xls的形式进行统计，但是masscan只支持xml,json,list等格式输出,并不支持直接输出xls格式。最近有正好这个需求，于是写了个小脚本来转换一下。 一、编码file: masscan-report-converter.py1234567891011121314151617">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//convert_result.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/masscan-report-converter/convert_result.png">
 <meta property="og:updated_time" content="2019-02-16T18:05:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编写masscan报告转换脚本">
 <meta name="twitter:description" content="由于nmap扫描比较慢，有时候需要使用masscan对大段ip进行快速扫描。为了后续方便数据处理，往往需要将数据以xls的形式进行统计，但是masscan只支持xml,json,list等格式输出,并不支持直接输出xls格式。最近有正好这个需求，于是写了个小脚本来转换一下。 一、编码file: masscan-report-converter.py1234567891011121314151617">
-<meta name="twitter:image" content="http://gv7.me/.me//convert_result.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/masscan-report-converter/convert_result.png">
     
     
         
@@ -167,7 +167,7 @@
 <h5 id="2-使用上面写的脚本转换出xls格式的报告"><a href="#2-使用上面写的脚本转换出xls格式的报告" class="headerlink" title="2.使用上面写的脚本转换出xls格式的报告"></a>2.使用上面写的脚本转换出xls格式的报告</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">masscan-report-converter.py -i scan_result.xml -o scan_result.xls</span><br></pre></td></tr></table></figure>
 
 <p>最终效果如下：</p>
-<p><img src="/.me//convert_result.png" alt="图1-脚本转换后的报告"></p>
+<p><img src="/articles/2018/masscan-report-converter/convert_result.png" alt="图1-脚本转换后的报告"></p>
 
   </div>
 </article>

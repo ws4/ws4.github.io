@@ -14,12 +14,12 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="一般在对客户所有linux机器进行弱口令检查时，如果在线进行破解的话，先不说影响业务，破解速率很慢，而且必须保证可以破解期间保持访问。这时将在线破解变成让客户提供shadow，我们破解shadow就有优势多了。后来k哥提供了一个批量调用john the ripper破解shadow的bash脚本。但是有诸多局限性，故深入研究优化了一下，并已此文做个记录。如各位有更优秀的解决方案，欢迎交流！ 0x0">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//pic.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/batch-crack-shadows/pic.png">
 <meta property="og:updated_time" content="2019-02-16T18:07:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="优化批量破解shadow">
 <meta name="twitter:description" content="一般在对客户所有linux机器进行弱口令检查时，如果在线进行破解的话，先不说影响业务，破解速率很慢，而且必须保证可以破解期间保持访问。这时将在线破解变成让客户提供shadow，我们破解shadow就有优势多了。后来k哥提供了一个批量调用john the ripper破解shadow的bash脚本。但是有诸多局限性，故深入研究优化了一下，并已此文做个记录。如各位有更优秀的解决方案，欢迎交流！ 0x0">
-<meta name="twitter:image" content="http://gv7.me/.me//pic.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/batch-crack-shadows/pic.png">
     
     
         
@@ -180,7 +180,7 @@
 <li>将多个shadow合成一个shadow，这样就可以查看进度，同时需要暂停的话，后面好恢复任务。</li>
 </ul>
 <p>用图1对以上方法做了一个流程化的梳理</p>
-<p><img src="/.me//pic.png" alt="图1-解决方案流程图"></p>
+<p><img src="/articles/2017/batch-crack-shadows/pic.png" alt="图1-解决方案流程图"></p>
 <h2 id="0x01shadow格式简介"><a href="#0x01shadow格式简介" class="headerlink" title="0x01shadow格式简介"></a>0x01shadow格式简介</h2><p>在破解之前我们先了解一下shadow格式</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root:$1$v2wT9rQF$XSpGgoB93STC4EFSlgpjg1:14181:0:99999:7:::</span><br></pre></td></tr></table></figure>
 

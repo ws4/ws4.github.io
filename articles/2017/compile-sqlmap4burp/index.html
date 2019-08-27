@@ -14,16 +14,16 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="填sqlmap4burp的那些坑&amp;emsp;&amp;emsp;sqlmap4burp是整合burp和sqlmap两大神器的一个burp插件。我也是查看了这边文章&amp;lt;&amp;lt;渗透神器合体：在BurpSuite中集成Sqlmap&amp;gt;&amp;gt;,通过文章下的评论发现，小伙伴们在编译与使用sqlmap4burp遇到了不少问题，我也不例外。以下是我遇到的问题，我们来一一解决它。  eclipse导入插件的源">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//package.png">
-<meta property="og:image" content="http://gv7.me/.me//create_jar.png">
-<meta property="og:image" content="http://gv7.me/.me//cmd_sqlmap.png">
-<meta property="og:image" content="http://gv7.me/.me//dead_code.png">
-<meta property="og:image" content="http://gv7.me/.me//change_menu_name.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/package.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/create_jar.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/cmd_sqlmap.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/dead_code.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/change_menu_name.png">
 <meta property="og:updated_time" content="2019-02-16T18:07:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译插件sqlmap4burp遇到的问题">
 <meta name="twitter:description" content="填sqlmap4burp的那些坑&amp;emsp;&amp;emsp;sqlmap4burp是整合burp和sqlmap两大神器的一个burp插件。我也是查看了这边文章&amp;lt;&amp;lt;渗透神器合体：在BurpSuite中集成Sqlmap&amp;gt;&amp;gt;,通过文章下的评论发现，小伙伴们在编译与使用sqlmap4burp遇到了不少问题，我也不例外。以下是我遇到的问题，我们来一一解决它。  eclipse导入插件的源">
-<meta name="twitter:image" content="http://gv7.me/.me//package.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/package.png">
     
     
         
@@ -173,13 +173,13 @@
 <li>弹出了cmd框且设置了sqlmap的路径到系统变量path之后，还是提示sqlmap.py不是内部命令或外部命令……</li>
 </ul>
 <h2 id="编译问题"><a href="#编译问题" class="headerlink" title="编译问题"></a>编译问题</h2><h4 id="缺包"><a href="#缺包" class="headerlink" title="缺包"></a>缺包</h4><p>&emsp;&emsp;作者在插件的说明中说项目缺少包<code>commons-io-2.4.jar</code>,有些小伙伴导入了commons-io包还是报错。这是因为项目其实还缺少一个<code>commons-lang</code>包（我使用的版本是3-3.6）</p>
-<p><img src="/.me//package.png" alt="图1-工程需要的包"></p>
+<p><img src="/articles/2017/compile-sqlmap4burp/package.png" alt="图1-工程需要的包"></p>
 <h4 id="导出jar问题"><a href="#导出jar问题" class="headerlink" title="导出jar问题"></a>导出jar问题</h4><p>&emsp;&emsp;我第一次编译导出时选择的是<code>JAR file</code>。然后加载到burp中，没有报错，也能正常限制tab标签和右键菜单，但是就是不弹出cmd。后来发现，应该导出时选择<code>Runnable JAE file</code>。</p>
-<p><img src="/.me//create_jar.png" alt="图2-导出Runnable JAE file"></p>
+<p><img src="/articles/2017/compile-sqlmap4burp/create_jar.png" alt="图2-导出Runnable JAE file"></p>
 <h2 id="使用问题"><a href="#使用问题" class="headerlink" title="使用问题"></a>使用问题</h2><p>&emsp;&emsp;明明已经将sqlmap的路径放到path环境中，而且启动cmd输入sqlmap.py可以正常运行sqlmap了。但是插件弹出的cmd提示如下：</p>
-<p><img src="/.me//cmd_sqlmap.png" alt="图3-插件运行弹出的cmd提示"></p>
+<p><img src="/articles/2017/compile-sqlmap4burp/cmd_sqlmap.png" alt="图3-插件运行弹出的cmd提示"></p>
 <p>&emsp;&emsp;当时内心很崩溃，我在想我是用了个假的burp么？<br>后来无意中找到了苦逼的原因：我是使用工具包（音速启动）打开的burp，这样弹出的cmd运行sqlmap.py，直接鼠标打开的burp才可以。</p>
-<h2 id="优化插件"><a href="#优化插件" class="headerlink" title="优化插件"></a>优化插件</h2><p>经过查看代码发现，<code>latershow.sniffer</code>包下的代码是无用的，应该删除掉。<br><img src="/.me//dead_code.png" alt="图4-无用代码"><br>&emsp;&emsp;如果用过gason插件的小伙伴会知道，gason插件的右键菜单名称也为send to sqlmap。<br>如果你同时安装这两个插件难免搞不清楚到底那个菜单对应着那个插件。所以我们在代码中将sqlmap4burp的右键菜单名改为<code>send to sqlmap4burp</code>。<br><img src="/.me//change_menu_name.png" alt="图5-修改右键菜单名称"><br>优化后编译的插件下载地址（base64）：<br><code>dXJsOmh0dHA6Ly9wYW4uYmFpZHUuY29tL3MvMW84Z2I1aHcNCnB3ZDptOGo1</code></p>
+<h2 id="优化插件"><a href="#优化插件" class="headerlink" title="优化插件"></a>优化插件</h2><p>经过查看代码发现，<code>latershow.sniffer</code>包下的代码是无用的，应该删除掉。<br><img src="/articles/2017/compile-sqlmap4burp/dead_code.png" alt="图4-无用代码"><br>&emsp;&emsp;如果用过gason插件的小伙伴会知道，gason插件的右键菜单名称也为send to sqlmap。<br>如果你同时安装这两个插件难免搞不清楚到底那个菜单对应着那个插件。所以我们在代码中将sqlmap4burp的右键菜单名改为<code>send to sqlmap4burp</code>。<br><img src="/articles/2017/compile-sqlmap4burp/change_menu_name.png" alt="图5-修改右键菜单名称"><br>优化后编译的插件下载地址（base64）：<br><code>dXJsOmh0dHA6Ly9wYW4uYmFpZHUuY29tL3MvMW84Z2I1aHcNCnB3ZDptOGo1</code></p>
 <h2 id="sqlmap4burp的优点"><a href="#sqlmap4burp的优点" class="headerlink" title="sqlmap4burp的优点"></a>sqlmap4burp的优点</h2><p>&emsp;&emsp;最后啰嗦一下这个插件的优点。它比我们直接导出的burp的log文件，然后用sqlmap的命令sqlmap.py -l burp.log –bitach –smart去批量检测sql注入有两个优势。</p>
 <ol>
 <li>比较方便，免去设置burp保存日志，然后启动sqlmap加载log文件的操作，一键无缝连接。</li>

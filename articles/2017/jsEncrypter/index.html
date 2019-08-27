@@ -14,16 +14,16 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="我曾经听某大牛所过两句话： 1231. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。2. 当一个系统的用户超过1000+,那么弱口令一定存在！  不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。 当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//liucheng.png">
-<meta property="og:image" content="http://gv7.me/.me//tab.png">
-<meta property="og:image" content="http://gv7.me/.me//server.png">
-<meta property="og:image" content="http://gv7.me/.me//test.gif">
-<meta property="og:image" content="http://gv7.me/.me//crack.gif">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/liucheng.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/tab.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/server.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/test.gif">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/crack.gif">
 <meta property="og:updated_time" content="2019-02-16T18:05:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编写加密传输爆破插件jsEncrypter">
 <meta name="twitter:description" content="我曾经听某大牛所过两句话： 1231. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。2. 当一个系统的用户超过1000+,那么弱口令一定存在！  不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。 当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了">
-<meta name="twitter:image" content="http://gv7.me/.me//liucheng.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/jsEncrypter/liucheng.png">
     
     
         
@@ -193,7 +193,7 @@
 <p><strong>今天特地对第三种情况进行解决，所以有了此文！</strong></p>
 <p>针对加密传输问题，freeBuf上的<a href="http://www.freebuf.com/articles/web/127888.html" target="_blank" rel="noopener">《对登录中账号密码进行加密之后再传输的爆破的思路和方式》</a>写的挺好，作者提供了4种思路去解决，比我思考的全面。我最初的解决方案类似文章中的第四种思路，今天的解决方案是写一个Burp插件，和文章中的第一种思路类似但又有点区别。</p>
 <h2 id="0x01-流程"><a href="#0x01-流程" class="headerlink" title="0x01 流程"></a>0x01 流程</h2><p>上一个流程图，给大家捋一捋插件运行的整个流程。</p>
-<p><img src="/.me//liucheng.png" alt="图1-流程图"></p>
+<p><img src="/articles/2017/jsEncrypter/liucheng.png" alt="图1-流程图"></p>
 <h2 id="0x02-开发"><a href="#0x02-开发" class="headerlink" title="0x02 开发"></a>0x02 开发</h2><h4 id="插件核心代码"><a href="#插件核心代码" class="headerlink" title="插件核心代码"></a>插件核心代码</h4><p>我们的插件实现对payload的处理，所以一定要实现Burp Suite APIs的<code>IIntruderPayloadProcessor</code>接口的<code>processPayload</code>方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] processPayload(<span class="keyword">byte</span>[] currentPayload, <span class="keyword">byte</span>[] originalPayload, <span class="keyword">byte</span>[] baseValue) &#123;</span><br><span class="line">		<span class="keyword">byte</span>[] newpayload =<span class="string">""</span>.getBytes();</span><br><span class="line">		String payload = <span class="keyword">new</span> String(currentPayload); <span class="comment">//获取当前paylaod</span></span><br><span class="line">		CloseableHttpClient client = HttpClients.createDefault(); <span class="comment">//新建一个HttpClient</span></span><br><span class="line">		HttpPost httpPost = <span class="keyword">new</span> HttpPost(gui.getURL()); <span class="comment">//新建一个post请求</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			List nameValuePairs = <span class="keyword">new</span> ArrayList(<span class="number">1</span>);</span><br><span class="line">			nameValuePairs.add(<span class="keyword">new</span> BasicNameValuePair(<span class="string">"payload"</span>,payload)); <span class="comment">//添加payload参数</span></span><br><span class="line">			httpPost.setEntity(<span class="keyword">new</span> UrlEncodedFormEntity(nameValuePairs)); <span class="comment">//设置HttpPost实体</span></span><br><span class="line">			CloseableHttpResponse response = client.execute(httpPost); <span class="comment">//发送带有payload的请求</span></span><br><span class="line">			<span class="comment">//获取phantomJS处理好的结果</span></span><br><span class="line">			String responseAsString = EntityUtils.toString(response.getEntity());</span><br><span class="line">			newpayload = helpers.stringToBytes(responseAsString);</span><br><span class="line">			</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			stderr.println(e.getMessage());</span><br><span class="line">			newpayload = <span class="string">"JsEncrypter cannot connect phantomJS!"</span>.getBytes();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> newpayload; <span class="comment">//返回处理好的payload给Burp Suite</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
@@ -204,7 +204,7 @@
 
 <h2 id="0x03演示"><a href="#0x03演示" class="headerlink" title="0x03演示"></a>0x03演示</h2><p>完整的代码请移步github: <code>http://github.com/c0ny1/jsEncrypter</code></p>
 <p>大家自行下载，编译好,最后加载到Burp Suite中！</p>
-<p><img src="/.me//tab.png" alt="图2-插件界面"></p>
+<p><img src="/articles/2017/jsEncrypter/tab.png" alt="图2-插件界面"></p>
 <h4 id="1-靶机搭建"><a href="#1-靶机搭建" class="headerlink" title="(1) 靶机搭建"></a>(1) 靶机搭建</h4><p>项目jsEncrytper/server目录下提供一个php编写的靶机，我们用phpStudy把他运行起来。靶机目前支持的加密算法有7中：</p>
 <ul>
 <li>base64 （PS：严格来说base64是一种编码，不是一种加密算法）</li>
@@ -216,7 +216,7 @@
 <li>RSA</li>
 </ul>
 <p>我们选择sha1来进行演示。</p>
-<p><img src="/.me//server.png" alt="图3-靶机"></p>
+<p><img src="/articles/2017/jsEncrypter/server.png" alt="图3-靶机"></p>
 <h4 id="2-编写phantomJS脚本"><a href="#2-编写phantomJS脚本" class="headerlink" title="(2) 编写phantomJS脚本"></a>(2) 编写phantomJS脚本</h4><ol>
 <li><p>通过查看靶机页面的js代码，我们知道实现sha1加密的是<code>sha1.js</code>这个文件，我们将它下载下来。</p>
 </li>
@@ -229,8 +229,8 @@
 
 <h4 id="3-运行phantomJS脚本"><a href="#3-运行phantomJS脚本" class="headerlink" title="(3) 运行phantomJS脚本"></a>(3) 运行phantomJS脚本</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">λ phantomjs.exe jsEncrypter_sha1.js</span><br><span class="line">[*] load js successful</span><br><span class="line">[!] ^_^</span><br><span class="line">[*] jsEncrypterJS <span class="built_in">start</span>!</span><br><span class="line">[+] address: http://<span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">1664</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="4-测试是否能成功加密"><a href="#4-测试是否能成功加密" class="headerlink" title="(4) 测试是否能成功加密"></a>(4) 测试是否能成功加密</h4><p><img src="/.me//test.gif" alt="图4-测试"></p>
-<h4 id="5-抓包爆破"><a href="#5-抓包爆破" class="headerlink" title="(5) 抓包爆破"></a>(5) 抓包爆破</h4><p><img src="/.me//crack.gif" alt="图5-抓包爆破"></p>
+<h4 id="4-测试是否能成功加密"><a href="#4-测试是否能成功加密" class="headerlink" title="(4) 测试是否能成功加密"></a>(4) 测试是否能成功加密</h4><p><img src="/articles/2017/jsEncrypter/test.gif" alt="图4-测试"></p>
+<h4 id="5-抓包爆破"><a href="#5-抓包爆破" class="headerlink" title="(5) 抓包爆破"></a>(5) 抓包爆破</h4><p><img src="/articles/2017/jsEncrypter/crack.gif" alt="图5-抓包爆破"></p>
 <h2 id="0x04最后的话"><a href="#0x04最后的话" class="headerlink" title="0x04最后的话"></a>0x04最后的话</h2><p>各位如果有更好的解决方案，请留言互相交流。发现项目有bug或者有更好的修改建议，欢迎在github提交issuse，期待我们一起进步！</p>
 <p><strong>项目地址：<a href="https://github.com/c0ny1/jsEncrypter" target="_blank" rel="noopener">https://github.com/c0ny1/jsEncrypter</a></strong></p>
 

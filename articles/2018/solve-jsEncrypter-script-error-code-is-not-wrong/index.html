@@ -14,12 +14,12 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;用过我的jsEncrypter插件的朋友，可能会有一个遇到一个大坑： 当编写前端加密调用脚本代码存在错误时，phantomJS不会报错，而且会进入假死，不能继续执行的状态。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果前端的加密逻辑比较简单还好，当前端加密涉及多个js文件，逻辑比较复杂时，编写调用代码存在错误在所难免。这时如果phantomJ">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//phantomjs_server_error_info.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/solve-jsEncrypter-script-error-code-is-not-wrong/phantomjs_server_error_info.png">
 <meta property="og:updated_time" content="2019-02-16T18:04:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决jsEncrypter脚本错误代码不报错问题">
 <meta name="twitter:description" content="&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;用过我的jsEncrypter插件的朋友，可能会有一个遇到一个大坑： 当编写前端加密调用脚本代码存在错误时，phantomJS不会报错，而且会进入假死，不能继续执行的状态。 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;如果前端的加密逻辑比较简单还好，当前端加密涉及多个js文件，逻辑比较复杂时，编写调用代码存在错误在所难免。这时如果phantomJ">
-<meta name="twitter:image" content="http://gv7.me/.me//phantomjs_server_error_info.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/solve-jsEncrypter-script-error-code-is-not-wrong/phantomjs_server_error_info.png">
     
     
         
@@ -170,7 +170,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">	...</span><br><span class="line">&#125;<span class="keyword">catch</span>(e)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'\n-----------------Error Info--------------------'</span>)</span><br><span class="line">	<span class="keyword">var</span> fullMessage = <span class="string">"Message: "</span>+e.toString() + <span class="string">':'</span>+ e.line;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> p <span class="keyword">in</span> e) &#123;</span><br><span class="line">		fullMessage += <span class="string">"\n"</span> + p.toUpperCase() + <span class="string">": "</span> + e[p];</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="built_in">console</span>.log(fullMessage);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'---------------------------------------------'</span>)</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'[*] phantomJS exit!'</span>)</span><br><span class="line">	phantom.exit();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我使用升级后的脚本模板，重新加入上周编写错误的前端加密调用代码。这次完美的报错了，提示如下：</p>
-<p><img src="/.me//phantomjs_server_error_info.png" alt="图1-phantomjs_server.js报错"></p>
+<p><img src="/articles/2018/solve-jsEncrypter-script-error-code-is-not-wrong/phantomjs_server_error_info.png" alt="图1-phantomjs_server.js报错"></p>
 <p>这里简单跟大家说明下报错信息的含义。</p>
 <p>Message为错误消息，内容如下。大概知道错误为类型错误，<code>a.pad</code>未定义。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: undefined is not an object (evaluating &apos;a.pad&apos;)</span><br></pre></td></tr></table></figure>

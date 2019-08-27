@@ -14,13 +14,13 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="分块传输绕WAF在年初的《利用分块传输吊打所有WAF》中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入Transfer-Encoding: chunkedHTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//repeater-chunked-coding.gif">
-<meta property="og:image" content="http://gv7.me/.me//sqlmap-bypassWAF.gif">
+<meta property="og:image" content="http://gv7.me/articles/2019/chunked-coding-converter/repeater-chunked-coding.gif">
+<meta property="og:image" content="http://gv7.me/articles/2019/chunked-coding-converter/sqlmap-bypassWAF.gif">
 <meta property="og:updated_time" content="2019-03-31T15:21:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编写Burp分块传输插件绕WAF">
 <meta name="twitter:description" content="分块传输绕WAF在年初的《利用分块传输吊打所有WAF》中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入Transfer-Encoding: chunkedHTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！">
-<meta name="twitter:image" content="http://gv7.me/.me//repeater-chunked-coding.gif">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/chunked-coding-converter/repeater-chunked-coding.gif">
     
     
         
@@ -180,9 +180,9 @@
 <p>完整的代码，已经上传github，地址如下：</p>
 <p><a href="http://github.com/c0ny1/chunked-coding-converter" target="_blank" rel="noopener">http://github.com/c0ny1/chunked-coding-converter</a></p>
 <h2 id="0x03-效果演示"><a href="#0x03-效果演示" class="headerlink" title="0x03 效果演示"></a>0x03 效果演示</h2><h4 id="3-1-演示一：快速编码解码"><a href="#3-1-演示一：快速编码解码" class="headerlink" title="3.1 演示一：快速编码解码"></a>3.1 演示一：快速编码解码</h4><p>在Burp repeater套件可以快速对请求内容进行chunked编码解码，来对WAF进行测试。</p>
-<p><img src="/.me//repeater-chunked-coding.gif" alt="快速编码解码对WAF进行测试"></p>
+<p><img src="/articles/2019/chunked-coding-converter/repeater-chunked-coding.gif" alt="快速编码解码对WAF进行测试"></p>
 <h4 id="3-2-演示二：搭配sqlmap进行sql注入"><a href="#3-2-演示二：搭配sqlmap进行sql注入" class="headerlink" title="3.2 演示二：搭配sqlmap进行sql注入"></a>3.2 演示二：搭配sqlmap进行sql注入</h4><p>sqlmap代理到Burp中，插件对Proxy套件的流量进行编码处理，来绕过waf。</p>
-<p><img src="/.me//sqlmap-bypassWAF.gif" alt="搭配sqlmap绕waf"></p>
+<p><img src="/articles/2019/chunked-coding-converter/sqlmap-bypassWAF.gif" alt="搭配sqlmap绕waf"></p>
 <h2 id="0x04-参考文章"><a href="#0x04-参考文章" class="headerlink" title="0x04 参考文章"></a>0x04 参考文章</h2><ul>
 <li><a href="https://www.anquanke.com/post/id/169738" target="_blank" rel="noopener">利用分块传输吊打所有WAF</a></li>
 <li><a href="https://www.freebuf.com/news/193659.html" target="_blank" rel="noopener">在HTTP协议层面绕过WAF</a></li>

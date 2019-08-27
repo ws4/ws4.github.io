@@ -14,17 +14,17 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="前两周我们搞明白了XXE漏洞在Java语言中的深层原理，以及错误修复方案为何无法防御XXE的原理。今天我们来解决最后一个问题： Java中如何正确防御XXE，同时它为何能防御呢？ OWASP推荐的修复代码如下，号称是可以防御几乎所有XXE攻击！今天我们来深入研究下它为何可以防御XXE漏洞。 12DocumentBuilderFactory dbf = DocumentBuilderFactory.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//setFeature_invocation_list.png">
-<meta property="og:image" content="http://gv7.me/.me//XMLDocumentScannerImpl_fDisallowDoctype_false.png">
-<meta property="og:image" content="http://gv7.me/.me//setScannerState_SCANNER_STATE_DOCTYPE.png">
-<meta property="og:image" content="http://gv7.me/.me//reportFatalError.png">
-<meta property="og:image" content="http://gv7.me/.me//fParseInProgress_false.png">
-<meta property="og:image" content="http://gv7.me/.me//result.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/setFeature_invocation_list.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/XMLDocumentScannerImpl_fDisallowDoctype_false.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/setScannerState_SCANNER_STATE_DOCTYPE.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/reportFatalError.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/fParseInProgress_false.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/result.png">
 <meta property="og:updated_time" content="2019-02-20T18:51:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java XXE漏洞正确修复方法及原理">
 <meta name="twitter:description" content="前两周我们搞明白了XXE漏洞在Java语言中的深层原理，以及错误修复方案为何无法防御XXE的原理。今天我们来解决最后一个问题： Java中如何正确防御XXE，同时它为何能防御呢？ OWASP推荐的修复代码如下，号称是可以防御几乎所有XXE攻击！今天我们来深入研究下它为何可以防御XXE漏洞。 12DocumentBuilderFactory dbf = DocumentBuilderFactory.">
-<meta name="twitter:image" content="http://gv7.me/.me//setFeature_invocation_list.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/setFeature_invocation_list.png">
     
     
         
@@ -178,17 +178,17 @@
 
 <h2 id="0x02-原理分析"><a href="#0x02-原理分析" class="headerlink" title="0x02 原理分析"></a>0x02 原理分析</h2><p>在测试代码<code>dbf.setFeature(...);</code>处打断点，开始调式跟踪。</p>
 <p><code>dbf.setFeature()</code>方法会调用多个对象的<code>setFeature()</code>方法，最终到达<code>XMLDocumentScannerImpl</code>对象<code>setFeature()</code>方法，调用链如下：</p>
-<p><img src="/.me//setFeature_invocation_list.png" alt="setFeature方法调用链"></p>
+<p><img src="/articles/2019/java-xxe-bug-fix-right-and-principle/setFeature_invocation_list.png" alt="setFeature方法调用链"></p>
 <p>在XMLDocumentScannerImpl.setFeature()中，将<code>fDisallowDoctype</code>属性设置为了<code>true</code>。</p>
-<p><img src="/.me//XMLDocumentScannerImpl_fDisallowDoctype_false.png" alt="fDisallowDoctype属性被设置为true"></p>
+<p><img src="/articles/2019/java-xxe-bug-fix-right-and-principle/XMLDocumentScannerImpl_fDisallowDoctype_false.png" alt="fDisallowDoctype属性被设置为true"></p>
 <p>在这些XML解析器完成设置后，解析器会调用<code>XMLDocumentScannerImpl.scanDocument()</code>对XML的文档进行扫描。在解析器读到<code>DOCTYPE</code>字符串时，扫描状态会被设置为<code>SCANNER_STATE_DOCTYPE</code>。解析器会进入<code>SCANNER_STATE_DOCTYPE</code>阶段。</p>
-<p><img src="/.me//setScannerState_SCANNER_STATE_DOCTYPE.png" alt="扫描状态会被设置为SCANNER_STATE_DOCTYPE"></p>
+<p><img src="/articles/2019/java-xxe-bug-fix-right-and-principle/setScannerState_SCANNER_STATE_DOCTYPE.png" alt="扫描状态会被设置为SCANNER_STATE_DOCTYPE"></p>
 <p>该阶段会首先判断<code>fDisallowDoctype</code>的值，由上面的跟踪可知<code>fDisallowDoctype</code>已经被改为<code>true</code>，所以会调用<code>reportFatalError()</code>方法，输出致命错误报告并向上抛出解析异常。</p>
-<p><img src="/.me//reportFatalError.png" alt="输出致命错误报告并向上抛出解析异常"></p>
+<p><img src="/articles/2019/java-xxe-bug-fix-right-and-principle/reportFatalError.png" alt="输出致命错误报告并向上抛出解析异常"></p>
 <p>异常会被抛到<code>XML11Configuration.parse()</code>中处理。处理的结果是<code>fParseInProgress</code>变量被设置为了<code>false</code>，接着会调用<code>cleanup()</code>方法在完全解析XML文档之前终止解析，释放解析期间分配的任何资源。所以程序不会运行到漏洞触发处。</p>
-<p><img src="/.me//fParseInProgress_false.png" alt="终止解析XML"></p>
+<p><img src="/articles/2019/java-xxe-bug-fix-right-and-principle/fParseInProgress_false.png" alt="终止解析XML"></p>
 <p>最终运行结果如下，Web服务器也并未收到Http请求。</p>
-<p><img src="/.me//result.png" alt="最终运行结果"></p>
+<p><img src="/articles/2019/java-xxe-bug-fix-right-and-principle/result.png" alt="最终运行结果"></p>
 <h2 id="0x03-参考文章"><a href="#0x03-参考文章" class="headerlink" title="0x03 参考文章"></a>0x03 参考文章</h2><ul>
 <li><a href="https://mp.weixin.qq.com/s/sGcaDCokVxhELd63-0TmIw" target="_blank" rel="noopener">Java XXE注入修复问题填坑实录</a></li>
 <li><a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet" target="_blank" rel="noopener">https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet</a></li>

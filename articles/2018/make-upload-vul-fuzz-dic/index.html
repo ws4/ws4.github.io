@@ -14,13 +14,13 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="上传漏洞的利用姿势很多，同时也会因为语言，中间件，操作系统的不同，利用也不同。比如有：大小写混合，.htaccess,解析漏洞，00截断，.绕过，空格绕过，::$DATA绕过，以及多种姿势的组合等等。当遇到一个上传点，如何全面的利用以上姿势测试一遍，并快速发现可以成功上传webshell的姿势？ 方案一:一个一个手工测试 手工把所有姿势测试一遍，先不说花费大量时间，还很可能会遗漏掉某些姿势而导致无">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//upload_fuzz_dic.png">
-<meta property="og:image" content="http://gv7.me/.me//fuzz_result.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/make-upload-vul-fuzz-dic/upload_fuzz_dic.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/make-upload-vul-fuzz-dic/fuzz_result.png">
 <meta property="og:updated_time" content="2019-02-16T18:05:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="构造优质上传漏洞fuzz字典">
 <meta name="twitter:description" content="上传漏洞的利用姿势很多，同时也会因为语言，中间件，操作系统的不同，利用也不同。比如有：大小写混合，.htaccess,解析漏洞，00截断，.绕过，空格绕过，::$DATA绕过，以及多种姿势的组合等等。当遇到一个上传点，如何全面的利用以上姿势测试一遍，并快速发现可以成功上传webshell的姿势？ 方案一:一个一个手工测试 手工把所有姿势测试一遍，先不说花费大量时间，还很可能会遗漏掉某些姿势而导致无">
-<meta name="twitter:image" content="http://gv7.me/.me//upload_fuzz_dic.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/make-upload-vul-fuzz-dic/upload_fuzz_dic.png">
     
     
         
@@ -317,9 +317,9 @@
 <h4 id="1-利用脚本生成fuzz字典。"><a href="#1-利用脚本生成fuzz字典。" class="headerlink" title="1.利用脚本生成fuzz字典。"></a>1.利用脚本生成fuzz字典。</h4><p>由于知道我们的后端语言为<code>php</code>,中间件为<code>apache</code>，操作系统为<code>Windows</code>。所以可以利用这些信息生成更精确的fuzz字典。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ python upload-fuzz-dic-builder.py -l php -m apache --os win</span><br><span class="line">[+] 收集17条可解析后缀完毕！</span><br><span class="line">[+] 加入145条可解析后缀大小写混合完毕！</span><br><span class="line">[+] 加入152条中间件漏洞完毕！</span><br><span class="line">[+] 加入37条.htaccess完毕！</span><br><span class="line">[+] 加入10336条系统特性完毕！</span><br><span class="line">[+] 去重后共10753条数据写入upload_fuzz_dic.txt文件</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//upload_fuzz_dic.png" alt="图1-生成的字典"></p>
+<p><img src="/articles/2018/make-upload-vul-fuzz-dic/upload_fuzz_dic.png" alt="图1-生成的字典"></p>
 <h4 id="2-抓包使用burp的Intruder模块对上传名称进行fuzz"><a href="#2-抓包使用burp的Intruder模块对上传名称进行fuzz" class="headerlink" title="2.抓包使用burp的Intruder模块对上传名称进行fuzz"></a>2.抓包使用burp的Intruder模块对上传名称进行fuzz</h4><p>抓取upload-labs的Pass-09的上传包，发送到Intruder模块，加载第一步脚本生成的fuzz字典，对上传的包的文件名进行fuzz。</p>
-<p><img src="/.me//fuzz_result.png" alt="图2-fuzz结果"></p>
+<p><img src="/articles/2018/make-upload-vul-fuzz-dic/fuzz_result.png" alt="图2-fuzz结果"></p>
 <p>经过测试，通过fuzz可以快速找到可以突破upload-labs那些基于后缀的Pass的payload。甚至fuzz出同一个Pass多种绕过的方法。</p>
 <p><strong>本文已在freebuf上首发：<a href="https://www.freebuf.com/articles/web/188464.html" target="_blank" rel="noopener">https://www.freebuf.com/articles/web/188464.html</a></strong></p>
 

@@ -14,12 +14,12 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="问题：过滤器作用范围设置为/或/*一样么？ 安全人员可能觉得不一样，毕竟从对通配符的认识来说，/代表的只是根目录，/*代表所有。 开发人员可能觉得一样，根据平常的开发经验，并未发现两者的差别。 其实呢，这两种认识都不正确，更确切地说前者说的不够正确。具体许我慢慢道来。 0x01 问题背景回想起之前做的代码审计时，发现项目设置全局过滤器时，有的设置为/，有的设置为/*。在自己模糊印象里，在校学jsp">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//show.gif">
+<meta property="og:image" content="http://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/show.gif">
 <meta property="og:updated_time" content="2019-04-04T20:41:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="过滤器作用范围&#x2F;和&#x2F;*引发的安全问题">
 <meta name="twitter:description" content="问题：过滤器作用范围设置为/或/*一样么？ 安全人员可能觉得不一样，毕竟从对通配符的认识来说，/代表的只是根目录，/*代表所有。 开发人员可能觉得一样，根据平常的开发经验，并未发现两者的差别。 其实呢，这两种认识都不正确，更确切地说前者说的不够正确。具体许我慢慢道来。 0x01 问题背景回想起之前做的代码审计时，发现项目设置全局过滤器时，有的设置为/，有的设置为/*。在自己模糊印象里，在校学jsp">
-<meta name="twitter:image" content="http://gv7.me/.me//show.gif">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/show.gif">
     
     
         
@@ -169,7 +169,7 @@
 <p><strong>web.xml中过滤器配置</strong></p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CrossSiteScriptFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>me.gv7.filter.XssFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CrossSiteScriptFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- &lt;url-pattern&gt;/*&lt;/url-pattern&gt; --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>REQUEST<span class="tag">&lt;/<span class="name">dispatcher</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//show.gif" alt="演示"></p>
+<p><img src="/articles/2019/security-raised-by-java-filter-scope-missetting/show.gif" alt="演示"></p>
 <p>通过演示的结果我们知道：</p>
 <ol>
 <li><code>/*</code>才是真正意义上的过滤所有请求</li>

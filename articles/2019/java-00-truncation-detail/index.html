@@ -14,20 +14,20 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="4个月前写了一篇文章叫《从代码层面理解java的00截断漏洞》，由于当时出差新疆没时间深入，便在文末立了个有空继续深入的flag。今天我们通过跟踪jdk代码， 彻底搞清楚java中00截断的原理，以及它之后版本是如何修复的？ 一、漏洞测试代码改进看了一些java web系统文件上传代码，基本都是使用FileOutputStream来实现对上传内容的保存。于是将上篇文章的测试代码修改如下，简单模拟j">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//vul-01.png">
-<meta property="og:image" content="http://gv7.me/.me//vul-02.png">
-<meta property="og:image" content="http://gv7.me/.me//vul-03.png">
-<meta property="og:image" content="http://gv7.me/.me//vul-04.png">
-<meta property="og:image" content="http://gv7.me/.me//vul-05.png">
-<meta property="og:image" content="http://gv7.me/.me//show.gif">
-<meta property="og:image" content="http://gv7.me/.me//fix-01.png">
-<meta property="og:image" content="http://gv7.me/.me//fix-02.png">
-<meta property="og:image" content="http://gv7.me/.me//update_note.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/vul-01.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/vul-02.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/vul-03.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/vul-04.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/vul-05.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/show.gif">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/fix-01.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/fix-02.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/update_note.png">
 <meta property="og:updated_time" content="2019-02-16T18:03:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从代码层面理解java的00截断漏洞深入篇">
 <meta name="twitter:description" content="4个月前写了一篇文章叫《从代码层面理解java的00截断漏洞》，由于当时出差新疆没时间深入，便在文末立了个有空继续深入的flag。今天我们通过跟踪jdk代码， 彻底搞清楚java中00截断的原理，以及它之后版本是如何修复的？ 一、漏洞测试代码改进看了一些java web系统文件上传代码，基本都是使用FileOutputStream来实现对上传内容的保存。于是将上篇文章的测试代码修改如下，简单模拟j">
-<meta name="twitter:image" content="http://gv7.me/.me//vul-01.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/java-00-truncation-detail/vul-01.png">
     
     
         
@@ -176,16 +176,16 @@
 
 <p>通过在漏洞版本和非漏洞版本运行以上代码，可知如果00截断成功，则会在系统的c盘根目录新建一个内容为<code>Test by c0ny1</code>的<code>shell.jsp</code>，如果没有截断成功，则抛出<code>Invalid file path</code>异常。</p>
 <h2 id="二、漏洞是如何产生的"><a href="#二、漏洞是如何产生的" class="headerlink" title="二、漏洞是如何产生的?"></a>二、漏洞是如何产生的?</h2><p>我选择使用<code>JDK1.7.0</code>（JDK1.7第一个版本），来跟踪漏洞测试代码从运行到触发。</p>
-<p><img src="/.me//vul-01.png" alt="第一个构造函数"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/vul-01.png" alt="第一个构造函数"></p>
 <p>将传进来的name参数作为路径，新建了File对象，再次传入到<code>FileOutputStream</code>对象新的构造函数。根据传入的两个参数的类型，我们可以确定会进入到以下这个构造函数。</p>
-<p><img src="/.me//vul-02.png" alt="第二个构造函数"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/vul-02.png" alt="第二个构造函数"></p>
 <p>FileOutputStream对象的构造方法又调用了open函数，打开了name参数传进来的文件路径，我们继续跟进open函数。</p>
-<p><img src="/.me//vul-03.png" alt="open方法的声明"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/vul-03.png" alt="open方法的声明"></p>
 <p>发现open函数是一个native method。它的实现体是由非java语言（c语言）实现的。只能去OpenJDK官网下载jdk源码来查看它的实现。无奈没有找到jdk7u1的源码，只找到了<a href="https://download.java.net/openjdk/jdk7u75/ri/openjdk-7u75-src-b13-18_dec_2014.zip" target="_blank" rel="noopener">jdk7u75</a>的源码。其实在小版本上源码应该区别不大。</p>
 <p>在<code>\openjdk\jdk\src\windows\native\java\io\FileOutputStream_md.c</code>中找到了<code>FileOutputStream</code>类的<code>open</code>方法的JNI实现。open方法又调用了<code>fileOpen</code>方法，继续跟进fileOpen方法。</p>
-<p><img src="/.me//vul-04.png" alt="open方法的定义"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/vul-04.png" alt="open方法的定义"></p>
 <p>在<code>io_util_md.c</code>中找到了<code>fileOpen</code>方法的定义。</p>
-<p><img src="/.me//vul-05.png" alt="fileOpen方法的定义"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/vul-05.png" alt="fileOpen方法的定义"></p>
 <p>fileOpen方法调用了<code>winFileHandleOpen</code>函数，继续跟进。由于winFileHandleOpen函数代码比较多，这里精简出了关键代码。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">jlong <span class="title">winFileHandleOpen</span><span class="params">(JNIEnv *env, jstring path, <span class="keyword">int</span> flags)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	......</span><br><span class="line">    <span class="keyword">if</span> (onNT) &#123; <span class="comment">//如果在Windows NT/Windows 2000操作系统下</span></span><br><span class="line">        WCHAR *pathbuf = pathToNTPath(env, path, JNI_TRUE);</span><br><span class="line">        <span class="keyword">if</span> (pathbuf == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="comment">/* Exception already pending */</span></span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        h = CreateFileW(</span><br><span class="line">            pathbuf,            <span class="comment">/* Wide char path name */</span></span><br><span class="line">            access,             <span class="comment">/* Read and/or write permission */</span></span><br><span class="line">            sharing,            <span class="comment">/* File sharing flags */</span></span><br><span class="line">            <span class="literal">NULL</span>,               <span class="comment">/* Security attributes */</span></span><br><span class="line">            disposition,        <span class="comment">/* creation disposition */</span></span><br><span class="line">            flagsAndAttributes, <span class="comment">/* flags and attributes */</span></span><br><span class="line">            <span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">free</span>(pathbuf);<span class="comment">//创建文件</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        WITH_PLATFORM_STRING(env, path, _ps) &#123;</span><br><span class="line">            h = CreateFile(_ps, access, sharing, <span class="literal">NULL</span>, disposition,flagsAndAttributes, <span class="literal">NULL</span>);<span class="comment">//创建文件</span></span><br><span class="line">        &#125;</span><br><span class="line">        END_PLATFORM_STRING(env, _ps);</span><br><span class="line">    &#125;</span><br><span class="line">	......</span><br><span class="line">    <span class="keyword">return</span> (jlong)h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -195,15 +195,15 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//test.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"windows.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	HANDLE fileHandle = CreateFileW(<span class="string">L"C:\\shell.jsp\0test.txt"</span>, GENERIC_WRITE, FILE_SHARE_WRITE, <span class="number">0</span>, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, <span class="number">0</span>);</span><br><span class="line">	<span class="keyword">char</span> *data = <span class="string">"Test by c0ny1"</span>;</span><br><span class="line">	DWORD a = <span class="built_in">strlen</span>(data);</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> b;</span><br><span class="line">	WriteFile(fileHandle, data, a, &amp;b, <span class="literal">NULL</span>);</span><br><span class="line">	CloseHandle(fileHandle);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>代码运行演示如下：</p>
-<p><img src="/.me//show.gif" alt="CreateFileW函数00截断演示"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/show.gif" alt="CreateFileW函数00截断演示"></p>
 <h2 id="三、漏洞是如何修复的？"><a href="#三、漏洞是如何修复的？" class="headerlink" title="三、漏洞是如何修复的？"></a>三、漏洞是如何修复的？</h2><p>这里选择使用<code>jdk1.7.0_80</code>（JDK1.7最新版本），来观察漏洞如果被修复的。</p>
 <p>我们继续按照原来漏洞触发的调用链重新跟踪一遍，跟踪到第二构造函数时，发现多了一个针对文件路径的检查，若检查结果为非法，则抛出异常<code>Invalid file path</code>.</p>
-<p><img src="/.me//fix-01.png" alt="构造函数中检查文件路径"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/fix-01.png" alt="构造函数中检查文件路径"></p>
 <p>继续跟进，来到<code>java.io.File</code>类的<code>isInvalid</code>方法,发现该检查函数判断了路径中是否包含00字符串。（注意：java默认编码为Unicode，00字符串的Unicode编码为\u0000）。</p>
-<p><img src="/.me//fix-02.png" alt="文件路径检查函数"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/fix-02.png" alt="文件路径检查函数"></p>
 <h2 id="四、漏洞影响的版本范围"><a href="#四、漏洞影响的版本范围" class="headerlink" title="四、漏洞影响的版本范围"></a>四、漏洞影响的版本范围</h2><p>我们知道jdk1.7版本是部分版本存在漏洞的。但这里我们需要确定是哪个版本修复了这个漏洞。翻阅了JDK1.7多个版本代码，发现在JDK1.7.0_40（7u40）开始加上了对文件名是否存在\00字符的检查。也就是说 <strong>JDK1.7.0_40之前java是存在00截断的，而之后的版本就不存在了！</strong></p>
 <p>后面在官网的JDK 7u40的更新日志中也找到了关于00截断问题Bug ID，分别为<code>JDK-8003992</code>和<code>JDK-8011539</code>，具体链接放在了文末的参考文章里了。其实这两个是同一个Bug，官网也说明了它们重复了。</p>
-<p><img src="/.me//update_note.png" alt="oracle官方更新日志"></p>
+<p><img src="/articles/2019/java-00-truncation-detail/update_note.png" alt="oracle官方更新日志"></p>
 <h2 id="五、参考文章"><a href="#五、参考文章" class="headerlink" title="五、参考文章"></a>五、参考文章</h2><ul>
 <li><a href="https://blog.csdn.net/I_S_T_O/article/details/1843871" target="_blank" rel="noopener">JAVA /00文件路径截断漏洞与分析for windows并对.NET比较</a></li>
 <li><a href="https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8003992" target="_blank" rel="noopener">JDK-8003992 : File and other classes in java.io do not handle embedded nulls properly</a></li>

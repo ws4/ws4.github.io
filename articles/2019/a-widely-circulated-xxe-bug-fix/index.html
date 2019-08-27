@@ -14,20 +14,20 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="现在百度”XXE漏洞修复”，搜索到的Java语言修复方案大部分如下： 12DocumentBuilderFactory dbf =DocumentBuilderFactory.newInstance();dbf.setExpandEntityReferences(false);  经过实际的测试发现setExpandEntityReferences(false)根本无法防御XXE漏洞！不禁思考到两">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//1.png">
-<meta property="og:image" content="http://gv7.me/.me//2.png">
-<meta property="og:image" content="http://gv7.me/.me//3.png">
-<meta property="og:image" content="http://gv7.me/.me//4.png">
-<meta property="og:image" content="http://gv7.me/.me//5.png">
-<meta property="og:image" content="http://gv7.me/.me//6.png">
-<meta property="og:image" content="http://gv7.me/.me//7.png">
-<meta property="og:image" content="http://gv7.me/.me//8.png">
-<meta property="og:image" content="http://gv7.me/.me//9.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/1.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/2.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/3.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/4.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/5.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/6.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/7.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/8.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/9.png">
 <meta property="og:updated_time" content="2019-02-20T18:39:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个被广泛流传的XXE漏洞错误修复方案">
 <meta name="twitter:description" content="现在百度”XXE漏洞修复”，搜索到的Java语言修复方案大部分如下： 12DocumentBuilderFactory dbf =DocumentBuilderFactory.newInstance();dbf.setExpandEntityReferences(false);  经过实际的测试发现setExpandEntityReferences(false)根本无法防御XXE漏洞！不禁思考到两">
-<meta name="twitter:image" content="http://gv7.me/.me//1.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/1.png">
     
     
         
@@ -186,24 +186,24 @@
 
 <h2 id="0x02-原理分析"><a href="#0x02-原理分析" class="headerlink" title="0x02 原理分析"></a>0x02 原理分析</h2><p>我们在<code>dbf.setExpandEntityReferences(false);</code>打断点开始分析！</p>
 <p>setExpandEntityReferences(false)会将DocumentBuilderFactory对象中的expandEntityRef属性默认值true修改为false。</p>
-<p><img src="/.me//1.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/1.png" alt></p>
 <p>在newDocumentBuilder()会方法返回一个DocumentBuilderImpl对象前，会在DocumentBuilderImpl对象初始化时，调用setFeature()方法对DOM解析器的<code>CREATE_ENTITY_REF_NODES_FEATURE</code>(<a href="http://apache.org/xml/features/dom/create-entity-ref-nodes" target="_blank" rel="noopener">http://apache.org/xml/features/dom/create-entity-ref-nodes</a>) 配置项设置为上一步的expandEntityRef变量的相反值true。</p>
-<p><img src="/.me//2.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/2.png" alt></p>
 <p>domParser.setFeature()最终会调用解析器配置对象设置目标配置项的值。</p>
-<p><img src="/.me//3.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/3.png" alt></p>
 <p>在XMLParser对象调用reset()方法重置状态时，AbstractDOMParser对象中通过解析器的配置对象获取到<code>CREATE_ENTITY_REF_NODES</code>（<a href="http://apache.org/xml/features/dom/create-entity-ref-nodes）" target="_blank" rel="noopener">http://apache.org/xml/features/dom/create-entity-ref-nodes）</a> 配置项的值true，并将<code>fCreateEntityRefNodes</code>属性设置为true。</p>
-<p><img src="/.me//4.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/4.png" alt></p>
 <p>在XMLDocumentFragmentScannerImpl.scanDocument()进入<code>START_ELEMENT</code>阶段后，next()方法会对XML中的元素进行扫描。当扫描到文本中的<code>&amp;</code>字符时（识别一般实体），解析器会调用scanEntityReference() 扫描实体引用。最后会调用setupCurrentEntity()创建连接并发起请求，以获取外部实体的内容，这时XXE漏洞将会触发！可以发现程序运行流程，依然会执行到XXE漏洞触发的位置。</p>
-<p><img src="/.me//5.png" alt></p>
-<p><img src="/.me//6.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/5.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/6.png" alt></p>
 <p>继续跟踪，<code>AbstractDOMParser.endGeneralEntity()</code>在判断<code>fCreateEntityRefNodes</code>为<code>false</code>时，实体引用&amp;xxe将会被从DOM树删除，引用的具体内容<code>Test by c0ny1</code>将会在DOM树中展开,替换掉&amp;xxe。此时为<code>true</code>，实体引用节点将保留在DOM树中。这是setExpandEntityReferences方法对XML解析器处理XML最终产生影响的位置。</p>
-<p><img src="/.me//7.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/7.png" alt></p>
 <p>最终调用链如下：</p>
-<p><img src="/.me//8.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/8.png" alt></p>
 <p>经过以上分析，我们大致了解了setExpandEntityReferences()方法的功能是对解析XML生成的Document文档进行设置，设置为 true则展开实体引用到生成的文档中替换掉<code>&amp;xxx</code>的实体引用声明，设置为false则保留实体引用声明的DOM树在生成的文档中。</p>
 <p>由于setExpandEntityReferences(false)对Java内置XML解析器的设置起作用前，解析器就已经发起了对外部实体的请求了，故无法防御XXE漏洞！</p>
 <h2 id="0x03-思考原因"><a href="#0x03-思考原因" class="headerlink" title="0x03 思考原因"></a>0x03 思考原因</h2><p>为何setExpandEntityReferences明明无法防御XXE漏洞，但却很多人在使用呢？当我看了官方JDK API文档之后，发现描述过于简单，从字面上理解很容易与方法的实际功能存在偏差。</p>
-<p><img src="/.me//9.png" alt></p>
+<p><img src="/articles/2019/a-widely-circulated-xxe-bug-fix/9.png" alt></p>
 <p>初步判断有两个原因：</p>
 <ol>
 <li><p>官方文档的描述太过于模糊，很容易让人产生歧义。如果没有跟踪该方法底层实现很容易对它的实际功能理解错误，从而导致错误使用。</p>

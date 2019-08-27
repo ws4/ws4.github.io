@@ -14,19 +14,19 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="&amp;emsp;&amp;emsp;在进行密码字典攻击时，经常使用到一些弱口令字典。而这些若口令字典基本都是通过各大网站泄露的密码，统计出使用频率最多的密码作为字典。这样就可以大大提高成功率。相信大家都听说过CSDN top 100,12306 top 100。今天尝试使用某东泄露的数据库制作一个jd top 100！ 0x01工具与素材 mysql navicat for mysql jd40w密码  0x">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//password_file.png">
-<meta property="og:image" content="http://gv7.me/.me//type.png">
-<meta property="og:image" content="http://gv7.me/.me//file.png">
-<meta property="og:image" content="http://gv7.me/.me//fengefu.png">
-<meta property="og:image" content="http://gv7.me/.me//table_name.png">
-<meta property="og:image" content="http://gv7.me/.me//table.png">
-<meta property="og:image" content="http://gv7.me/.me//result.png">
-<meta property="og:image" content="http://gv7.me/.me//copy_to_file.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/password_file.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/type.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/file.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/fengefu.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/table_name.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/table.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/result.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/making-the-password-top-100/copy_to_file.png">
 <meta property="og:updated_time" content="2019-02-16T18:05:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自制弱口令字典top100">
 <meta name="twitter:description" content="&amp;emsp;&amp;emsp;在进行密码字典攻击时，经常使用到一些弱口令字典。而这些若口令字典基本都是通过各大网站泄露的密码，统计出使用频率最多的密码作为字典。这样就可以大大提高成功率。相信大家都听说过CSDN top 100,12306 top 100。今天尝试使用某东泄露的数据库制作一个jd top 100！ 0x01工具与素材 mysql navicat for mysql jd40w密码  0x">
-<meta name="twitter:image" content="http://gv7.me/.me//password_file.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/making-the-password-top-100/password_file.png">
     
     
         
@@ -176,20 +176,20 @@
 <li>jd40w密码</li>
 </ul>
 <h2 id="0x02导入"><a href="#0x02导入" class="headerlink" title="0x02导入"></a>0x02导入</h2><p>&emsp;&emsp;我们日常收集到的一些裤子各种格式都有，比如sql文件，cvs,txt等等。Navicat很强大，可以导入多种数据格式导入到mysql数据库，我们需要根据我们的密码文件格式来进行选择,我们演示的密码文件格式是txt。故选第三个。</p>
-<p><img src="/.me//password_file.png" alt="图1-某东40W密码文件"></p>
-<p><img src="/.me//type.png" alt="图2-Navicat支持的导入的文件格式"></p>
+<p><img src="/articles/2017/making-the-password-top-100/password_file.png" alt="图1-某东40W密码文件"></p>
+<p><img src="/articles/2017/making-the-password-top-100/type.png" alt="图2-Navicat支持的导入的文件格式"></p>
 <p>选择好我们要导入的文件40W.txt</p>
-<p><img src="/.me//file.png" alt="图3-选择要导入的密码文件"></p>
+<p><img src="/articles/2017/making-the-password-top-100/file.png" alt="图3-选择要导入的密码文件"></p>
 <p>由于我们的密码文件每行格式为<code>username-password</code>,所以我们的分隔符为<code>-</code></p>
-<p><img src="/.me//fengefu.png" alt="图4-分隔符"></p>
+<p><img src="/articles/2017/making-the-password-top-100/fengefu.png" alt="图4-分隔符"></p>
 <p>将导入的数据表名该为<code>test</code></p>
-<p><img src="/.me//table_name.png" alt="图5-输入导入的表名"></p>
-<p>后面就是下一步下一步的事了。<br><img src="/.me//table.png" alt="图6-导入完成后的数据"></p>
+<p><img src="/articles/2017/making-the-password-top-100/table_name.png" alt="图5-输入导入的表名"></p>
+<p>后面就是下一步下一步的事了。<br><img src="/articles/2017/making-the-password-top-100/table.png" alt="图6-导入完成后的数据"></p>
 <h2 id="0x3处理"><a href="#0x3处理" class="headerlink" title="0x3处理"></a>0x3处理</h2><p>新建一个查询，输入以下sql语句，并执行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">select password,count(password) as cou #cou为重复数量</span><br><span class="line">from test #test为表名</span><br><span class="line">GROUP BY password #按照密码来分组</span><br><span class="line">ORDER BY cou desc #查询结果按照cou来降序排列</span><br><span class="line">limit 100 #只要前100条结果集，也就是我们的top100</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//result.png" alt="图7-查询结果"></p>
-<h2 id="0x4导出"><a href="#0x4导出" class="headerlink" title="0x4导出"></a>0x4导出</h2><p>选中所有查询结果的password字段，并复制并粘贴到我们的字段文件里。<br><img src="/.me//copy_to_file.png" alt="图8-复制结果到文件"></p>
+<p><img src="/articles/2017/making-the-password-top-100/result.png" alt="图7-查询结果"></p>
+<h2 id="0x4导出"><a href="#0x4导出" class="headerlink" title="0x4导出"></a>0x4导出</h2><p>选中所有查询结果的password字段，并复制并粘贴到我们的字段文件里。<br><img src="/articles/2017/making-the-password-top-100/copy_to_file.png" alt="图8-复制结果到文件"></p>
 <h3 id="注意：如果数据量很大时，就可以考虑使用mongodb，并采用分布式来进行统计并计算。"><a href="#注意：如果数据量很大时，就可以考虑使用mongodb，并采用分布式来进行统计并计算。" class="headerlink" title="注意：如果数据量很大时，就可以考虑使用mongodb，并采用分布式来进行统计并计算。"></a>注意：如果数据量很大时，就可以考虑使用mongodb，并采用分布式来进行统计并计算。</h3>
   </div>
 </article>

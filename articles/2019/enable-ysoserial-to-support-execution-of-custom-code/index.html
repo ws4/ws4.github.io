@@ -14,15 +14,15 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//cmd-code.png">
-<meta property="og:image" content="http://gv7.me/.me//call.png">
-<meta property="og:image" content="http://gv7.me/.me//server_info.png">
-<meta property="og:image" content="http://gv7.me/.me//txt_info.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/cmd-code.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/call.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/server_info.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/txt_info.png">
 <meta property="og:updated_time" content="2019-05-12T14:22:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使ysoserial支持执行自定义代码">
 <meta name="twitter:description" content="修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。">
-<meta name="twitter:image" content="http://gv7.me/.me//cmd-code.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/cmd-code.png">
     
     
         
@@ -173,7 +173,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TODO: could also do fun things like injecting a pure-java rev/bind-shell to bypass naive protections（待做，可以做一些有趣的事情比如注入一个纯java的反弹或绑定shell去绕过较弱的保护）</span><br></pre></td></tr></table></figure>
 
 <p>可知作者也有此意，并给我们预留了可指定自定义代码的变量<code>cmd</code>。</p>
-<p><img src="/.me//cmd-code.png" alt="作者的注释"></p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/cmd-code.png" alt="作者的注释"></p>
 <p>我们从控制台传入的命令，会被保存到<code>command</code>变量中，最后ysoserial会将该变量的值,拼接到<code>&quot;Runtime.getRuntime.exec(&quot; + 命令 + &quot;)&quot;</code>中，生成形成达到命令执行的代码，所以本质上还是代码执行。</p>
 <p><strong>因此要想使ysoserial支持执行自定义代码，只要使得在控制台输入能控制cmd变量的值即可。实现起来并不难</strong></p>
 <h2 id="0x03-编码"><a href="#0x03-编码" class="headerlink" title="0x03 编码"></a>0x03 编码</h2><p>根据我个人的的需要，给ysoserial加入以下三种方式来指定要执行的自定义代码。</p>
@@ -207,7 +207,7 @@
 
 <p>修改完代码后，我们重新将其打包为ysoserial-0.0.6.1-custom-code-exec.jar，就可以使用可指定自定义代码的ysoserial了。需要我编译好的jar，请公众号后台回复“ysoserial可指定任意代码版本”获取。</p>
 <p>注意:只有以下payload支持指定支持任意代码执行，其他paylaod需要手工修改其代码，因为它们没有调用我们修改的<code>Gadgets.createTemplatesImpl</code>方法。</p>
-<p><img src="/.me//call.png" alt="调用了createTemplatesImpl方法的payload"></p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/call.png" alt="调用了createTemplatesImpl方法的payload"></p>
 <h2 id="0x04-案例"><a href="#0x04-案例" class="headerlink" title="0x04 案例"></a>0x04 案例</h2><p>下面举一个“不痛不痒”的例子，来展现其高自由度。</p>
 <p>假设我们有个需求是这样的，获取目标系统的web物理路径，如果目标能访问我们服务器就把信息提交到服务器的web服务上。如果不能，就把信息写到目标自己的web目录下。如果你使用命令在实现，是比较费劲的，但是用代码就轻而易举！</p>
 <p><strong>custiom-code.java</strong></p>
@@ -217,9 +217,9 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp ysoserial-0.0.6.1-custom-code-exec.jar ysoserial.exploit.JRMPListener 1664 Jdk7u21 &quot;codefile:custom-code.java&quot;</span><br></pre></td></tr></table></figure>
 
 <p>通过测试发现，在本机启动web服务（92.168.149.1:1665），且目标可访问时，可成功接收信息。</p>
-<p><img src="/.me//server_info.png" alt="服务器成功接收到信息"></p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/server_info.png" alt="服务器成功接收到信息"></p>
 <p>然后我把服务器web服务停止了，目标自然无法访问。结果在目标系统的web目录下成功生成了文件，保存着我们要采集的信息。</p>
-<p><img src="/.me//txt_info.png" alt="目标web目录下成功生成包含信息的文件"></p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/txt_info.png" alt="目标web目录下成功生成包含信息的文件"></p>
 <p>从任意命令执行变成任意代码执行，在我看来危害增大了不少。在命令执行getshell受阻时，如何通过代码执行突破呢，到这里懂的人自然懂了。</p>
 <h2 id="0x05-参考文章"><a href="#0x05-参考文章" class="headerlink" title="0x05 参考文章"></a>0x05 参考文章</h2><ul>
 <li><a href="https://blog.csdn.net/fnmsd/article/details/79534877" target="_blank" rel="noopener">修改ysoserial使其支持生成代码执行Payload</a></li>

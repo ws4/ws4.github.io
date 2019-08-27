@@ -14,17 +14,17 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="0x01什么是图片木马？图片木马在网络上没有统一的定义，在这里我给出自己的定义。图片木马是一张能正常显示又包含恶意代码（比如一句话木马）的图片文件。 根据定义我们知道图片木马两个条件：  图片能正常显示 包含能执行的而已代码  总体思路：将恶意代码写在图片文件中非图片数据区，防止写入导致图片损坏。 常规的图片格式有gif,png,jpg格式 0x02将恶意代码写在图片尾部适合格式：任何图片格式 方">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//1.jpg">
-<meta property="og:image" content="http://gv7.me/.me//2.jpg">
-<meta property="og:image" content="http://gv7.me/.me//3.gif">
-<meta property="og:image" content="http://gv7.me/.me//4.jpg">
-<meta property="og:image" content="http://gv7.me/.me//ps02.jpg">
-<meta property="og:image" content="http://gv7.me/.me//5.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2017/picture-trojan-horse-making-method/1.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2017/picture-trojan-horse-making-method/2.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2017/picture-trojan-horse-making-method/3.gif">
+<meta property="og:image" content="http://gv7.me/articles/2017/picture-trojan-horse-making-method/4.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2017/picture-trojan-horse-making-method/img/ps02.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2017/picture-trojan-horse-making-method/5.jpg">
 <meta property="og:updated_time" content="2019-02-16T18:04:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图片木马制作大法">
 <meta name="twitter:description" content="0x01什么是图片木马？图片木马在网络上没有统一的定义，在这里我给出自己的定义。图片木马是一张能正常显示又包含恶意代码（比如一句话木马）的图片文件。 根据定义我们知道图片木马两个条件：  图片能正常显示 包含能执行的而已代码  总体思路：将恶意代码写在图片文件中非图片数据区，防止写入导致图片损坏。 常规的图片格式有gif,png,jpg格式 0x02将恶意代码写在图片尾部适合格式：任何图片格式 方">
-<meta name="twitter:image" content="http://gv7.me/.me//1.jpg">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/picture-trojan-horse-making-method/1.jpg">
     
     
         
@@ -182,13 +182,13 @@
 <p>使用以下命令生成图片木马muma.jpg</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy /b a.jpg + b.php/a = muma.jpg</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//1.jpg" alt="copy_20170726"></p>
-<h3 id="方法二：二进制编辑器法"><a href="#方法二：二进制编辑器法" class="headerlink" title="方法二：二进制编辑器法"></a>方法二：二进制编辑器法</h3><p>使用二进制编辑工具（比如winhex,utrl editor等等）直接写恶意代码到文件尾部。<br>这里我使用winhex给大家演示<br><img src="/.me//2.jpg" alt="winhex_20170726"><br><img src="/.me//3.gif" alt="winhex_20170726"></p>
+<p><img src="/articles/2017/picture-trojan-horse-making-method/1.jpg" alt="copy_20170726"></p>
+<h3 id="方法二：二进制编辑器法"><a href="#方法二：二进制编辑器法" class="headerlink" title="方法二：二进制编辑器法"></a>方法二：二进制编辑器法</h3><p>使用二进制编辑工具（比如winhex,utrl editor等等）直接写恶意代码到文件尾部。<br>这里我使用winhex给大家演示<br><img src="/articles/2017/picture-trojan-horse-making-method/2.jpg" alt="winhex_20170726"><br><img src="/articles/2017/picture-trojan-horse-making-method/3.gif" alt="winhex_20170726"></p>
 <h2 id="0x03图片描述法"><a href="#0x03图片描述法" class="headerlink" title="0x03图片描述法"></a>0x03图片描述法</h2><p>jpg格式的图片有exif这个结构，专门用来描述 </p>
 <h3 id="方法一：ps法"><a href="#方法一：ps法" class="headerlink" title="方法一：ps法"></a>方法一：ps法</h3><p>使用ps打开图片，在描述出填入恶意代码，最后保存</p>
 <p>其实也可以用gimp</p>
-<p><img src="/.me//4.jpg" alt="ps01_20170726"><br><img src="/.me//ps02.jpg" alt="ps02"></p>
-<h3 id="方法二：edjpgcom"><a href="#方法二：edjpgcom" class="headerlink" title="方法二：edjpgcom"></a>方法二：edjpgcom</h3><p>将要注入恶意代码的图片拖到edjpgcom.exe上，在edjpgcom弹出的输入框中输入一句话。<br><img src="/.me//5.jpg" alt="edjpgcom_20170726"></p>
+<p><img src="/articles/2017/picture-trojan-horse-making-method/4.jpg" alt="ps01_20170726"><br><img src="/articles/2017/picture-trojan-horse-making-method/img/ps02.jpg" alt="ps02"></p>
+<h3 id="方法二：edjpgcom"><a href="#方法二：edjpgcom" class="headerlink" title="方法二：edjpgcom"></a>方法二：edjpgcom</h3><p>将要注入恶意代码的图片拖到edjpgcom.exe上，在edjpgcom弹出的输入框中输入一句话。<br><img src="/articles/2017/picture-trojan-horse-making-method/5.jpg" alt="edjpgcom_20170726"></p>
 <p><a href="http://pan.baidu.com/sdfwfewfew" target="_blank" rel="noopener">edjpgcom下载</a></p>
 <h2 id="0x04渲染绕过"><a href="#0x04渲染绕过" class="headerlink" title="0x04渲染绕过"></a>0x04渲染绕过</h2><p>适合格式：gif<br>现在的网站对于图片上传的防范越来越严，经常对上传的图片二次渲染。导致我们的通过方法思路一和思路二的方法注入的而已代码，在渲染之后被“清洗”掉了！这时候我们就得思考如何去绕过。<br>绕过思路：对比上传前和上传后的图片的差异，找到相同数据同时又是非图片数据区的地方，在在，此处写入恶意代码。</p>
 <p>下载笔者开发的上传绕过框架（uplaod bypass framework),里面有一个二次渲染绕过上传</p>

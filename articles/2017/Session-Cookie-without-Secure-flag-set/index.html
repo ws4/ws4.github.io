@@ -14,14 +14,14 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="&amp;emsp;&amp;emsp;我们在做渗透测试使用AWVS对网站进行扫描时，经常会扫描出Session Cookie without Secure flag set漏洞。由于是低危，而且很难被利用，所以我们常常会忽略掉它，不去研究它的原理关心它的细节。当真正让我们要去修复这些小漏洞时，尴尬的事情就发生了：这么不起眼的漏洞，劳资都没能正确修复！！！  0x01叙事&amp;emsp;&amp;emsp;在研究该漏洞原理与">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//crazy.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/crazy.jpg">
 <meta property="og:image" content="http://i1.bvimg.com/602334/b0787d9db2d4aa57.png">
 <meta property="og:image" content="http://i1.bvimg.com/602334/46bd20af8fd156ca.png">
 <meta property="og:updated_time" content="2019-02-16T18:04:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="坑死我的HTTPOnly">
 <meta name="twitter:description" content="&amp;emsp;&amp;emsp;我们在做渗透测试使用AWVS对网站进行扫描时，经常会扫描出Session Cookie without Secure flag set漏洞。由于是低危，而且很难被利用，所以我们常常会忽略掉它，不去研究它的原理关心它的细节。当真正让我们要去修复这些小漏洞时，尴尬的事情就发生了：这么不起眼的漏洞，劳资都没能正确修复！！！  0x01叙事&amp;emsp;&amp;emsp;在研究该漏洞原理与">
-<meta name="twitter:image" content="http://gv7.me/.me//crazy.jpg">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/crazy.jpg">
     
     
         
@@ -165,7 +165,7 @@
 
   <div class="content" itemprop="articleBody">
     <p>&emsp;&emsp;我们在做渗透测试使用AWVS对网站进行扫描时，经常会扫描出Session Cookie without Secure flag set漏洞。由于是低危，而且很难被利用，所以我们常常会忽略掉它，不去研究它的原理关心它的细节。当真正让我们要去修复这些小漏洞时，尴尬的事情就发生了：<font color="red">这么不起眼的漏洞，劳资都没能正确修复！！！</font></p>
-<p><img src="/.me//crazy.jpg" alt></p>
+<p><img src="/articles/2017/Session-Cookie-without-Secure-flag-set/crazy.jpg" alt></p>
 <h2 id="0x01叙事"><a href="#0x01叙事" class="headerlink" title="0x01叙事"></a>0x01叙事</h2><p>&emsp;&emsp;在研究该漏洞原理与修复之前，先聊聊最近被这个小小小漏洞的坑死的琐事。最近负责客户网站的漏洞复测，其中就有这个不起眼的小漏洞。因为不起眼，所以平时对其原理并未深究，导致了这次被坑死。我在复测的过程中使用了firebug去查看了漏洞地址的cookie,发现没有设置cookie的HTTPOnly属性。于是就在复测报告中写复测结果为未修复。结果开发人员打电话过来说: <strong>你复测的是访问js,图片等前端页面的请求的cookie,这些cookie自然是没有HTTPOnly属性。但涉及后台数据交互的cookie的HTTPOnly属性,所以该漏洞算是已经修复。</strong> 现在想想这种表述本身就有问题，我TMD竟然信以为真!晚上回来狠心恶补了一下该漏洞原理，才知道： <em>要修复该漏洞，存储sessionID的cookie一定要设置HTTPOnly属性，其他cookie的设不设置该属性，得根据网站具体的业务来确定。</em></p>
 <p>&emsp;&emsp;现在我再来看看那位开发修复漏洞的方式我就想笑，他直接去百度经验copy了一段代码，就粘贴过去了。连cookiename都没有修改。这回到好了，目标cookie的HTTPOnly属性没有设置，到是加了一个无用的设置了HTTPOnly属性得cookie。<br><img src alt="图1开发人员直接copy的修复代码"></p>
 <p><img src="http://i1.bvimg.com/602334/b0787d9db2d4aa57.png" alt="图2添加的无用cookie"></p>

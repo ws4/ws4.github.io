@@ -14,20 +14,20 @@
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="说要混淆Burp插件，可能有些小伙伴会说： A:混淆干嘛，大家都这么忙，谁有时间看你的烂代码！ B:现在都鼓励开源，你这么做有悖于开源精神。 …… me:这和开源精神没有冲突，我的理解里，真正的开源精神应该是从内心出发的，而不是受“开源人士”的舆论压力，这是道德绑架。更不能因为大家开源，所以我也开源，为了开源而开源没有意义。况且本文仅仅研究混淆这门技术的原理和魅力！ C:把不开源说得这么清新脱俗，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/.me//obf_dic.png">
-<meta property="og:image" content="http://gv7.me/.me//ProGuard_obf_success.png">
-<meta property="og:image" content="http://gv7.me/.me//ProGuard_before_obf.png">
-<meta property="og:image" content="http://gv7.me/.me//ProGuard_after_obf.png">
-<meta property="og:image" content="http://gv7.me/.me//alltori_folders.png">
-<meta property="og:image" content="http://gv7.me/.me//after_obfuscated_folders.png">
-<meta property="og:image" content="http://gv7.me/.me//RunAllatori.png">
-<meta property="og:image" content="http://gv7.me/.me//before_obfuscated_code.png">
-<meta property="og:image" content="http://gv7.me/.me//after_obfuscated_code.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/obf_dic.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_obf_success.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_before_obf.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_after_obf.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/alltori_folders.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_folders.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/RunAllatori.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/before_obfuscated_code.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_code.png">
 <meta property="og:updated_time" content="2019-02-16T18:04:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="混淆Burp插件代码">
 <meta name="twitter:description" content="说要混淆Burp插件，可能有些小伙伴会说： A:混淆干嘛，大家都这么忙，谁有时间看你的烂代码！ B:现在都鼓励开源，你这么做有悖于开源精神。 …… me:这和开源精神没有冲突，我的理解里，真正的开源精神应该是从内心出发的，而不是受“开源人士”的舆论压力，这是道德绑架。更不能因为大家开源，所以我也开源，为了开源而开源没有意义。况且本文仅仅研究混淆这门技术的原理和魅力！ C:把不开源说得这么清新脱俗，">
-<meta name="twitter:image" content="http://gv7.me/.me//obf_dic.png">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/obf_dic.png">
     
     
         
@@ -210,7 +210,7 @@
 <p>编写了一个py脚本来快速生成字典（obf_dic_creater.py）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding=utf-8</span></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="comment">#author:c0ny1</span></span><br><span class="line"></span><br><span class="line">package_str = <span class="string">"o0"</span></span><br><span class="line">class_str = <span class="string">"li"</span></span><br><span class="line">field_method_str = <span class="string">"l1"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_obf_str</span><span class="params">(str,length)</span>:</span></span><br><span class="line">	obf_str = <span class="string">""</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(length):</span><br><span class="line">		j = random.randrange(<span class="number">0</span>,len(str)) </span><br><span class="line">		obf_str+=str[j]</span><br><span class="line">	<span class="keyword">print</span> obf_str</span><br><span class="line">	<span class="keyword">return</span> obf_str</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_obf_dic</span><span class="params">(str,filename,length,num)</span>:</span></span><br><span class="line">	f = open(filename,<span class="string">"a"</span>)</span><br><span class="line">	<span class="keyword">for</span> n <span class="keyword">in</span> range(num):</span><br><span class="line">		obf_str = create_obf_str(str,length)</span><br><span class="line">		f.write(obf_str)</span><br><span class="line">		f.write(<span class="string">'\n'</span>)</span><br><span class="line">	f.close()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">	create_obf_dic(package_str,<span class="string">"package_dic.txt"</span>,<span class="number">10</span>,<span class="number">500</span>)</span><br><span class="line">	create_obf_dic(class_str,<span class="string">"class_dic.txt"</span>,<span class="number">10</span>,<span class="number">500</span>)</span><br><span class="line">	create_obf_dic(field_method_str,<span class="string">"field_method_dic.txt"</span>,<span class="number">10</span>,<span class="number">500</span>)</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.me//obf_dic.png" alt="生成字典"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/obf_dic.png" alt="生成字典"></p>
 <p>我们使用ProGuard的配置文件语法来描述burp插件混淆规则部分分析好的规则，内容如下</p>
 <p>XXEHelper.pro</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-injars Test.jar #要混淆的插件</span><br><span class="line">-outjars Obf.jar #混淆成功后导出的文件</span><br><span class="line"></span><br><span class="line">#添加依赖的jar</span><br><span class="line">-libraryjars  &lt;java.home&gt;/lib/rt.jar </span><br><span class="line"></span><br><span class="line">-dontshrink #不压缩</span><br><span class="line">-dontoptimize #不优化</span><br><span class="line">-obfuscationdictionary package_dic.txt #方法和属性名混淆字典</span><br><span class="line">-classobfuscationdictionary class_dic.txt #类名混淆字典</span><br><span class="line">-packageobfuscationdictionary package_dic.txt #包名混淆字典</span><br><span class="line">-overloadaggressively #深度重载混淆</span><br><span class="line">-useuniqueclassmembernames #使用大小写混合类名</span><br><span class="line">-keeppackagenames burp # 不混淆burp这个包名</span><br><span class="line">-flattenpackagehierarchy me.gv7 #将混淆的包放在me.gv7这个父包</span><br><span class="line"></span><br><span class="line">-keep,allowshrinking class burp.* &#123; #不混淆burp.*下的class</span><br><span class="line">    public &lt;fields&gt;; #不混淆public属性</span><br><span class="line">    public &lt;methods&gt;; #不混淆public方法</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -222,14 +222,14 @@
 </ul>
 <p>大家可以以我这个配置文件为模板，根据具体情况来修改相关路径，和参数值，来混淆自己的burp插件！</p>
 <p>最后我们运行<code>ProGuargui</code>&gt;<code>ProGuard</code>&gt;<code>Load configuration...</code>&gt;选择<code>XXEHelper.pro</code>&gt;<code>Process</code>&gt;<code>Process!</code></p>
-<p><img src="/.me//ProGuard_obf_success.png" alt="ProGuargui混淆成功"></p>
-<p><img src="/.me//ProGuard_before_obf.png" alt="ProGuard混淆前"></p>
-<p><img src="/.me//ProGuard_after_obf.png" alt="ProGuard混淆后"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/ProGuard_obf_success.png" alt="ProGuargui混淆成功"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/ProGuard_before_obf.png" alt="ProGuard混淆前"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/ProGuard_after_obf.png" alt="ProGuard混淆后"></p>
 <p>经过测试混淆后插件可以正常运行。</p>
 <h2 id="0x03-使用allatori混淆"><a href="#0x03-使用allatori混淆" class="headerlink" title="0x03 使用allatori混淆"></a>0x03 使用allatori混淆</h2><p>不过ProGuard的混淆效果个人感觉不是特别好，公司大神推荐allatori这款商业混淆器。</p>
-<p><img src="/.me//alltori_folders.png" alt="allaroi目录结构"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/alltori_folders.png" alt="allaroi目录结构"></p>
 <p>由于官方程序的目录结构比较深，为了方便研究复制核心文件，简洁目录格式为如下：</p>
-<p><img src="/.me//after_obfuscated_folders.png" alt="allaroi目录结构"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_folders.png" alt="allaroi目录结构"></p>
 <p>根据以上我们burp混淆的规则，重新编写<code>config.xml</code>为：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">config</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">jar</span> <span class="attr">in</span>=<span class="string">"xxe-helper 0.1.jar"</span> <span class="attr">out</span>=<span class="string">"xxe-helper-obf.jar"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">input</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">classpath</span> <span class="attr">basedir</span>=<span class="string">"library-jars"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">jar</span> <span class="attr">name</span>=<span class="string">"*.jar"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">classpath</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">keep-names</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">class</span> <span class="attr">template</span>=<span class="string">"class burp.*"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">field</span> <span class="attr">template</span>=<span class="string">"public *"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">method</span> <span class="attr">template</span>=<span class="string">"public *(*)"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">class</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">class</span> <span class="attr">template</span>=<span class="string">"interface  burp.*"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">keep-names</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"log-file"</span> <span class="attr">value</span>=<span class="string">"log.xml"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">config</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -240,12 +240,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">del log.xml</span><br><span class="line">del *obf.jar</span><br><span class="line">pause</span><br></pre></td></tr></table></figure>
 
 <p>最后运行<code>RunAllitori.bat</code></p>
-<p><img src="/.me//RunAllatori.png" alt="运行RunAllitori.bat"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/RunAllatori.png" alt="运行RunAllitori.bat"></p>
 <p>大家可以发现红框标出的是混淆器提示我们有些类没有找到，这些类时插件包含的jar所依赖的jar，大家可以根据提示的缺的包名，用上面说过的搜jar方法，把它们下载并引入进来。不过我们不引入它们也是可以混淆的，但混淆的强度会弱一些。</p>
 <p>不懂编写<code>config.xml</code>的小伙伴，可以去阅读一下<a href="http://www.allatori.com/doc.html" target="_blank" rel="noopener">官方文档</a>。</p>
 <p>下面我们对比一下混淆前后的效果！</p>
-<p><img src="/.me//before_obfuscated_code.png" alt="插件混淆前代码反编译"></p>
-<p><img src="/.me//after_obfuscated_code.png" alt="插件混淆后代码反编译"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/before_obfuscated_code.png" alt="插件混淆前代码反编译"></p>
+<p><img src="/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_code.png" alt="插件混淆后代码反编译"></p>
 <p>经过测试插件混淆后，可以运行。</p>
 <h2 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h2><p>混淆和编码有大关系，比如设计包名时，应该将我们插件的核心代码单独放一个包里，不要一股脑都放在burp。这样的话最后不好写混淆规则。对于方法和属性得访问属性（public,protected,private）,要深思熟虑。这样不但程序更规范，写混淆规则也会简单些。</p>
 <p>如果插件引用的jar比较多，使用ProGuard来混淆是比较麻烦的。因为依赖的外部jar也会依赖其他jar,你需要将它们都引入才行！我自己目前也没有好的解决方法。例子中的插件没有引用外部jar，所以混淆容易一些。allori不存在这个问题，只引入依赖jar就行。</p>
