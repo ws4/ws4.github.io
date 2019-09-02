@@ -6,21 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="其实联动sqlmap与burp的插件挺多的有gson,CO2,sqli-py,但我独爱sqlmap4burp,因为它使用简洁。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。">
+    <meta name="description" content="其实联动sqlmap与burp的插件挺多的，有gson,CO2,sqli-py等等。但我独爱sqlmap4burp,因为它使用超简单。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。">
 <meta name="keywords" content="网络安全,渗透测试,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
 <meta property="og:type" content="article">
 <meta property="og:title" content="重构sqlmap4burp插件">
 <meta property="og:url" content="http://gv7.me/articles/2019/refactoring-sqlmap4burp/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
-<meta property="og:description" content="其实联动sqlmap与burp的插件挺多的有gson,CO2,sqli-py,但我独爱sqlmap4burp,因为它使用简洁。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。">
+<meta property="og:description" content="其实联动sqlmap与burp的插件挺多的，有gson,CO2,sqli-py等等。但我独爱sqlmap4burp,因为它使用超简单。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://gv7.me/articles/2019/refactoring-sqlmap4burp/sqlmap4burp-tab.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/refactoring-sqlmap4burp/sqlmap4burp-plus-plus-dlg.png">
 <meta property="og:image" content="https://img.youtube.com/vi/Rcyfm8bd63o/0.jpg">
-<meta property="og:updated_time" content="2019-09-02T12:48:53.898Z">
+<meta property="og:updated_time" content="2019-09-02T13:08:28.908Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="重构sqlmap4burp插件">
-<meta name="twitter:description" content="其实联动sqlmap与burp的插件挺多的有gson,CO2,sqli-py,但我独爱sqlmap4burp,因为它使用简洁。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。">
+<meta name="twitter:description" content="其实联动sqlmap与burp的插件挺多的，有gson,CO2,sqli-py等等。但我独爱sqlmap4burp,因为它使用超简单。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。">
 <meta name="twitter:image" content="http://gv7.me/articles/2019/refactoring-sqlmap4burp/sqlmap4burp-tab.png">
     
     
@@ -108,7 +108,7 @@
   <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&title=重构sqlmap4burp插件"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&title=重构sqlmap4burp插件"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&title=重构sqlmap4burp插件"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&name=重构sqlmap4burp插件&description=&lt;p&gt;其实联动sqlmap与burp的插件挺多的有&lt;a href=&#34;https://code.google.com/p/gason/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;gson&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/co2&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CO2&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/sqli-py&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqli-py&lt;/a&gt;,但我独爱&lt;a href=&#34;https://github.com/difcareer/sqlmap4burp&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqlmap4burp&lt;/a&gt;,因为它使用简洁。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&name=重构sqlmap4burp插件&description=&lt;p&gt;其实联动sqlmap与burp的插件挺多的，有&lt;a href=&#34;https://code.google.com/p/gason/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;gson&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/co2&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CO2&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/sqli-py&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqli-py&lt;/a&gt;等等。但我独爱&lt;a href=&#34;https://github.com/difcareer/sqlmap4burp&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqlmap4burp&lt;/a&gt;,因为它使用超简单。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -157,11 +157,11 @@
   
 
   <div class="content" itemprop="articleBody">
-    <p>其实联动sqlmap与burp的插件挺多的有<a href="https://code.google.com/p/gason/" target="_blank" rel="noopener">gson</a>,<a href="https://github.com/portswigger/co2" target="_blank" rel="noopener">CO2</a>,<a href="https://github.com/portswigger/sqli-py" target="_blank" rel="noopener">sqli-py</a>,但我独爱<a href="https://github.com/difcareer/sqlmap4burp" target="_blank" rel="noopener">sqlmap4burp</a>,因为它使用简洁。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。</p>
+    <p>其实联动sqlmap与burp的插件挺多的，有<a href="https://code.google.com/p/gason/" target="_blank" rel="noopener">gson</a>,<a href="https://github.com/portswigger/co2" target="_blank" rel="noopener">CO2</a>,<a href="https://github.com/portswigger/sqli-py" target="_blank" rel="noopener">sqli-py</a>等等。但我独爱<a href="https://github.com/difcareer/sqlmap4burp" target="_blank" rel="noopener">sqlmap4burp</a>,因为它使用超简单。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。</p>
 <a id="more"></a>
 <p><code>sqlmap4burp</code>项目作者已经很久没有维护了，于是打算对其进行重构。新插件就叫<code>sqlmap4burp++</code>，表示感谢原作者的思路。<code>sqlmap4burp++</code>将<code>兼容更多操作系统</code>，<code>操作更加简单</code>，<code>界面更加简洁</code>！</p>
 <h2 id="0x01-重构之路"><a href="#0x01-重构之路" class="headerlink" title="0x01 重构之路"></a>0x01 重构之路</h2><p>下面简单记录下重构做的一些小工作。</p>
-<h3 id="1-1-去除多余依赖"><a href="#1-1-去除多余依赖" class="headerlink" title="1.1 去除多余依赖"></a>1.1 去除多余依赖</h3><p>原插件依赖<code>commons-io-&lt;version&gt;.jar</code>,<code>commons-langs-&lt;version&gt;.jar</code>这两个jar。但查看代码只是为了可以使用<code>FileUtils.writeByteArrayToFile()</code>和<code>StringUtils.isNoneBlank()</code>两个方法。<code>sqlmap4burp++</code>使用原生Java代码实现，让插件更轻量容易编译。</p>
+<h3 id="1-1-去除多余依赖"><a href="#1-1-去除多余依赖" class="headerlink" title="1.1 去除多余依赖"></a>1.1 去除多余依赖</h3><p>原插件依赖<code>commons-io-&lt;version&gt;.jar</code>,<code>commons-langs-&lt;version&gt;.jar</code>这两个jar。但查看代码只是为了可以使用<code>FileUtils.writeByteArrayToFile()</code>和<code>StringUtils.isNoneBlank()</code>两个方法。<code>sqlmap4burp++</code>使用原生Java代码实现，让插件更轻量易编译。</p>
 <h3 id="1-2-去除JTab控件"><a href="#1-2-去除JTab控件" class="headerlink" title="1.2 去除JTab控件"></a>1.2 去除JTab控件</h3><p>现在的Burp插件很丰富，Burp suite JTab控件太多界面会显得特别臃肿。</p>
 <p><img src="/articles/2019/refactoring-sqlmap4burp/sqlmap4burp-tab.png" alt="sqlmap4burp的JTab控件"></p>
 <p>考虑了下该插件并非特别需要JTab面板来添加sqlmap的配置命令，于是去除JTab控件该换成如下的弹窗。</p>
@@ -187,7 +187,7 @@
 <h4 id="1-3-3-Linux"><a href="#1-3-3-Linux" class="headerlink" title="1.3.3 Linux"></a>1.3.3 Linux</h4><p>Linux下想实现弹出命令行窗口同时执行命令，我尝试了很多方法，但是都没有成功的。比较接近想要效果的方法是先将sqlmap命令写到shell脚本中（<code>sqlmap4burp.sh</code>）。然后执行如下命令来运行<code>sqlmap4burp.sh</code>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gnome-terminal -t <span class="string">"sqlmap4burp"</span> -x bash -c <span class="string">"sh ./tmp/sqlmap4burp.sh;exec bash;"</span></span><br></pre></td></tr></table></figure>
 
-<p>但使用代码去执行的时候并没有弹出<code>Terminal</code>。大家如果有解决方法，可以Fork sqlmap4burp++项目贡献代码，或者发送想法到我的邮箱root#gv7.me。</p>
+<p>但使用代码去执行的时候并没有弹出<code>Terminal</code>。大家如果有解决方法，可以Fork <a href="https://github.com/c0ny1/sqlmap4burp-plus-plus" target="_blank" rel="noopener">sqlmap4burp++</a>项目贡献代码，或者发送想法到我的邮箱root#gv7.me。</p>
 <p>目前采用临时的方法：先弹出<code>Terminal</code>窗口，然后将生成好的sqlmap命令复制剪贴板，最后手工在弹出的窗口中粘贴并执行。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String command = <span class="string">"sqlmap.py -r xxxxx.req"</span>;</span><br><span class="line">List&lt;String&gt; cmds = <span class="keyword">new</span> ArrayList();</span><br><span class="line">cmds.add(<span class="string">"/bin/sh"</span>);</span><br><span class="line">cmds.add(<span class="string">"-c"</span>);</span><br><span class="line">cmds.add(<span class="string">"gnome-terminal"</span>);</span><br><span class="line">Util.setSysClipboardText(command); <span class="comment">//sqlmap命令到剪贴板</span></span><br><span class="line"><span class="keyword">new</span> ProcessBuilder(cmds).start();</span><br></pre></td></tr></table></figure>
 
@@ -246,7 +246,7 @@
   <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&title=重构sqlmap4burp插件"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&title=重构sqlmap4burp插件"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&title=重构sqlmap4burp插件"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&name=重构sqlmap4burp插件&description=&lt;p&gt;其实联动sqlmap与burp的插件挺多的有&lt;a href=&#34;https://code.google.com/p/gason/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;gson&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/co2&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CO2&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/sqli-py&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqli-py&lt;/a&gt;,但我独爱&lt;a href=&#34;https://github.com/difcareer/sqlmap4burp&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqlmap4burp&lt;/a&gt;,因为它使用简洁。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/refactoring-sqlmap4burp/&name=重构sqlmap4burp插件&description=&lt;p&gt;其实联动sqlmap与burp的插件挺多的，有&lt;a href=&#34;https://code.google.com/p/gason/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;gson&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/co2&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;CO2&lt;/a&gt;,&lt;a href=&#34;https://github.com/portswigger/sqli-py&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqli-py&lt;/a&gt;等等。但我独爱&lt;a href=&#34;https://github.com/difcareer/sqlmap4burp&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;sqlmap4burp&lt;/a&gt;,因为它使用超简单。原来在Windows下体验还是很ok的，自从换上mac之后就不好使了。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
