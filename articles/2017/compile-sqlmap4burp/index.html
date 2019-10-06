@@ -6,23 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="填sqlmap4burp的那些坑&amp;emsp;&amp;emsp;sqlmap4burp是整合burp和sqlmap两大神器的一个burp插件。我也是查看了这边文章&amp;lt;&amp;lt;渗透神器合体：在BurpSuite中集成Sqlmap&amp;gt;&amp;gt;,通过文章下的评论发现，小伙伴们在编译与使用sqlmap4burp遇到了不少问题，我也不例外。以下是我遇到的问题，我们来一一解决它。  eclipse导入插件的源">
+    <meta name="description" content="由于sqlmap4burp项目很久没有维护了，于是重构了其代码，在其基础上增加了对Mac和Linux系统的支持。大家可以尝试下更新的sqlmap4burp++。 github：https://github.com/c0ny1/sqlmap4burp-plus-plus 文章：重构sqlmap4burp插件 上文更新于 2019-10-6 22:18   填sqlmap4burp的那些坑&amp;emsp">
 <meta name="keywords" content="插件开发,burp插件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="编译插件sqlmap4burp遇到的问题">
 <meta property="og:url" content="http://gv7.me/articles/2017/compile-sqlmap4burp/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
-<meta property="og:description" content="填sqlmap4burp的那些坑&amp;emsp;&amp;emsp;sqlmap4burp是整合burp和sqlmap两大神器的一个burp插件。我也是查看了这边文章&amp;lt;&amp;lt;渗透神器合体：在BurpSuite中集成Sqlmap&amp;gt;&amp;gt;,通过文章下的评论发现，小伙伴们在编译与使用sqlmap4burp遇到了不少问题，我也不例外。以下是我遇到的问题，我们来一一解决它。  eclipse导入插件的源">
+<meta property="og:description" content="由于sqlmap4burp项目很久没有维护了，于是重构了其代码，在其基础上增加了对Mac和Linux系统的支持。大家可以尝试下更新的sqlmap4burp++。 github：https://github.com/c0ny1/sqlmap4burp-plus-plus 文章：重构sqlmap4burp插件 上文更新于 2019-10-6 22:18   填sqlmap4burp的那些坑&amp;emsp">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/package.png">
 <meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/create_jar.png">
 <meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/cmd_sqlmap.png">
 <meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/dead_code.png">
 <meta property="og:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/change_menu_name.png">
-<meta property="og:updated_time" content="2019-02-16T18:07:22.000Z">
+<meta property="og:updated_time" content="2019-10-06T14:20:03.298Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译插件sqlmap4burp遇到的问题">
-<meta name="twitter:description" content="填sqlmap4burp的那些坑&amp;emsp;&amp;emsp;sqlmap4burp是整合burp和sqlmap两大神器的一个burp插件。我也是查看了这边文章&amp;lt;&amp;lt;渗透神器合体：在BurpSuite中集成Sqlmap&amp;gt;&amp;gt;,通过文章下的评论发现，小伙伴们在编译与使用sqlmap4burp遇到了不少问题，我也不例外。以下是我遇到的问题，我们来一一解决它。  eclipse导入插件的源">
+<meta name="twitter:description" content="由于sqlmap4burp项目很久没有维护了，于是重构了其代码，在其基础上增加了对Mac和Linux系统的支持。大家可以尝试下更新的sqlmap4burp++。 github：https://github.com/c0ny1/sqlmap4burp-plus-plus 文章：重构sqlmap4burp插件 上文更新于 2019-10-6 22:18   填sqlmap4burp的那些坑&amp;emsp">
 <meta name="twitter:image" content="http://gv7.me/articles/2017/compile-sqlmap4burp/package.png">
     
     
@@ -117,7 +117,7 @@
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#填sqlmap4burp的那些坑"><span class="toc-number">1.</span> <span class="toc-text">填sqlmap4burp的那些坑</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译问题"><span class="toc-number"></span> <span class="toc-text">编译问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缺包"><span class="toc-number">1.</span> <span class="toc-text">缺包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#导出jar问题"><span class="toc-number">2.</span> <span class="toc-text">导出jar问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用问题"><span class="toc-number"></span> <span class="toc-text">使用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化插件"><span class="toc-number"></span> <span class="toc-text">优化插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sqlmap4burp的优点"><span class="toc-number"></span> <span class="toc-text">sqlmap4burp的优点</span></a>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#填sqlmap4burp的那些坑"><span class="toc-number">1.</span> <span class="toc-text">填sqlmap4burp的那些坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译问题"><span class="toc-number">2.</span> <span class="toc-text">编译问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缺包"><span class="toc-number">2.0.1.</span> <span class="toc-text">缺包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#导出jar问题"><span class="toc-number">2.0.2.</span> <span class="toc-text">导出jar问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用问题"><span class="toc-number">3.</span> <span class="toc-text">使用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化插件"><span class="toc-number">4.</span> <span class="toc-text">优化插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sqlmap4burp的优点"><span class="toc-number">5.</span> <span class="toc-text">sqlmap4burp的优点</span></a></li></ol>
     </div>
   </span>
 </div>
@@ -166,7 +166,13 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h4 id="填sqlmap4burp的那些坑"><a href="#填sqlmap4burp的那些坑" class="headerlink" title="填sqlmap4burp的那些坑"></a>填sqlmap4burp的那些坑</h4><p>&emsp;&emsp;sqlmap4burp是整合burp和sqlmap两大神器的一个burp插件。我也是查看了这边文章<a href="http://www.freebuf.com/sectool/45239.html" target="_blank" rel="noopener">&lt;&lt;渗透神器合体：在BurpSuite中集成Sqlmap&gt;&gt;</a>,通过文章下的评论发现，小伙伴们在编译与使用sqlmap4burp遇到了不少问题，我也不例外。以下是我遇到的问题，我们来一一解决它。</p>
+    <blockquote>
+<p>由于sqlmap4burp项目很久没有维护了，于是重构了其代码，在其基础上增加了对Mac和Linux系统的支持。大家可以尝试下更新的sqlmap4burp++。</p>
+<p>github：<a href="https://github.com/c0ny1/sqlmap4burp-plus-plus" target="_blank" rel="noopener">https://github.com/c0ny1/sqlmap4burp-plus-plus</a></p>
+<p>文章：<a href="http://gv7.me/articles/2019/refactoring-sqlmap4burp/">重构sqlmap4burp插件</a></p>
+<p>上文更新于 2019-10-6 22:18 </p>
+</blockquote>
+<h2 id="填sqlmap4burp的那些坑"><a href="#填sqlmap4burp的那些坑" class="headerlink" title="填sqlmap4burp的那些坑"></a>填sqlmap4burp的那些坑</h2><p>&emsp;&emsp;sqlmap4burp是整合burp和sqlmap两大神器的一个burp插件。我也是查看了这边文章<a href="http://www.freebuf.com/sectool/45239.html" target="_blank" rel="noopener">&lt;&lt;渗透神器合体：在BurpSuite中集成Sqlmap&gt;&gt;</a>,通过文章下的评论发现，小伙伴们在编译与使用sqlmap4burp遇到了不少问题，我也不例外。以下是我遇到的问题，我们来一一解决它。</p>
 <ul>
 <li>eclipse导入插件的源码报错</li>
 <li>编译成功且加载到burp成功后，但是使用是无法弹出cmd框</li>
@@ -214,7 +220,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#填sqlmap4burp的那些坑"><span class="toc-number">1.</span> <span class="toc-text">填sqlmap4burp的那些坑</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译问题"><span class="toc-number"></span> <span class="toc-text">编译问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缺包"><span class="toc-number">1.</span> <span class="toc-text">缺包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#导出jar问题"><span class="toc-number">2.</span> <span class="toc-text">导出jar问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用问题"><span class="toc-number"></span> <span class="toc-text">使用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化插件"><span class="toc-number"></span> <span class="toc-text">优化插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sqlmap4burp的优点"><span class="toc-number"></span> <span class="toc-text">sqlmap4burp的优点</span></a>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#填sqlmap4burp的那些坑"><span class="toc-number">1.</span> <span class="toc-text">填sqlmap4burp的那些坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#编译问题"><span class="toc-number">2.</span> <span class="toc-text">编译问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缺包"><span class="toc-number">2.0.1.</span> <span class="toc-text">缺包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#导出jar问题"><span class="toc-number">2.0.2.</span> <span class="toc-text">导出jar问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用问题"><span class="toc-number">3.</span> <span class="toc-text">使用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化插件"><span class="toc-number">4.</span> <span class="toc-text">优化插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sqlmap4burp的优点"><span class="toc-number">5.</span> <span class="toc-text">sqlmap4burp的优点</span></a></li></ol>
     </div>
 
     <div id="share-footer" style="display: none">

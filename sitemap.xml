@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2017/compile-sqlmap4burp/</loc>
+    
+    <lastmod>2019-10-06T14:20:03.298Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2019/refactoring-sqlmap4burp/</loc>
     
     <lastmod>2019-09-02T18:42:18.324Z</lastmod>
@@ -117,13 +124,6 @@
     <loc>http://gv7.me/articles/2017/classification-of-burp-apis/</loc>
     
     <lastmod>2019-02-16T18:07:29.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2017/compile-sqlmap4burp/</loc>
-    
-    <lastmod>2019-02-16T18:07:22.000Z</lastmod>
     
   </url>
   
