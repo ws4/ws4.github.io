@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/</loc>
+    
+    <lastmod>2019-11-01T07:02:26.759Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/</loc>
+    
+    <lastmod>2019-11-01T07:02:19.043Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2017/compile-sqlmap4burp/</loc>
     
     <lastmod>2019-10-06T14:22:31.646Z</lastmod>
@@ -89,13 +103,6 @@
     <loc>http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/</loc>
     
     <lastmod>2019-02-20T18:51:57.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/</loc>
-    
-    <lastmod>2019-02-20T18:39:59.000Z</lastmod>
     
   </url>
   
