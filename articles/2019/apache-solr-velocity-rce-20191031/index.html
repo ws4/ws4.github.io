@@ -23,7 +23,7 @@
 <meta property="og:image" content="http://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/CD9FDCEB-B8AE-4659-8D92-08BFAA7F8896.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/CA7EFD0E-CAB8-437E-BDE4-0C683CEE5452.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/E339A09C-32EC-43B5-8E47-F38F5E573315.png">
-<meta property="og:updated_time" content="2019-11-01T07:02:19.043Z">
+<meta property="og:updated_time" content="2019-11-01T07:10:28.332Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache solr Velocity模版远程命令执行漏洞分析">
 <meta name="twitter:description" content="0x01 漏洞背景2019年10月31日，一个Solr Velocity模板远程命令执行的POC被公开到Github。经过分析测试，该POC在Solr的多个版本测试成功，包含最新版本，所以该漏洞目前处于0day状态。由于Solr默认未开启登录认证，只需请求/节点名/config,将配置项params.resource.loader.enabled设置为true，再构造链接即可让Solr中的Velo">
@@ -192,8 +192,8 @@
 <p>然后我们重新回到<code>write()</code>方法，不管<code>wrapResponse</code>变量为<code>true</code>还是<code>false</code>，恶意模版都被传入<code>merge()</code>进行合并渲染，至此漏洞触发。</p>
 <p><img src="/articles/2019/apache-solr-velocity-rce-20191031/CA7EFD0E-CAB8-437E-BDE4-0C683CEE5452.png" alt="合并解析模版"><br><img src="/articles/2019/apache-solr-velocity-rce-20191031/E339A09C-32EC-43B5-8E47-F38F5E573315.png" alt="漏洞触发效果"></p>
 <h2 id="0x04-参考"><a href="#0x04-参考" class="headerlink" title="0x04 参考"></a>0x04 参考</h2><ul>
+<li><a href="https://gist.githubusercontent.com/s00py/a1ba36a3689fa13759ff910e179fc133/raw/fae5e663ffac0e3996fd9dbb89438310719d347a/gistfile1.txt" target="_blank" rel="noopener">s00py公开的POC</a></li>
 <li><a href="https://github.com/wyzxxz/Apache_Solr_RCE_via_Velocity_template" target="_blank" rel="noopener">https://github.com/wyzxxz/Apache_Solr_RCE_via_Velocity_template</a></li>
-<li><a href="https://gist.githubusercontent.com/s00py/a1ba36a3689fa13759ff910e179fc133/raw/fae5e663ffac0e3996fd9dbb89438310719d347a/gistfile1.txt" target="_blank" rel="noopener">https://gist.githubusercontent.com/s00py/a1ba36a3689fa13759ff910e179fc133/raw/fae5e663ffac0e3996fd9dbb89438310719d347a/gistfile1.txt</a></li>
 </ul>
 
   </div>

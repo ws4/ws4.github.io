@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/</loc>
+    <loc>http://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/</loc>
     <lastmod>2019-11-01</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/</loc>
+    <loc>http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/</loc>
     <lastmod>2019-11-01</lastmod>
   </url>  <url>
     <loc>http://gv7.me/articles/2017/compile-sqlmap4burp/</loc>
