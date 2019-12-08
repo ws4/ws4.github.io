@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/gossip/index.html</loc>
+    
+    <lastmod>2019-12-08T14:51:39.001Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://gv7.me/about/index.html</loc>
+    
+    <lastmod>2019-12-08T14:35:20.209Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2019/cve-2019-2890-vulnerability-analysis/</loc>
     
-    <lastmod>2019-11-05T02:06:13.232Z</lastmod>
+    <lastmod>2019-11-05T02:13:00.189Z</lastmod>
     
   </url>
   
@@ -327,13 +341,6 @@
     <loc>http://gv7.me/articles/2019/study-the-deep-principle-of-xxe-vulnerability-in-java/</loc>
     
     <lastmod>2019-02-16T17:57:27.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/about/index.html</loc>
-    
-    <lastmod>2019-01-25T04:34:10.000Z</lastmod>
     
   </url>
   
