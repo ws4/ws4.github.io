@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2019/burp-captcha-killer-usage/</loc>
+    
+    <lastmod>2019-12-16T18:37:31.053Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://gv7.me/articles/2019/chunked-coding-converter/</loc>
+    
+    <lastmod>2019-12-16T17:37:02.680Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/gossip/index.html</loc>
     
     <lastmod>2019-12-08T15:06:29.983Z</lastmod>
@@ -96,13 +110,6 @@
     <loc>http://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/</loc>
     
     <lastmod>2019-04-04T20:41:08.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2019/chunked-coding-converter/</loc>
-    
-    <lastmod>2019-03-31T15:21:46.000Z</lastmod>
     
   </url>
   

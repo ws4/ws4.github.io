@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>使用burp插件captcha-killer识别图片验证码</title>
+      <link href="/articles/2019/burp-captcha-killer-usage/"/>
+      <url>/articles/2019/burp-captcha-killer-usage/</url>
+      
+        <content type="html"><![CDATA[<h2 id="0x01-开发背景"><a href="#0x01-开发背景" class="headerlink" title="0x01 开发背景"></a>0x01 开发背景</h2><p>说起对存在验证码的登录表单进行爆破，大部分人都会想到<code>PKav HTTP Fuzzer</code>，这款工具在前些年确实给我们带来了不少便利。反观burp一直没有一个高度自定义通杀大部分图片验证码的识别方案，于是抽了点闲暇的时间开发了<a href="https://github.com/c0ny1/captcha-killer" target="_blank" rel="noopener">captcha-kille</a>，希望burp也能用上各种好用的识别码技术。其设计理念是<code>只专注做好对各种验证码识别技术接口的调用！</code>说具体点就是burp通过同一个插件，就可以适配各种验证码识别接口，无需重复编写调用代码。今天不谈编码层面如何设计，感兴趣的可以去github看源码。此处只通过使用步骤来说明设计的细节。</p><h2 id="0x02-Step1-将获取验证码的数据包发送到插件"><a href="#0x02-Step1-将获取验证码的数据包发送到插件" class="headerlink" title="0x02 Step1:将获取验证码的数据包发送到插件"></a>0x02 Step1:将获取验证码的数据包发送到插件</h2><p>使用burp抓取获取验证码数据包，然后右键<code>captcha-killer</code> -&gt; <code>send to captcha panel</code>发送数据包到插件的验证码请求面板。</p><p><img src="/articles/2019/burp-captcha-killer-usage/step1-1.png" alt="将请求验证码数据包发送到插件"></p><p>然后到切换到插件面板，点击获取即可拿到要识别的验证码图片内容。</p><p><img src="/articles/2019/burp-captcha-killer-usage/step1-2.png" alt="请求获取验证码"></p><p><strong>注意：获取验证码的cookie一定要和intruder发送的cookie相同！</strong></p><h2 id="0x03-Step2-配置识别接口的地址和请求包"><a href="#0x03-Step2-配置识别接口的地址和请求包" class="headerlink" title="0x03 Step2:配置识别接口的地址和请求包"></a>0x03 Step2:配置识别接口的地址和请求包</h2><p>拿到验证码之后，就要设置接口来进行识别了。我们可以使用网上寻找免费的接口，用burp抓包，然后右键发送到插件的接口请求面板。</p><p><img src="/articles/2019/burp-captcha-killer-usage/step2-1.png" alt="将接口调用请求发送到插件"></p><p>然后我们把图片内容的位置用标签来代替。比如该例子使用的接口是post提交image参数，参数的值为图片二进制数据的base64编码后的url编码。那么<code>Request template</code>(请求模版)面板应该填写如下：</p><p><img src="/articles/2019/burp-captcha-killer-usage/step2-2.png" alt="接口请求模版设置"></p><table><thead><tr><th align="center">ID</th><th align="left">标签</th><th align="left">描述</th></tr></thead><tbody><tr><td align="center">1</td><td align="left"><code>&lt;@IMG_RAW&gt;&lt;/@IMG_RAW&gt;</code></td><td align="left">代表验证码图片原二进制内容</td></tr><tr><td align="center">2</td><td align="left"><code>&lt;@URLENCODE&gt;&lt;/@URLENCODE&gt;</code></td><td align="left">对标签内的内容进行url编码</td></tr><tr><td align="center">3</td><td align="left"><code>&lt;@BASE64&gt;&lt;/@BASE64&gt;</code></td><td align="left">对标签内的内容进行base64编码</td></tr></tbody></table><p>最后点击“识别”即可获取到接口返回的数据包，同时在<code>request raw</code>可以看到调用接口最终发送的请求包。</p><p><img src="/articles/2019/burp-captcha-killer-usage/step2-3.png" alt="模版被渲染为最终的请求"></p><h2 id="0x03-Step3-设置用于匹配识别结果的规则"><a href="#0x03-Step3-设置用于匹配识别结果的规则" class="headerlink" title="0x03 Step3:设置用于匹配识别结果的规则"></a>0x03 Step3:设置用于匹配识别结果的规则</h2><p>通过上一步我们获取到了识别接口的返回结果，但是插件并不知道返回结果中，哪里是真正的识别结果。插件提供了4中方式进行匹配，可以根据具体情况选择合适的。</p><table><thead><tr><th align="center">ID</th><th align="left">规则类型</th><th align="left">描述</th></tr></thead><tbody><tr><td align="center">1</td><td align="left">Repose data</td><td align="left">这种规则用于匹配接口返回包内容直接是识别结果</td></tr><tr><td align="center">2</td><td align="left">Regular expression</td><td align="left">正则表达式,适合比较复杂的匹配。比如接口返回包<code>{&quot;coede&quot;:1,&quot;result&quot;:&quot;abcd&quot;}</code>说明abcd是识别结果，我们可以编写规则为<code>result&quot;:&quot;(.*?)&quot;\}</code></td></tr><tr><td align="center">3</td><td align="left">Define the start and end positions</td><td align="left">定义开始和结束位置,使用上面的例子，可以编写规则<code>{&quot;start&quot;:21,&quot;end&quot;:25}</code></td></tr><tr><td align="center">4</td><td align="left">Defines the start and end strings</td><td align="left">定义开始和结束字符，使用上面的例子，可以编写规则为<code>{&quot;start&quot;:&quot;result\&quot;:\&quot;,&quot;end&quot;:&quot;\&quot;\}&quot;}</code></td></tr></tbody></table><p>通过分析我们知道，接口返回的json数据中，字段<code>words</code>的值为识别结果。我们这里使用<code>Regular expression</code>(正则表达式)来匹配，然后选择<code>yzep</code>右键<code>标记为识别结果</code>，系统会自动生成正则表达式规则<code>&quot; (.*?)&quot;\}\]</code>。</p><p><img src="/articles/2019/burp-captcha-killer-usage/step3-1.png" alt="设置匹配方式和自动生成规则"></p><p>注意：若右键标记自动生成的规则匹配不精确，可以人工进行微调。比如该例子中可以微调规则为<code>&quot;words&quot;\: &quot;(.*?)&quot;\}</code>将更加准确！</p><p>到达这步建议将配置好常用接口的url，数据包已经匹配规则保存为模版，方便下次直接通过右键<code>模板库</code>中快速设置。同时插件也有默认的模版供大家使用与修改。</p><p><img src="/articles/2019/burp-captcha-killer-usage/step3-2.png" alt="保存设置好的配置，方便下次快速配置"></p><h2 id="0x04-Step4-在Intruder模块调用"><a href="#0x04-Step4-在Intruder模块调用" class="headerlink" title="0x04 Step4:在Intruder模块调用"></a>0x04 Step4:在Intruder模块调用</h2><p>配置好各项后，可以点击<code>锁定</code>对当前配置进行锁定，防止被修改导致爆破失败！接着安装以下步骤进行配置</p><p><img src="/articles/2019/burp-captcha-killer-usage/step4-1.png" alt="设置Intruder的爆破模式和payload位置"></p><p><img src="/articles/2019/burp-captcha-killer-usage/step4-2.png" alt="验证码payload选择有插件来生成"></p><p><img src="/articles/2019/burp-captcha-killer-usage/step4-3.png" alt="进行爆破，可以通过对比识别结果看出识别率"></p><h2 id="0x05-使用小案例"><a href="#0x05-使用小案例" class="headerlink" title="0x05 使用小案例"></a>0x05 使用小案例</h2><p>后续将通过小案例来演示，如何通过captcha-killer让burp使用上各种技术识别验证码(免费方案)，敬请期待！</p><ul><li>《captcha-killer调用tesseract-ocr识别验证码》[待发布]</li><li>《captcha-killer调用完美识别验证码系统》[待发布]</li><li>《captcha-killer调用百度ocr识别验证码》[待发布]</li><li>《capatch-killer+机器学习识别验证码》[待发布]</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 安全开发 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> burp </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Weblogic t3反序列化漏洞(CVE-2019-2890)分析</title>
       <link href="/articles/2019/cve-2019-2890-vulnerability-analysis/"/>
       <url>/articles/2019/cve-2019-2890-vulnerability-analysis/</url>
@@ -232,6 +257,12 @@
           
       </categories>
       
+      
+        <tags>
+            
+            <tag> burp </tag>
+            
+        </tags>
       
     </entry>
     

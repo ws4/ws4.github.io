@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://gv7.me/articles/2019/burp-captcha-killer-usage/</loc>
+    <lastmod>2019-12-16</lastmod>
+  </url>  <url>
+    <loc>http://gv7.me/articles/2019/chunked-coding-converter/</loc>
+    <lastmod>2019-12-16</lastmod>
+  </url>  <url>
     <loc>http://gv7.me/articles/2019/cve-2019-2890-vulnerability-analysis/</loc>
     <lastmod>2019-11-05</lastmod>
   </url>  <url>
@@ -36,9 +42,6 @@
   </url>  <url>
     <loc>http://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/</loc>
     <lastmod>2019-04-04</lastmod>
-  </url>  <url>
-    <loc>http://gv7.me/articles/2019/chunked-coding-converter/</loc>
-    <lastmod>2019-03-31</lastmod>
   </url>  <url>
     <loc>http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/</loc>
     <lastmod>2019-03-28</lastmod>
