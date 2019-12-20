@@ -434,9 +434,23 @@ body td {
 }
 body .highlight table {
   width: 100%;
+  border: 0px solid #2bbc8a;
   border-collapse: collapse;
   text-align: left;
   font-size: 12px;
+}
+body .highlight th {
+  padding: 8px;
+  border: 0px solid #2bbc8a;
+  border-bottom: 1px dashed $color-code-border;
+  color: #eee;
+  font-weight: bold;
+  font-size: 13px;
+}
+body .highlight td {
+  padding: 9px 8px 0;
+  border: 0px solid #2bbc8a;
+  border-bottom: none;
 }
 @font-face {
   font-style: normal;
