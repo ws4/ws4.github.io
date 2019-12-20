@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/about/index.html</loc>
+    
+    <lastmod>2019-12-20T16:41:30.584Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2019/burp-captcha-killer-usage/</loc>
     
     <lastmod>2019-12-16T18:37:31.053Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>http://gv7.me/gossip/index.html</loc>
     
     <lastmod>2019-12-08T15:06:29.983Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/about/index.html</loc>
-    
-    <lastmod>2019-12-08T15:00:23.707Z</lastmod>
     
   </url>
   
