@@ -417,6 +417,8 @@ body table {
   border-collapse: collapse;
   text-align: left;
   font-size: 12px;
+  border: 3px;
+  bordercolor: #2bbc8a;
 }
 body th {
   padding: 8px;
