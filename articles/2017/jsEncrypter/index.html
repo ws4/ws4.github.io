@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="我曾经听某大牛所过两句话： 1231. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。2. 当一个系统的用户超过1000+,那么弱口令一定存在！  不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。 当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了">
+<meta name="keywords" content="Burp Suite">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编写加密传输爆破插件jsEncrypter">
+<meta property="og:url" content="http://gv7.me/articles/2017/jsEncrypter/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="我曾经听某大牛所过两句话： 1231. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。2. 当一个系统的用户超过1000+,那么弱口令一定存在！  不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。 当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/liucheng.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/tab.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/server.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/test.gif">
+<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/crack.gif">
+<meta property="og:updated_time" content="2019-02-16T18:05:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编写加密传输爆破插件jsEncrypter">
+<meta name="twitter:description" content="我曾经听某大牛所过两句话： 1231. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。2. 当一个系统的用户超过1000+,那么弱口令一定存在！  不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。 当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/jsEncrypter/liucheng.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			编写加密传输爆破插件jsEncrypter | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/articles/2018/learning-notes-of-meltdown-and-spectre/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/articles/2017/Aaron-Swartz/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/jsEncrypter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/jsEncrypter/&text=编写加密传输爆破插件jsEncrypter"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/jsEncrypter/&is_video=false&description=编写加密传输爆破插件jsEncrypter"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写加密传输爆破插件jsEncrypter&body=Check out this article: http://gv7.me/articles/2017/jsEncrypter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/jsEncrypter/&name=编写加密传输爆破插件jsEncrypter&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-流程"><span class="toc-number">1.</span> <span class="toc-text">0x01 流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-开发"><span class="toc-number">2.</span> <span class="toc-text">0x02 开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#插件核心代码"><span class="toc-number">2.0.1.</span> <span class="toc-text">插件核心代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#phantomJS脚本编写"><span class="toc-number">2.0.2.</span> <span class="toc-text">phantomJS脚本编写</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#phatomJS脚本模板代码"><span class="toc-number">2.0.2.0.1.</span> <span class="toc-text">phatomJS脚本模板代码</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03演示"><span class="toc-number">3.</span> <span class="toc-text">0x03演示</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-靶机搭建"><span class="toc-number">3.0.1.</span> <span class="toc-text">(1) 靶机搭建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-编写phantomJS脚本"><span class="toc-number">3.0.2.</span> <span class="toc-text">(2) 编写phantomJS脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#完整代码如下："><span class="toc-number">3.0.2.0.1.</span> <span class="toc-text">完整代码如下：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-运行phantomJS脚本"><span class="toc-number">3.0.3.</span> <span class="toc-text">(3) 运行phantomJS脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-测试是否能成功加密"><span class="toc-number">3.0.4.</span> <span class="toc-text">(4) 测试是否能成功加密</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-抓包爆破"><span class="toc-number">3.0.5.</span> <span class="toc-text">(5) 抓包爆破</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04最后的话"><span class="toc-number">4.</span> <span class="toc-text">0x04最后的话</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        编写加密传输爆破插件jsEncrypter
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-12-18T13:31:09.000Z" itemprop="datePublished">2017-12-18</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Burp-Suite/">Burp Suite</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>我曾经听某大牛所过两句话：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。</span><br><span class="line"></span><br><span class="line">2. 当一个系统的用户超过1000+,那么弱口令一定存在！</span><br></pre></td></tr></table></figure>
+
+<p>不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。</p>
+<p>当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了以下三个难点：</p>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">情况</th>
+<th align="center">解决</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">验证码</td>
+<td align="center">验证码有的可以绕过，无法绕开也已经存在识别验证码的插件。</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">token</td>
+<td align="center">token问题，使用burp Suite完全可以解决。</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">加密传输</td>
+<td align="center">目前解决方案比较少，对应的工具基本没有找到。</td>
+</tr>
+</tbody></table>
+<p><strong>今天特地对第三种情况进行解决，所以有了此文！</strong></p>
+<p>针对加密传输问题，freeBuf上的<a href="http://www.freebuf.com/articles/web/127888.html" target="_blank" rel="noopener">《对登录中账号密码进行加密之后再传输的爆破的思路和方式》</a>写的挺好，作者提供了4种思路去解决，比我思考的全面。我最初的解决方案类似文章中的第四种思路，今天的解决方案是写一个Burp插件，和文章中的第一种思路类似但又有点区别。</p>
+<h2 id="0x01-流程"><a href="#0x01-流程" class="headerlink" title="0x01 流程"></a>0x01 流程</h2><p>上一个流程图，给大家捋一捋插件运行的整个流程。</p>
+<p><img src="/articles/2017/jsEncrypter/liucheng.png" alt="图1-流程图"></p>
+<h2 id="0x02-开发"><a href="#0x02-开发" class="headerlink" title="0x02 开发"></a>0x02 开发</h2><h4 id="插件核心代码"><a href="#插件核心代码" class="headerlink" title="插件核心代码"></a>插件核心代码</h4><p>我们的插件实现对payload的处理，所以一定要实现Burp Suite APIs的<code>IIntruderPayloadProcessor</code>接口的<code>processPayload</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] processPayload(<span class="keyword">byte</span>[] currentPayload, <span class="keyword">byte</span>[] originalPayload, <span class="keyword">byte</span>[] baseValue) &#123;</span><br><span class="line">		<span class="keyword">byte</span>[] newpayload =<span class="string">""</span>.getBytes();</span><br><span class="line">		String payload = <span class="keyword">new</span> String(currentPayload); <span class="comment">//获取当前paylaod</span></span><br><span class="line">		CloseableHttpClient client = HttpClients.createDefault(); <span class="comment">//新建一个HttpClient</span></span><br><span class="line">		HttpPost httpPost = <span class="keyword">new</span> HttpPost(gui.getURL()); <span class="comment">//新建一个post请求</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			List nameValuePairs = <span class="keyword">new</span> ArrayList(<span class="number">1</span>);</span><br><span class="line">			nameValuePairs.add(<span class="keyword">new</span> BasicNameValuePair(<span class="string">"payload"</span>,payload)); <span class="comment">//添加payload参数</span></span><br><span class="line">			httpPost.setEntity(<span class="keyword">new</span> UrlEncodedFormEntity(nameValuePairs)); <span class="comment">//设置HttpPost实体</span></span><br><span class="line">			CloseableHttpResponse response = client.execute(httpPost); <span class="comment">//发送带有payload的请求</span></span><br><span class="line">			<span class="comment">//获取phantomJS处理好的结果</span></span><br><span class="line">			String responseAsString = EntityUtils.toString(response.getEntity());</span><br><span class="line">			newpayload = helpers.stringToBytes(responseAsString);</span><br><span class="line">			</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			stderr.println(e.getMessage());</span><br><span class="line">			newpayload = <span class="string">"JsEncrypter cannot connect phantomJS!"</span>.getBytes();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> newpayload; <span class="comment">//返回处理好的payload给Burp Suite</span></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="phantomJS脚本编写"><a href="#phantomJS脚本编写" class="headerlink" title="phantomJS脚本编写"></a>phantomJS脚本编写</h4><p>phantomJS是一个没有界面的浏览器，除了不能浏览，其他的和正常浏览器一样。使用它来执行我们编写好的脚本。</p>
+<p>phantomJS下载地址：<code>http://phantomjs.org/download.html</code></p>
+<p>由于每个网站前端加密传输的算法一样，所以每次引入的js都不同，调用加密函数的代码也不仅相同。鉴于以上情况，为了每次不用重复写一些固定的代码，我们写一个模板代码。每次使用时，只要填写好引入js的文件名，以及实现好在<code>js_encrypt()</code>函数体调用加密算法对payload进行加密处理即可。</p>
+<h6 id="phatomJS脚本模板代码"><a href="#phatomJS脚本模板代码" class="headerlink" title="phatomJS脚本模板代码"></a>phatomJS脚本模板代码</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * author: c0ny1</span></span><br><span class="line"><span class="comment"> * date: 2017-12-16</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> webserver = <span class="built_in">require</span>(<span class="string">'webserver'</span>);</span><br><span class="line">server = webserver.create();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> host = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">var</span> port = <span class="string">'1664'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加载实现加密算法的js脚本</span></span><br><span class="line"><span class="keyword">var</span> wasSuccessful = phantom.injectJs(<span class="string">'xxx.js'</span>);<span class="comment">/*引入实现加密的js文件*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">js_encrypt</span>(<span class="params">payload</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> newpayload;</span><br><span class="line">	<span class="comment">/**********在这里编写调用加密函数进行加密的代码************/</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/**********************************************************/</span></span><br><span class="line">	<span class="keyword">return</span> newpayload;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(wasSuccessful)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[*] load js successful"</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[!] ^_^"</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[*] jsEncrypterJS start!"</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[+] address: http://"</span>+host+<span class="string">":"</span>+port);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'[*] load js fail!'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> service = server.listen(host+<span class="string">':'</span>+port,<span class="function"><span class="keyword">function</span>(<span class="params">request, response</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(request.method == <span class="string">'POST'</span>)&#123;</span><br><span class="line">		<span class="keyword">var</span> payload = request.post[<span class="string">'payload'</span>];</span><br><span class="line">        <span class="keyword">var</span> encrypt_payload = js_encrypt(payload); </span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[+] '</span> + payload + <span class="string">':'</span> + encrypt_payload); <span class="comment">//显示原始payload和加密处理好的payload</span></span><br><span class="line">		response.statusCode = <span class="number">200</span>;</span><br><span class="line">  		response.write(encrypt_payload.toString()); <span class="comment">//返回处理好的payload</span></span><br><span class="line">        response.close();</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		  response.statusCode = <span class="number">200</span>;</span><br><span class="line">  		  response.write(<span class="string">"^_^\n\rhello jsEncrypter!"</span>);</span><br><span class="line">          response.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x03演示"><a href="#0x03演示" class="headerlink" title="0x03演示"></a>0x03演示</h2><p>完整的代码请移步github: <code>http://github.com/c0ny1/jsEncrypter</code></p>
+<p>大家自行下载，编译好,最后加载到Burp Suite中！</p>
+<p><img src="/articles/2017/jsEncrypter/tab.png" alt="图2-插件界面"></p>
+<h4 id="1-靶机搭建"><a href="#1-靶机搭建" class="headerlink" title="(1) 靶机搭建"></a>(1) 靶机搭建</h4><p>项目jsEncrytper/server目录下提供一个php编写的靶机，我们用phpStudy把他运行起来。靶机目前支持的加密算法有7中：</p>
+<ul>
+<li>base64 （PS：严格来说base64是一种编码，不是一种加密算法）</li>
+<li>md5</li>
+<li>sha1</li>
+<li>sha254</li>
+<li>sha384</li>
+<li>sha512</li>
+<li>RSA</li>
+</ul>
+<p>我们选择sha1来进行演示。</p>
+<p><img src="/articles/2017/jsEncrypter/server.png" alt="图3-靶机"></p>
+<h4 id="2-编写phantomJS脚本"><a href="#2-编写phantomJS脚本" class="headerlink" title="(2) 编写phantomJS脚本"></a>(2) 编写phantomJS脚本</h4><ol>
+<li><p>通过查看靶机页面的js代码，我们知道实现sha1加密的是<code>sha1.js</code>这个文件，我们将它下载下来。</p>
+</li>
+<li><p>复制phantomJS模板代码<code>jsEncrypter/js/jsEncrypter_base.js</code>文件，改名为jsEncrypter_sha1.js。</p>
+</li>
+<li><p>在脚本中加载<code>sha1.js</code>,然后在<code>js_encrypt</code>函数中实现调用加密函数对传入的payload进行加密处理，即可。</p>
+</li>
+</ol>
+<h6 id="完整代码如下："><a href="#完整代码如下：" class="headerlink" title="完整代码如下："></a>完整代码如下：</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> webserver = <span class="built_in">require</span>(<span class="string">'webserver'</span>);</span><br><span class="line">server = webserver.create();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> host = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">var</span> port = <span class="string">'1664'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加载实现加密算法的js脚本</span></span><br><span class="line"><span class="keyword">var</span> wasSuccessful = phantom.injectJs(<span class="string">'sha1.js'</span>);<span class="comment">/*引入实现加密的js文件*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">js_encrypt</span>(<span class="params">payload</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> newpayload;</span><br><span class="line">	<span class="comment">/**********在这里编写调用加密函数进行加密的代码************/</span></span><br><span class="line">	newpayload = hex_sha1(payload);</span><br><span class="line">	<span class="comment">/****************************************************/</span></span><br><span class="line">	<span class="keyword">return</span> newpayload;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(wasSuccessful)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[*] load js successful"</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[!] ^_^"</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[*] jsEncrypterJS start!"</span>);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"[+] address: http://"</span>+host+<span class="string">":"</span>+port);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'[*] load js fail!'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> service = server.listen(host+<span class="string">':'</span>+port,<span class="function"><span class="keyword">function</span>(<span class="params">request, response</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(request.method == <span class="string">'POST'</span>)&#123;</span><br><span class="line">		<span class="keyword">var</span> payload = request.post[<span class="string">'payload'</span>];</span><br><span class="line">        <span class="keyword">var</span> encrypt_payload = js_encrypt(payload); </span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'[+] '</span> + payload + <span class="string">':'</span> + encrypt_payload);</span><br><span class="line">		response.statusCode = <span class="number">200</span>;</span><br><span class="line">  		response.write(encrypt_payload.toString());</span><br><span class="line">        response.close();</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		  response.statusCode = <span class="number">200</span>;</span><br><span class="line">  		  response.write(<span class="string">"^_^\n\rhello jsEncrypt!"</span>);</span><br><span class="line">          response.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-运行phantomJS脚本"><a href="#3-运行phantomJS脚本" class="headerlink" title="(3) 运行phantomJS脚本"></a>(3) 运行phantomJS脚本</h4><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">λ phantomjs.exe jsEncrypter_sha1.js</span><br><span class="line">[*] load js successful</span><br><span class="line">[!] ^_^</span><br><span class="line">[*] jsEncrypterJS <span class="built_in">start</span>!</span><br><span class="line">[+] address: http://<span class="number">127</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">1</span>:<span class="number">1664</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-测试是否能成功加密"><a href="#4-测试是否能成功加密" class="headerlink" title="(4) 测试是否能成功加密"></a>(4) 测试是否能成功加密</h4><p><img src="/articles/2017/jsEncrypter/test.gif" alt="图4-测试"></p>
+<h4 id="5-抓包爆破"><a href="#5-抓包爆破" class="headerlink" title="(5) 抓包爆破"></a>(5) 抓包爆破</h4><p><img src="/articles/2017/jsEncrypter/crack.gif" alt="图5-抓包爆破"></p>
+<h2 id="0x04最后的话"><a href="#0x04最后的话" class="headerlink" title="0x04最后的话"></a>0x04最后的话</h2><p>各位如果有更好的解决方案，请留言互相交流。发现项目有bug或者有更好的修改建议，欢迎在github提交issuse，期待我们一起进步！</p>
+<p><strong>项目地址：<a href="https://github.com/c0ny1/jsEncrypter" target="_blank" rel="noopener">https://github.com/c0ny1/jsEncrypter</a></strong></p>
+
+  </div>
+</article>
+
+
+
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/vssue/dist/vssue.min.css">
+<div id="vssue"></div>
+<script src="https://unpkg.com/vue/dist/vue.runtime.min.js"></script>
+<script src="https://unpkg.com/vssue/dist/vssue.github.min.js"></script>
+<!-- <script src="https://unpkg.com/vssue/dist/vssue.github-v4.min.js"></script> -->
+<script>
+    new Vue({
+      el: '#vssue',
+      render: h => h('Vssue', {
+        props: {
+          title: '编写加密传输爆破插件jsEncrypter',
+          options: {
+            owner: 'ws4',
+            repo: 'ws4.github.io',
+            clientId: 'e47c5d37e969e470f60b',
+            clientSecret: '82b90182f62c79794f62979f6841b4199281b01d',
+          },
+        }
+      })
+    })
+</script>
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-流程"><span class="toc-number">1.</span> <span class="toc-text">0x01 流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-开发"><span class="toc-number">2.</span> <span class="toc-text">0x02 开发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#插件核心代码"><span class="toc-number">2.0.1.</span> <span class="toc-text">插件核心代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#phantomJS脚本编写"><span class="toc-number">2.0.2.</span> <span class="toc-text">phantomJS脚本编写</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#phatomJS脚本模板代码"><span class="toc-number">2.0.2.0.1.</span> <span class="toc-text">phatomJS脚本模板代码</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03演示"><span class="toc-number">3.</span> <span class="toc-text">0x03演示</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-靶机搭建"><span class="toc-number">3.0.1.</span> <span class="toc-text">(1) 靶机搭建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-编写phantomJS脚本"><span class="toc-number">3.0.2.</span> <span class="toc-text">(2) 编写phantomJS脚本</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#完整代码如下："><span class="toc-number">3.0.2.0.1.</span> <span class="toc-text">完整代码如下：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-运行phantomJS脚本"><span class="toc-number">3.0.3.</span> <span class="toc-text">(3) 运行phantomJS脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-测试是否能成功加密"><span class="toc-number">3.0.4.</span> <span class="toc-text">(4) 测试是否能成功加密</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-抓包爆破"><span class="toc-number">3.0.5.</span> <span class="toc-text">(5) 抓包爆破</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04最后的话"><span class="toc-number">4.</span> <span class="toc-text">0x04最后的话</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/jsEncrypter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/jsEncrypter/&text=编写加密传输爆破插件jsEncrypter"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/jsEncrypter/&is_video=false&description=编写加密传输爆破插件jsEncrypter"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写加密传输爆破插件jsEncrypter&body=Check out this article: http://gv7.me/articles/2017/jsEncrypter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/jsEncrypter/&name=编写加密传输爆破插件jsEncrypter&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2017 ~ 2019 c0ny1
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+

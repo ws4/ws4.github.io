@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="最近一直在做渗透测试，发现在使用AWVS去扫描一个使用web services的网站时。最后的扫描结果并没有web services。然而web services由于经常出现一些问题，故我们很有必要去收集到网站的使用web services的信息。下面我们通过编写AWVS脚本的方式去让AWVS探测的网站是否存在。 注意：这里默认大家都了解过AWVS基本语法。如果不了解请移步文章的“编写AWVS脚本">
+<meta name="keywords" content="插件开发,AWVS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编写AWVS脚本探测web services">
+<meta property="og:url" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="最近一直在做渗透测试，发现在使用AWVS去扫描一个使用web services的网站时。最后的扫描结果并没有web services。然而web services由于经常出现一些问题，故我们很有必要去收集到网站的使用web services的信息。下面我们通过编写AWVS脚本的方式去让AWVS探测的网站是否存在。 注意：这里默认大家都了解过AWVS基本语法。如果不了解请移步文章的“编写AWVS脚本">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/add_xml.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/2.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/3.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/4.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/5.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/6.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/7.png">
+<meta property="og:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/8.png">
+<meta property="og:updated_time" content="2019-02-16T18:03:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编写AWVS脚本探测web services">
+<meta name="twitter:description" content="最近一直在做渗透测试，发现在使用AWVS去扫描一个使用web services的网站时。最后的扫描结果并没有web services。然而web services由于经常出现一些问题，故我们很有必要去收集到网站的使用web services的信息。下面我们通过编写AWVS脚本的方式去让AWVS探测的网站是否存在。 注意：这里默认大家都了解过AWVS基本语法。如果不了解请移步文章的“编写AWVS脚本">
+<meta name="twitter:image" content="http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/add_xml.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			编写AWVS脚本探测web services | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/articles/2017/how-do-sql-inject-web-services/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&text=编写AWVS脚本探测web services"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&is_video=false&description=编写AWVS脚本探测web services"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写AWVS脚本探测web services&body=Check out this article: http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&name=编写AWVS脚本探测web services&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01思路"><span class="toc-number">1.</span> <span class="toc-text">0x01思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02编写代码"><span class="toc-number">2.</span> <span class="toc-text">0x02编写代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新建报告模板"><span class="toc-number">2.1.</span> <span class="toc-text">新建报告模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新建探测脚本"><span class="toc-number">2.2.</span> <span class="toc-text">新建探测脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x3测试"><span class="toc-number">3.</span> <span class="toc-text">0x3测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x4AWVS脚本编写资料"><span class="toc-number">4.</span> <span class="toc-text">0x4AWVS脚本编写资料</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#官方SDK文档"><span class="toc-number">4.1.</span> <span class="toc-text">官方SDK文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#官方开发工具包"><span class="toc-number">4.2.</span> <span class="toc-text">官方开发工具包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密的扫描脚本"><span class="toc-number">4.3.</span> <span class="toc-text">解密的扫描脚本</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        编写AWVS脚本探测web services
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-08-13T08:53:07.000Z" itemprop="datePublished">2017-08-13</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/编程开发/">编程开发</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/AWVS/">AWVS</a>, <a class="tag-link" href="/tags/插件开发/">插件开发</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>最近一直在做渗透测试，发现在使用AWVS去扫描一个使用web services的网站时。最后的扫描结果并没有web services。然而web services由于经常出现一些问题，故我们很有必要去收集到网站的使用web services的信息。下面我们通过编写AWVS脚本的方式去让AWVS探测的网站是否存在。</p>
+<p>注意：这里默认大家都了解过AWVS基本语法。如果不了解请移步文章的“编写AWVS脚本资料”部分。</p>
+<h2 id="0x01思路"><a href="#0x01思路" class="headerlink" title="0x01思路"></a>0x01思路</h2><p>我们让AWVS爬取到的每一个路径都添加/services，然后去访问这个构造好的路径。如果存在该页面，则分析返回结果中是否存在“wdsl”字符，若存在则说明该站点存在web services服务。</p>
+<h2 id="0x02编写代码"><a href="#0x02编写代码" class="headerlink" title="0x02编写代码"></a>0x02编写代码</h2><h3 id="新建报告模板"><a href="#新建报告模板" class="headerlink" title="新建报告模板"></a>新建报告模板</h3><p>AWVS》Tools》Vulnerability Editor</p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/add_xml.png" alt="图1-新建报告模板"></p>
+<p>填写好漏洞相关信息</p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/2.png" alt="图2-填写漏洞信息"></p>
+<h3 id="新建探测脚本"><a href="#新建探测脚本" class="headerlink" title="新建探测脚本"></a>新建探测脚本</h3><p>找到AWVS的/data/script/folder目录</p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/3.png" alt="图3-新建探测脚本"></p>
+<p>由于我们需要AWVS在爬取到目录时就检查一次该目录是否存在web services。所以我们需要在该目录下的PerFolder文件夹，新建一个名为Web_Services.script的脚本文件。代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> target = <span class="keyword">new</span> THTTPJob(); <span class="comment">//实例化一个HTTP任务</span></span><br><span class="line"><span class="keyword">var</span> dir = getCurrentDirectory();<span class="comment">//获取当前路径</span></span><br><span class="line">target.url = <span class="keyword">new</span> TURL(scanURL.url+ dir.fullPath + <span class="string">"/services"</span>);<span class="comment">//构造请求url</span></span><br><span class="line">target.execute();<span class="comment">//执行http请求</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> wsRes = target.response.body;<span class="comment">//获取http请求内容</span></span><br><span class="line"><span class="keyword">if</span>(!target.wasError &amp;&amp; !target.notFound )&#123;<span class="comment">//判断是否访问错误或者是404</span></span><br><span class="line">	<span class="keyword">if</span>(wsRes.indexOf(<span class="string">'wsdl'</span>) != <span class="number">-1</span>)&#123;</span><br><span class="line">		logWarning(scanURL.url+dir.fullPath+<span class="string">'-----&gt;this web services is exists!!!'</span>);<span class="comment">//在日志栏显示该调式信息</span></span><br><span class="line">		<span class="keyword">var</span> ri = <span class="keyword">new</span> TReportItem();<span class="comment">//新建一个报告结果，返回给扫描器界面</span></span><br><span class="line">		ri.loadFromFile(<span class="string">'Web_Services.xml'</span>);<span class="comment">//载入模板</span></span><br><span class="line">		ri.severity = <span class="string">"high"</span><span class="comment">//影响等级</span></span><br><span class="line">		ri.affects = dir.fullPath + <span class="string">"/services"</span>;</span><br><span class="line">		ri.Request = target.Request.headersString;<span class="comment">//测试请求HTTP头输出到界面</span></span><br><span class="line">		ri.response = target.response.body;<span class="comment">//测试请求HTTP响应内容输出到界面</span></span><br><span class="line">		ri.fullResponse = target.fullResponse;<span class="comment">//测试请求的完整HTTP响应内容输出到界面</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">//ri.description = "web services";</span></span><br><span class="line">		ri.addReference(<span class="string">"how do sql inject web services"</span>,<span class="string">"http://gv7.me/2017/08/12/how-do-sql-inject-web-services/"</span>);</span><br><span class="line">		</span><br><span class="line">		AddReportItem(ri);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		logError(scanURL.url+dir.fullPath+<span class="string">"-----&gt;This's not web services!!!"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		logWarning(scanURL.url+dir.fullPath+<span class="string">"notFound web services!!!!"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/4.png" alt="图4-代码"></p>
+<h2 id="0x3测试"><a href="#0x3测试" class="headerlink" title="0x3测试"></a>0x3测试</h2><p>去网上随便找一个测试站点，该站点/pptx/路径下存在web services的wsdl列表。</p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/5.png" alt="图5-测试站点"></p>
+<p>为了方便测试，我们新建一个test策略，策略包含我们写的脚本。</p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/6.png" alt="图6-新建test策略"></p>
+<p>扫描选择我们的新建的策略</p>
+<p><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/7.png" alt="图7-测试扫描设置"></p>
+<p>扫描结果中发现，已经找到web services<br><img src="/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/8.png" alt="图8-测试扫描结果"></p>
+<p>后面我在这个代码基础上泄露发现SVN泄露的脚本，大家想让AWVS发现更多漏洞，可以自己尝试去写写。</p>
+<h2 id="0x4AWVS脚本编写资料"><a href="#0x4AWVS脚本编写资料" class="headerlink" title="0x4AWVS脚本编写资料"></a>0x4AWVS脚本编写资料</h2><p>如果想了解更多编写脚本的资料。可以下载以下推荐的资料，若你有更好，欢淫共享感激不尽。</p>
+<h3 id="官方SDK文档"><a href="#官方SDK文档" class="headerlink" title="官方SDK文档"></a>官方SDK文档</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.acunetix.com/resources/sdk/</span><br></pre></td></tr></table></figure>
+
+<h3 id="官方开发工具包"><a href="#官方开发工具包" class="headerlink" title="官方开发工具包"></a>官方开发工具包</h3><p>工具包里有一个文档，和3个脚本例子。大家可以参考一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.acunetix.com/download/tools/WVSSDK.zip</span><br></pre></td></tr></table></figure>
+
+<h3 id="解密的扫描脚本"><a href="#解密的扫描脚本" class="headerlink" title="解密的扫描脚本"></a>解密的扫描脚本</h3><p>大家可能发现在/data/script/文件夹下的所有脚本都加密了，我们无法查看源码。这对于我们想学习编写脚本的童鞋很是不利。这里给大家发个福利：〇〇木一大神解密AWVS 10.5的script文件夹下所有脚本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/c0ny1/awvs_script_decode</span><br></pre></td></tr></table></figure>
+
+<p>百度云下载(base64)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dXJs77yaaHR0cHM6Ly9wYW4uYmFpZHUuY29tL3MvMXNscjRIUHogcHdk77yaYjNtbw==</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/vssue/dist/vssue.min.css">
+<div id="vssue"></div>
+<script src="https://unpkg.com/vue/dist/vue.runtime.min.js"></script>
+<script src="https://unpkg.com/vssue/dist/vssue.github.min.js"></script>
+<!-- <script src="https://unpkg.com/vssue/dist/vssue.github-v4.min.js"></script> -->
+<script>
+    new Vue({
+      el: '#vssue',
+      render: h => h('Vssue', {
+        props: {
+          title: '编写AWVS脚本探测web services',
+          options: {
+            owner: 'ws4',
+            repo: 'ws4.github.io',
+            clientId: 'e47c5d37e969e470f60b',
+            clientSecret: '82b90182f62c79794f62979f6841b4199281b01d',
+          },
+        }
+      })
+    })
+</script>
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01思路"><span class="toc-number">1.</span> <span class="toc-text">0x01思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02编写代码"><span class="toc-number">2.</span> <span class="toc-text">0x02编写代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新建报告模板"><span class="toc-number">2.1.</span> <span class="toc-text">新建报告模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新建探测脚本"><span class="toc-number">2.2.</span> <span class="toc-text">新建探测脚本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x3测试"><span class="toc-number">3.</span> <span class="toc-text">0x3测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x4AWVS脚本编写资料"><span class="toc-number">4.</span> <span class="toc-text">0x4AWVS脚本编写资料</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#官方SDK文档"><span class="toc-number">4.1.</span> <span class="toc-text">官方SDK文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#官方开发工具包"><span class="toc-number">4.2.</span> <span class="toc-text">官方开发工具包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解密的扫描脚本"><span class="toc-number">4.3.</span> <span class="toc-text">解密的扫描脚本</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&text=编写AWVS脚本探测web services"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&is_video=false&description=编写AWVS脚本探测web services"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写AWVS脚本探测web services&body=Check out this article: http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&title=编写AWVS脚本探测web services"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/&name=编写AWVS脚本探测web services&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2017 ~ 2019 c0ny1
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+

