@@ -417,11 +417,11 @@ body table {
   border-collapse: collapse;
   text-align: left;
   font-size: 12px;
-  border: 3px;
-  bordercolor: #2bbc8a;
+  border: 3px solid #2bbc8a;
 }
 body th {
   padding: 8px;
+  border: 1px solid #2bbc8a;
   border-bottom: 1px dashed $color-code-border;
   color: #eee;
   font-weight: bold;
@@ -429,7 +429,14 @@ body th {
 }
 body td {
   padding: 9px 8px 0;
+  border: 1px solid #2bbc8a;
   border-bottom: none;
+}
+body .highlight table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12px;
 }
 @font-face {
   font-style: normal;
