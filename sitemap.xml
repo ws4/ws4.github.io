@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/</loc>
+    
+    <lastmod>2019-12-21T02:57:06.216Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/about/index.html</loc>
     
     <lastmod>2019-12-20T16:44:20.844Z</lastmod>
@@ -187,13 +194,6 @@
     <loc>http://gv7.me/articles/2018/escape-string-in-xss/</loc>
     
     <lastmod>2019-02-16T18:06:44.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/</loc>
-    
-    <lastmod>2019-02-16T18:06:36.000Z</lastmod>
     
   </url>
   

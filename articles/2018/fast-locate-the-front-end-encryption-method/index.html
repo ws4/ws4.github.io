@@ -7,7 +7,7 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="description" content="相信用过我jsEncrypter这个插件的朋友，都会碰到一个问题。 那就是一些大型网站前端太复杂，以至于无法定位到前端数据加密函数所在的位置。无法定位到加密方法所在，自然就无法编写jsEncrypter的phantomJS脚本了。k哥在今晚给了我很多灵感，让我对这个问题有一个完美的解决方案。以至于现在已是12号的凌晨3点，我仍不舍得搁浅内心零散的想法。窗外稍许的车辆略过的轰鸣，在夜深人静时显得格外">
-<meta name="keywords" content="网络安全,渗透测试,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
+<meta name="keywords" content="burp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="快速定位前端加密方法">
 <meta property="og:url" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/index.html">
@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/FindFunctionFromEventListeners.png">
 <meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByKeyword.png">
 <meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/debug.png">
-<meta property="og:updated_time" content="2019-02-16T18:06:36.000Z">
+<meta property="og:updated_time" content="2019-12-21T02:57:06.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="快速定位前端加密方法">
 <meta name="twitter:description" content="相信用过我jsEncrypter这个插件的朋友，都会碰到一个问题。 那就是一些大型网站前端太复杂，以至于无法定位到前端数据加密函数所在的位置。无法定位到加密方法所在，自然就无法编写jsEncrypter的phantomJS脚本了。k哥在今晚给了我很多灵感，让我对这个问题有一个完美的解决方案。以至于现在已是12号的凌晨3点，我仍不舍得搁浅内心零散的想法。窗外稍许的车辆略过的轰鸣，在夜深人静时显得格外">
@@ -147,15 +147,25 @@
 
 
       
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/安全开发/">安全开发</a>
+    </div>
+
 
       
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/burp/">burp</a>
+    </div>
+
 
     </div>
   </header>
   
 
   <div class="content" itemprop="articleBody">
-    <p>相信用过我jsEncrypter这个插件的朋友，都会碰到一个问题。 <strong>那就是一些大型网站前端太复杂，以至于无法定位到前端数据加密函数所在的位置</strong>。无法定位到加密方法所在，自然就无法编写jsEncrypter的phantomJS脚本了。k哥在今晚给了我很多灵感，让我对这个问题有一个完美的解决方案。以至于现在已是12号的凌晨3点，我仍不舍得搁浅内心零散的想法。窗外稍许的车辆略过的轰鸣，在夜深人静时显得格外刺耳。不过还好，没破坏我静静码字感觉。下面让我慢慢将这简单弱智有点零散，但细细思考，却有点意思的想法，串成一个流程。</p>
+    <p>相信用过我<a href="https://github.com/c0ny1/jsEncrypter" target="_blank" rel="noopener">jsEncrypter</a>这个插件的朋友，都会碰到一个问题。 <strong>那就是一些大型网站前端太复杂，以至于无法定位到前端数据加密函数所在的位置</strong>。无法定位到加密方法所在，自然就无法编写jsEncrypter的phantomJS脚本了。k哥在今晚给了我很多灵感，让我对这个问题有一个完美的解决方案。以至于现在已是12号的凌晨3点，我仍不舍得搁浅内心零散的想法。窗外稍许的车辆略过的轰鸣，在夜深人静时显得格外刺耳。不过还好，没破坏我静静码字感觉。下面让我慢慢将这简单弱智有点零散，但细细思考，却有点意思的想法，串成一个流程。</p>
 <h2 id="0x01-onClick定位法"><a href="#0x01-onClick定位法" class="headerlink" title="0x01 onClick定位法"></a>0x01 onClick定位法</h2><p>有时候在触发提交表单的标签中会存在一个onClik属性，该属性的值正好是一个js函数。而这个函数往往就是我们要找的数据加密函数。我们只需要找到它定义的地方即可。</p>
 <p><img src="/articles/2018/fast-locate-the-front-end-encryption-method/LocationByonClick.png" alt="图1-通过onClick属性定位"></p>
 <p>找到了加密数据的方法名之后，我们就可以去找一下该方法在那个js文件中定义，即可定位到位置。</p>
