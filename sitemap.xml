@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2018/CVE-2016-8735/</loc>
+    
+    <lastmod>2019-12-21T03:04:22.543Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/</loc>
     
     <lastmod>2019-12-21T02:57:06.216Z</lastmod>
@@ -173,13 +180,6 @@
     <loc>http://gv7.me/articles/2017/currentPayload-originalPayload/</loc>
     
     <lastmod>2019-02-16T18:07:15.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2018/CVE-2016-8735/</loc>
-    
-    <lastmod>2019-02-16T18:07:02.000Z</lastmod>
     
   </url>
   
