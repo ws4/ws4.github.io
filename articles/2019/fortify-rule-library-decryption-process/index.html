@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/117337DD-962F-4B64-90AF-AC4C98D92F47.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/726FEDA7-ABD4-4EED-9431-B87C034A5F5C.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/dumplings-and-cat.jpeg">
-<meta property="og:updated_time" content="2019-12-23T15:41:46.931Z">
+<meta property="og:updated_time" content="2019-12-23T15:43:04.230Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="fortify规则库解密之旅">
 <meta name="twitter:description" content="前端时间在学习fortify的规则编写，充分利用污点回溯功能来扫描出比较新的漏洞，比如fastjson反序列化等新爆发出来的漏洞。网上有比较好的资料是《fortify安全代码规则编写指南》，但是很缺例子。一直想参考参考官方的规则库，但是是加密的，万般无奈只能踏上解密之旅。 0x01 解密思路猜测fortify会和AWVS一样，会将规则库加载到内存当中进行解密，然后在使用其进行代码扫描。基于这个想法">
@@ -198,7 +198,7 @@
 <li>如果无需解密，为何fortify又要在jar中提供解密方法？</li>
 <li>到底解密方法在哪里被调用？</li>
 </ol>
-<p><img src="/articles/2019/fortify-rule-library-decryption-process/dumplings-and-cat.jpeg" alt="冬至夜"></p>
+<p><img src="/articles/2019/fortify-rule-library-decryption-process/dumplings-and-cat.jpeg" alt="冬至的夜晚"></p>
 
   </div>
 </article>
