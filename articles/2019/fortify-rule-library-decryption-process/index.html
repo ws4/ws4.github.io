@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/117337DD-962F-4B64-90AF-AC4C98D92F47.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/726FEDA7-ABD4-4EED-9431-B87C034A5F5C.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/dumplings-and-cat.jpeg">
-<meta property="og:updated_time" content="2019-12-23T17:20:19.747Z">
+<meta property="og:updated_time" content="2019-12-23T17:21:57.281Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="fortify规则库解密之旅">
 <meta name="twitter:description" content="前段时间在学习fortify的规则编写，想充分利用其污点回溯功能来扫描出当下比较新的漏洞，比如fastjson反序列化漏洞。网上有比较好的资料是《fortify安全代码规则编写指南》，但是很缺例子。于是想参考下官方的规则库，但是是加密的，万般无奈只能踏上解密之旅。 0x01 解密思路猜测fortify会和AWVS一样，会将规则库加载到内存当中进行解密，然后再使用其进行代码扫描。基于这个想法，它必然">
@@ -177,7 +177,7 @@
 <p>接着运行fortify扫描一个<code>java web demo</code>，最终漏洞是扫描出来了，但是没有一个可疑方法被调用，甚是奇怪。于是我将所有方法都打上断点，发现扫描期间只有<code>readHeaders(InputStream encrypted)</code>被调用了。</p>
 <p><img src="/articles/2019/fortify-rule-library-decryption-process/8128736C-CBCB-4521-9E67-E33D900E0756.png" alt="扫描期间只有readHeaders方法被调用"></p>
 <p>难道fortify并没有在扫描时对规则进行解密，可以直接读取规则内容？后面通过调用栈上下文也没发现解密操作。</p>
-<h4 id="3-2-通过编码调用定位"><a href="#3-2-通过编码调用定位" class="headerlink" title="3.2 通过编码调用定位"></a>3.2 通过编码调用定位</h4><p>这时一个朋友突然叫去包饺子，我才记起是冬至。为了速战速决，我决定 通过写代码直接将规则库传入到可疑方法中进行解密，然后看返回的解密结果是否是有意义的明文来判断是否是我们要找的解密方法。 于是将CryptoUtil类中的所有代码审计一遍之后，发现decryptCompressed()可以解密压缩一个文件，感觉看到来希望。​</p>
+<h4 id="3-2-通过编码调用定位"><a href="#3-2-通过编码调用定位" class="headerlink" title="3.2 通过编码调用定位"></a>3.2 通过编码调用定位</h4><p>这时一个朋友突然叫去包饺子，我才记起今天是冬至。为了速战速决，我决定 通过写代码直接将规则库传入到可疑方法中进行解密，然后看返回的解密结果是否是有意义的明文来判断是否是我们要找的解密方法。 于是将CryptoUtil类中的所有代码审计一遍之后，发现decryptCompressed()可以解密压缩一个文件，感觉看到来希望。​</p>
 <p>下面我们来看看该方法的运行流程。该方法最终会调用decryptAfterHeaders()，它负责控制解密解压整个流程。可以看到如果key没设置会被设置为默认值。接着会调用doBlockCipher()来解密，使用uncompressString来解压。</p>
 <p><img src="/articles/2019/fortify-rule-library-decryption-process/0B404A33-CFBB-49CF-BE75-FB2364DEA968.png" alt="解密压缩方法decryptAfterHeaders()"></p>
 <p>我们再来看看<code>doBlockCipher()</code>方法,它可以进行加密和解密。传入的是<code>false</code>所以是解密。</p>
