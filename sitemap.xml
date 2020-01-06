@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/gossip/index.html</loc>
+    
+    <lastmod>2020-01-06T16:55:12.526Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/links/index.html</loc>
     
     <lastmod>2020-01-06T16:28:45.984Z</lastmod>
@@ -47,13 +54,6 @@
     <loc>http://gv7.me/articles/2019/chunked-coding-converter/</loc>
     
     <lastmod>2019-12-16T17:37:02.680Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/gossip/index.html</loc>
-    
-    <lastmod>2019-12-08T15:06:29.983Z</lastmod>
     
   </url>
   
