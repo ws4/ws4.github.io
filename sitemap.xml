@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2020/cve-2019-17564-dubbo-http-deserialization-vulnerability/</loc>
+    
+    <lastmod>2020-02-14T15:40:13.583Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/about/index.html</loc>
     
     <lastmod>2020-02-05T05:34:50.584Z</lastmod>
