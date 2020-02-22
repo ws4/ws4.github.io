@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2020/cve-2020-1938-tomcat-ajp-lfi/</loc>
+    
+    <lastmod>2020-02-22T08:41:06.934Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2020/cve-2019-17564-dubbo-http-deserialization-vulnerability/</loc>
     
-    <lastmod>2020-02-14T16:12:53.986Z</lastmod>
+    <lastmod>2020-02-22T08:41:02.441Z</lastmod>
     
   </url>
   
