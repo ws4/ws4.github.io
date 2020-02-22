@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title>CVE-2020-1938:Tomcat AJP文件包含漏洞分析</title>
+      <title>CVE-2020-1938:Tomcat AJP协议文件包含漏洞分析</title>
       <link href="/articles/2020/cve-2020-1938-tomcat-ajp-lfi/"/>
       <url>/articles/2020/cve-2020-1938-tomcat-ajp-lfi/</url>
       
