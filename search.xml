@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title>如何更加准确的检测AJP协议文件包含漏洞(CVE-2020-1938)</title>
+      <title>如何更加精准地检测AJP协议文件包含漏洞(CVE-2020-1938)</title>
       <link href="/articles/2020/how-to-detect-tomcat-ajp-lfi-more-accurately/"/>
       <url>/articles/2020/how-to-detect-tomcat-ajp-lfi-more-accurately/</url>
       
