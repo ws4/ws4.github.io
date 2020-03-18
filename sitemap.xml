@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2020/how-to-detect-tomcat-ajp-lfi-more-accurately/</loc>
+    
+    <lastmod>2020-03-18T13:20:06.565Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://gv7.me/gossip/index.html</loc>
+    
+    <lastmod>2020-03-11T14:48:51.797Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2020/cve-2020-1938-tomcat-ajp-lfi/</loc>
     
     <lastmod>2020-02-22T09:48:33.455Z</lastmod>
@@ -19,13 +33,6 @@
     <loc>http://gv7.me/about/index.html</loc>
     
     <lastmod>2020-02-05T05:34:50.584Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/gossip/index.html</loc>
-    
-    <lastmod>2020-02-05T04:56:08.116Z</lastmod>
     
   </url>
   
