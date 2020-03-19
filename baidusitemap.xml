@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://gv7.me/articles/2020/how-to-detect-tomcat-ajp-lfi-more-accurately/</loc>
-    <lastmod>2020-03-18</lastmod>
+    <lastmod>2020-03-19</lastmod>
   </url>  <url>
     <loc>http://gv7.me/articles/2020/cve-2020-1938-tomcat-ajp-lfi/</loc>
     <lastmod>2020-02-22</lastmod>
