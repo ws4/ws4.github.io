@@ -16,7 +16,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/1.png">
 <meta property="og:image" content="http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/2.png">
-<meta property="og:updated_time" content="2020-03-24T15:45:02.839Z">
+<meta property="og:updated_time" content="2020-03-24T15:50:15.270Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过dnslog探测fastjson的几种方法">
 <meta name="twitter:description" content="0x01 背景在渗透测试中遇到json数据一般都会测试下有没有反序列化。然而json库有fastjson,jackson,gson等等。怎么判断后端不是fastjson呢？这就需要构造特定的payload了。 昨天翻看fastjson源码时发现了一些可以构造dns解析且没在黑名单当中的类，于是顺手给官方提了下Issue。有趣的是后续的师傅们讨论还挺热闹的，我也在这次讨论中学习了很多。这篇文章算是对">
@@ -182,7 +182,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;&quot;@type&quot;:&quot;java.net.URL&quot;,&quot;val&quot;:&quot;http://dnslog&quot;&#125;:&quot;x&quot;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>来源于<code>@retanoj</code>和<code>@threedr3am</code>两位师傅的启发,其原理和ysoserial中的<code>URLDNS</code>这个gadget原理一样。</p>
-<p><strong>简单来说就是向HashMap压入一个键值对时，HashMap需要获取key对象的hashcode。当key对象是一个URL对象时，在获取它的hashcode期间会调用`getHostAddress    方法获取host，这个过程域名会被解析。</strong></p>
+<p><strong>简单来说就是向HashMap压入一个键值对时，HashMap需要获取key对象的hashcode。当key对象是一个URL对象时，在获取它的<code>hashcode</code>期间会调用<code>getHostAddress</code>方法获取host，这个过程域名会被解析。</strong></p>
 <p><img src="/articles/2020/several-ways-to-detect-fastjson-through-dnslog/2.png" alt="URL对象hashcode的获取过程"></p>
 <p>fastjson会将内成序列化为URL对象，然后开始解析{URL(<a href="http://dnslog):&quot;x&quot;}，会被解析为HashMap。" target="_blank" rel="noopener">http://dnslog):&quot;x&quot;}，会被解析为HashMap。</a></p>
 <h2 id="0x05-参考文献"><a href="#0x05-参考文献" class="headerlink" title="0x05 参考文献"></a>0x05 参考文献</h2><ul>
