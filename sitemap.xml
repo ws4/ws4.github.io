@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/gossip/index.html</loc>
+    
+    <lastmod>2020-04-14T01:57:56.192Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/links/index.html</loc>
     
     <lastmod>2020-04-02T06:02:55.208Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/</loc>
     
     <lastmod>2020-03-24T17:55:23.871Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/gossip/index.html</loc>
-    
-    <lastmod>2020-03-11T14:48:51.797Z</lastmod>
     
   </url>
   
