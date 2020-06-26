@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://gv7.me/articles/2020/semi-automatic-mining-request-implements-multiple-middleware-echo/</loc>
+    <loc>http://gv7.me/gossip/index.html</loc>
     
-    <lastmod>2020-04-19T20:01:41.214Z</lastmod>
+    <lastmod>2020-06-26T17:57:29.676Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://gv7.me/gossip/index.html</loc>
+    <loc>http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/</loc>
     
-    <lastmod>2020-04-14T02:04:00.464Z</lastmod>
+    <lastmod>2020-04-21T14:02:37.724Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://gv7.me/articles/2020/semi-automatic-mining-request-implements-multiple-middleware-echo/</loc>
+    
+    <lastmod>2020-04-19T20:01:41.214Z</lastmod>
     
   </url>
   
@@ -145,13 +152,6 @@
     <loc>http://gv7.me/articles/2019/quickly-find-jars-that-depend-on-poc-exp/</loc>
     
     <lastmod>2019-05-21T18:49:22.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/</loc>
-    
-    <lastmod>2019-05-12T14:22:29.000Z</lastmod>
     
   </url>
   
