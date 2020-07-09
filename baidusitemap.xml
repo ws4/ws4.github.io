@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/</loc>
+    <lastmod>2020-07-09</lastmod>
+  </url>  <url>
     <loc>http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/</loc>
     <lastmod>2020-04-21</lastmod>
   </url>  <url>

