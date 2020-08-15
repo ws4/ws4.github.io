@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://gv7.me/articles/2020/kill-java-web-filter-memshell/</loc>
+    <lastmod>2020-08-15</lastmod>
+  </url>  <url>
     <loc>http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/</loc>
     <lastmod>2020-07-09</lastmod>
   </url>  <url>
