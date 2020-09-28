@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://gv7.me/articles/2020/kill-java-web-filter-memshell/</loc>
+    <loc>http://gv7.me/articles/2018/pentestbox-search-tools/</loc>
     
-    <lastmod>2020-09-09T16:33:15.425Z</lastmod>
+    <lastmod>2020-09-28T06:23:29.984Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://gv7.me/articles/2020/filter-servlet-type-memshell-scan-capture-and-kill/</loc>
     
-    <lastmod>2020-09-09T16:32:38.824Z</lastmod>
+    <lastmod>2020-09-16T03:33:41.048Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://gv7.me/articles/2020/kill-java-web-filter-memshell/</loc>
+    
+    <lastmod>2020-09-09T16:33:15.425Z</lastmod>
     
   </url>
   
@@ -341,13 +348,6 @@
     <loc>http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/</loc>
     
     <lastmod>2019-02-16T18:04:56.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2018/pentestbox-search-tools/</loc>
-    
-    <lastmod>2019-02-16T18:04:50.000Z</lastmod>
     
   </url>
   
