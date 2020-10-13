@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://gv7.me/articles/2020/filter-servlet-type-memshell-scan-capture-and-kill/</loc>
+    <lastmod>2020-10-13</lastmod>
+  </url>  <url>
     <loc>http://gv7.me/articles/2018/pentestbox-search-tools/</loc>
     <lastmod>2020-09-28</lastmod>
-  </url>  <url>
-    <loc>http://gv7.me/articles/2020/filter-servlet-type-memshell-scan-capture-and-kill/</loc>
-    <lastmod>2020-09-16</lastmod>
   </url>  <url>
     <loc>http://gv7.me/articles/2020/kill-java-web-filter-memshell/</loc>
     <lastmod>2020-09-09</lastmod>
