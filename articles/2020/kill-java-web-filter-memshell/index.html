@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://gv7.me/articles/2020/kill-java-web-filter-memshell/gulangyu01.jpeg">
 <meta property="og:image" content="http://gv7.me/articles/2020/kill-java-web-filter-memshell/gulangyu02.jpeg">
 <meta property="og:image" content="http://gv7.me/articles/2020/kill-java-web-filter-memshell/kill-java-filter-memshell-demo.gif">
-<meta property="og:updated_time" content="2020-09-09T16:33:15.425Z">
+<meta property="og:updated_time" content="2021-01-21T03:15:21.471Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="查杀Java web filter型内存马">
 <meta name="twitter:description" content="想法早在几个月之前就有了，月初收好友之邀请，夜游鼓浪屿，彼时夜朗星稀，山海一色，偶有微波抚足，不觉间有了点写东西的感觉，晚上回到旅社简单写了下。等回到北京后，不料润色之意全无，就凑合看吧。    0x01 内存马简历史其实内存马由来已久，早在17年n1nty师傅的《Tomcat源码调试笔记-看不见的shell》中已初见端倪，但一直不温不火。后经过rebeyong师傅使用agent技术加持后，拓展">
@@ -164,7 +164,7 @@
 </blockquote>
 <p><img src="/articles/2020/kill-java-web-filter-memshell/gulangyu01.jpeg" alt></p>
 <p><img src="/articles/2020/kill-java-web-filter-memshell/gulangyu02.jpeg" alt></p>
-<h2 id="0x01-内存马简历史"><a href="#0x01-内存马简历史" class="headerlink" title="0x01 内存马简历史"></a>0x01 内存马简历史</h2><p>其实内存马由来已久，早在17年n1nty师傅的<a href="https://mp.weixin.qq.com/s/x4pxmeqC1DvRi9AdxZ-0Lw" target="_blank" rel="noopener">《Tomcat源码调试笔记-看不见的shell》</a>中已初见端倪，但一直不温不火。后经过rebeyong师傅使用<a href="(https://www.cnblogs.com/rebeyond/p/9686213.html)">agent技术</a>加持后，拓展了内存马的使用场景，然终停留在奇技淫巧上。在各类hw洗礼之后，文件shell明显气数已尽。内存马以救命稻草的身份重回大众视野。特别是今年在shiro的回显研究之后，引发了无数安全研究员对内存webshell的研究，其中涌现出了LandGrey师傅构造的<a href="https://landgrey.me/blog/12/" target="_blank" rel="noopener">Spring controller内存马</a>。至此内存马开枝散叶发展出了三大类型：</p>
+<h2 id="0x01-内存马简历史"><a href="#0x01-内存马简历史" class="headerlink" title="0x01 内存马简历史"></a>0x01 内存马简历史</h2><p>其实内存马由来已久，早在17年n1nty师傅的<a href="https://mp.weixin.qq.com/s/x4pxmeqC1DvRi9AdxZ-0Lw" target="_blank" rel="noopener">《Tomcat源码调试笔记-看不见的shell》</a>中已初见端倪，但一直不温不火。后经过rebeyong师傅使用<a href="https://www.cnblogs.com/rebeyond/p/9686213.html" target="_blank" rel="noopener">agent技术</a>加持后，拓展了内存马的使用场景，然终停留在奇技淫巧上。在各类hw洗礼之后，文件shell明显气数已尽。内存马以救命稻草的身份重回大众视野。特别是今年在shiro的回显研究之后，引发了无数安全研究员对内存webshell的研究，其中涌现出了LandGrey师傅构造的<a href="https://landgrey.me/blog/12/" target="_blank" rel="noopener">Spring controller内存马</a>。至此内存马开枝散叶发展出了三大类型：</p>
 <ol>
 <li>servlet-api类<ul>
 <li>filter型</li>
@@ -330,7 +330,7 @@
         
         <footer id="footer">
   <div class="footer-left">
-    Copyright &copy; 2017 ~ 2020 c0ny1
+    Copyright &copy; 2017 ~ 2021 c0ny1
   </div>
   <div class="footer-right">
     <nav>
