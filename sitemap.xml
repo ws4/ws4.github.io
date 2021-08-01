@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2021/java-deserialize-data-bypass-waf-by-adding-a-lot-of-dirty-data/</loc>
+    
+    <lastmod>2021-08-01T05:41:15.347Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/gossip/index.html</loc>
     
     <lastmod>2021-07-04T07:33:36.642Z</lastmod>
