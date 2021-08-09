@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2021/woodpecker-framework-introduce/</loc>
+    
+    <lastmod>2021-08-09T13:48:13.388Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2021/java-deserialize-data-bypass-waf-by-adding-a-lot-of-dirty-data/</loc>
     
-    <lastmod>2021-08-03T02:42:31.591Z</lastmod>
+    <lastmod>2021-08-07T14:33:37.602Z</lastmod>
     
   </url>
   

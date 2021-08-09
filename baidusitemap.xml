@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://gv7.me/articles/2021/woodpecker-framework-introduce/</loc>
+    <lastmod>2021-08-09</lastmod>
+  </url>  <url>
     <loc>http://gv7.me/articles/2021/java-deserialize-data-bypass-waf-by-adding-a-lot-of-dirty-data/</loc>
-    <lastmod>2021-08-03</lastmod>
+    <lastmod>2021-08-07</lastmod>
   </url>  <url>
     <loc>http://gv7.me/articles/2021/an-idea-of-keeping-persistent-backdoor-in-tomcat-middleware/</loc>
     <lastmod>2021-04-23</lastmod>
