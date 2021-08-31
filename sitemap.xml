@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/</loc>
+    
+    <lastmod>2021-08-22T09:09:27.088Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2021/java-deserialized-data-bypasses-waf-through-sleep-chunked/</loc>
     
     <lastmod>2021-08-16T05:25:16.224Z</lastmod>

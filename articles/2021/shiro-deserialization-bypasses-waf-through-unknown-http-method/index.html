@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="有东西被加密了, 请输入密码查看.">
+<meta name="keywords" content="绕WAF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shiro反序列化绕WAF之未知HTTP请求方法">
+<meta property="og:url" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="有东西被加密了, 请输入密码查看.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-08-22T09:09:27.088Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shiro反序列化绕WAF之未知HTTP请求方法">
+<meta name="twitter:description" content="有东西被加密了, 请输入密码查看.">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			shiro反序列化绕WAF之未知HTTP请求方法 | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/articles/2021/woodpecker-framework-introduce/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/articles/2021/java-deserialized-data-bypasses-waf-through-sleep-chunked/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&text=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&is_video=false&description=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=shiro反序列化绕WAF之未知HTTP请求方法&body=Check out this article: http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&name=shiro反序列化绕WAF之未知HTTP请求方法&description=有东西被加密了, 请输入密码查看."><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        shiro反序列化绕WAF之未知HTTP请求方法
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-08-07T13:49:06.000Z" itemprop="datePublished">2021-08-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/绕WAF/">绕WAF</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <div id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试." data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder="" />
+    <label for="hbePass">您好, 这里需要密码,请移步公众号抢先看.</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="48b164aed1ff19a2524388602d9c7d2cbe46a619b87026b969f4294e1cc1a791">60d5c73e066c4011798d5784ce24955885b14492a3da393def408b7812748631ffd558ea9c89134d1e9383f30ed740ef3cf22ddd775733d3b294498cfc005a71a1cc32ec32dd1a0870033a603c904b15d1b159817e85142541deef5c6c6893690831f52d984feb0555aa4e5291eba94a47d5f9729e6fead988b9a185fe737a074a5fe3cf80cfe77437059f4b8d6daff69a0e3d9cee7252027eb71a74f7305cadbfabf563ebd13d9afa9902c0cc4b78133301d2105326106286cdfa3ad590b16184cd0a61b3e1149446417254de268086c6ea12281b62347201786f7ad57b23d7717f39fd8df967e95cd5483c397fb01ba8f6b5b36e2cf62d2b710f9d8dce7f5aeb7c844fcbafd73e68075b59e9f7605e462b65e1a330ce40bba0c0d24a89d6c53638c689d80f5b9d1dde64fefbdb04eb06b9bcb05b938031d8ea7abeb95ee26bc0bc4844c72b39224f510490fd515bdf7a78ee7f667549456e3bc5ac98df7468abf2eb3436325236a631188c1c55582999f5b2e5d1da81f076ed6cad2136a4b9d58d0406109c88d20ff5ca151f048cf123ca200ddb2e1a6026dda82ba5de6c8b5a3f51b7dcab35b99183cbd19c61c66bc7c022496b5904dbdbcf6d10de50d80773cafeb467c7cbb7886d395d44fc104303c672f3b0ef9171c76d0cbf8855fbbeb4f6bde75264581735b16198240721315dc66487df653a79c68657028c60e73d6d50094c04545c06aab5ca20bec3618ad91afdeb1210b5cd0c3bf7f552cb07846055a654d087d2e04e810b264cdcf693d71182a7560bb07799023a93f990da87f3946e5b4b5c85b22ba5dccc15a5c445ba7db9ef0cec23c1d43adb0e4dc1e09a64d6d9196316d127c7f4cbb7aade94f3f9c4f2223264b2565c40ae32c969666393ff4022ce4f4942cdaa5b4e6ac26b93ff42516f01612d35666593e1092d4d7496f4cd41a625cb31ef9976ab1519e172267c9732e2c0a5dbb62b205e3c734bb7f491af87ae5924997b9d7593e4522f5e069cfe2517539d2a7e3150688876bc86f68a9128e096f6c3f1374a9e7e4db8eb34e5f6cf85e2778ae29755f8660ec595c8f77eb4804d449e28d47e635be8ec4aa10dd62f522be38fb3731decd32962adc6c3e0c073280a4eedd0eef5e8ca995ef5bd548475a5544386833bc45fd0cf12fc806e7104e478cd759c5e4020c896141a48ee637578abb1769f948e8d436938ae8d53b4c1d0b86a240ac826ae1591e79d41ade81964e44b3ddbc07e9c954530813f8e138ed68432087433cb3c7f8f91e787478bd38be978544c6d9e586cbccfc461dd6a553e1dc6809fcfe6009dc1688ddb8246b4752aaa4d12935d75b5ade8da5e08f9a0f67f4600b0f38c8b27f21f81ea693c895d32df4d23a393454a314559cb7a9893ff6270569edace21fbdc55e8e09a460061d0d45c81a44e6c35027ffad367ff9a9847d35aea26f1492140e423f33cdafc93fea3f43d7edb8ff315a2e9f0de6233ed282bf1b334cddc3f1956385b4ca2b643446aceaf9dfb4062f88d092d1b874ccc601d7c344255cd1d81f11ace5c70b62401e9584efa496da2ff0a176e6d4a2df8305facd2e648f05dd929e4dd3550254d7376fd09e770cd570e631e544da7742d63e3303d5713584588c2efe7b6d0aa99d2032dcbab1b3ae9575b4445c8c7f5f919fd2f12c00f8d0eed1ef2475903f8dc1cac1c9d0d3acf43e8f301bd04aa749f93bff2081f62da71db2116d337b01e839b31d344812a6f350c18f9a21316597e3894f54f0df5a956bd9b05aead92f0339d47c0bda8e52b8748902b752c239863bd60c06115253bee2a0bb9e51773a5ae759664adef120b9e0dd3f8dd403132a8ef9afe2b07d1b8313699c46ace313516502bd44c34898a63fce9660ef1aecac6649e6f7b172a5f52efd4ef82121cfa4e3696cb2b56d358abc61b21747ff9f0c234cae65be69d90773444ba1043afa6a2af98d62c43e361555fc82a4cdaaa875d7cce33e090ccc32bfaa18dc02871adb227921befa227c6da2ecc6a45be034b7905a471ba0e3c4607c01bddf60ef1e9d47b5c2f970921685be0983657ebb1e36bafcba1ffb889c85c09a891b0847411bf99f5fd9292a27434553d5222ed012c8ac902aba9b283a7b5ee09b01b5b6b49fdc7899b153cbb941739e02c3ba60076e2e0a10c0f1ab6a2ab0d33a3ad8cfaa4bd9416d33c42e3ed3cc08f3edc2399b0dea12383b81132b6183bfee1f1481c447575eda81ddee2ab94a848ad0a4bcbb676d534a61439d545d2e69063fcdb3aa8ce25d9fe4170e6a998652cdaf32530ea2a35abe7595ab36327f4a412af5b31d65bcc3f4d0389d391ba5c1ee6f8435f854e56dfee475b423c616822e189c9e920d8757c58070bb13afa10d944dc734deefe06ce8762bc347872a743506a2b5261b08c8081ebb9a6c8a4324144b73f7143edef9d9b2fffa16f85df6c48e0ce5e87e32df3be4f52b7943e367fc3411662fefc61a84ce4c66a65835a34e96f533541227fd73415588a4f89851177ea42d7cb8bb7ae77a476cc85a7215890c310d6a6acbd9fea2be792aec7b537c1ae5c597d490fb6edbcfd3f668c027e94da6e50ddf0ec2344d2d5e552667af808b6c6b66c19e3c05491222d9c72371489a2482c327fc50583603a67f8675233e4ebb1e51091feb3eac7b97235d3a8432a3aa2cb9524ab86896c1eb9b85507a90621b083a612bc5b954fbf484c404386dde14e07c964ccaba49cf316a6ceedef724ae1b9c5f04667db124104706c3d57f8f19ac4a2c01a36714bd177a1905128a66c478f865c5ef95cc4cb2bc772266c5647ee70d42b827fe41378bc05d221031f6f71acd0d1656370424a158169fe63627a69218549deb3d16ae2d2ed05d989b558c853ef4f395637cfea1d7402c862981e38380321c0ffbc84b8f48b1066ece0e035594eaaf01d0c07027440c0c62bdb9970f5e885517c56c36f89368d0dc21a4f1c0244ac4c3a15a747598007bd2962d93874b0a38a145162a2cb8e05cf6f96424d30139a94e1da849861e90635f0235a9888eea0577e683c600f0a0e80d438cb0927fffeaaad2ff4e0225beb521ca9a183312f24441b6999776d4546c6398939f1dc8300e3194341b53105a43000c4cd40c88d47fbfbde6be6008c6660911a9fb9b00e23d20a6f42fd028622ce9291b3a54dde3c1495dbea0dd361cedf95e06ddf95bac2307a7df6881c339fd454e2fdd2b51026f84994bbc6e8c3842da745892f8ef7ff92539970c38e3831b470962eacb2e03987f51a5edc99f46607e04659e4039c2deede02839d2e566e3237736c6afa49f5a1516b94c36b4cb15a146248df18abe4b05aeb5d3375984b4714bec3ed9561374435b65cf78ff0a315d063b3bf44e51fd2ae7beb9a3ba94e0488846cf3868c92caf3b8a3a3a5d00d1891352a1ddf5046bc08a83abb953b2ec8894b4d1cc3dc1c7a6d023ea2db57e2498baaa8a32097b14f59d86cd8924778b82edf96bd7d023bab6375bf19e9725fc4d8ccea8cf91815a52a689edf8050213e6508af4464941b43ed5253a6ca4ff0074f549d60d36e6cccda11cb7b293a787c5b440de7e411f2045c21b35c517855d306fc429edb5d6261ca27732c455b582a6dd60423a04e7ca9753a723d53082b6f87703bfdf846ff3f04e351f62413376ab7a8cfe9e65b31bf734df59a3a4c59866c10fe0327a19b586e494100e5692c67e40b567554b8952e83409dc7190001db2c7cf061008b462b02a7d48ce93325d73e0e2b0b41b538118571c4469a8a57c6c6d511418887004fadd523da638148b1d95969dbd0cfd299e0585e605fc0d1dbaca9dd4ed4a23d3205729377a7c8f3566e34f566cd395167170a095551041f31274dd9dc61d90bae28163e63102b485fa1c25fb7f7af375ea253804561851aea38cda17de956944bed69bc48b4afa07c69f10f9e636c79078d0eab6169c69ca5100819a6ebe198ac4809574d8bafbdd6144c4beee17ac813b7a3a2e0edbeb6dc29913e1c133f5b5fa68fe8bf16ede013cdfae939a814bd83767bd3aced2dbb51b0d69fc0691aff091e619a60aa8c9c71a0e59d1bbff92eca430d65631fd7923b11b6780dc3a103fb91c2587a0aa001dee4d28b8bc5227d2d4ed4d1fa8c0a81f0586db3409c6c479f15777812c36964fd69bb7e2eeeb47812c9da29a61d9633148db9080cd178a45cfbd04d4f86cae4fac45f8c43575cc8c7b22087c72446615b0c070b23a2a79a57c4593d59cf87b359e813f6bf80c1e7864c63f7e10dcfbd720de85c863cc2928767956295bddbe33d2e8d2a724e29d43801b4a40b97be68b9d935177c1af1937d7fb57af03279aacdf701c44ab24266df7d37d6312a290cd800c82bc8f3155a984908d538b3f2fed982084f994462b9382de8b844a3387274b3b4696f6661e9a17803438dc31e160c37947af51968d1511e3d17cbcdab9c67b82e3b68a50329ee9892d0df0802c0ad977a92a17cc80c0353ba5a57166f39ffdbbc10055b275a0900bc2f9998fae29a9846fb27a3a18bb2f928f94a4a57bd08d1c3eb9472889e316decb6ee0ff68a9fd6b863f1277f8d01b8af0e0b3ff9bc353c39af0514d49f3f7ca8635473bec70c29d68dad9cf5725eb3ec2a77dbd0c4d2a75d9bf18328bfdf8f4a48fc71d712c8c806b79d0bccf2d61fff8bbc5d3c47a3e7db1b9354800466a8d502ab712be5a7bb397fe6c5159c2a5a5d4d94604436150b2e95ec502b4aa9fcf18338e6bdfc473a16907fb0f529d59e3405e71dafc381a531639ae1495e39554964cb6d79216aa842f649377eeec9e6b643465cad179c3933465107f0822e60d475117da1a4249f278c53c79c9f1b56107c1e821411fa972eeca1f950434643cfc4d58faeaf243e1b5a93f4f171d3e30aa7ca74e26859805653815dab52389a9eec31796e3d6f3f7514a7cc2f383f4d0ee84d31fdb7e2a8489318426048ed25a94b67d6d7441cfd41e946f739e65561f9125cb9038cbfcfd20a3b547ee219d6b43c4f066b824348ea613dbd2cdabf946886bc789a0a20642fd83975e1982f492752272962905e3396eb9f68a4bd3c13fed1b9699c1b09e18f4fd2037110f4eb66a8ce7e0c7cc1cf12be78d070aff6258268503f190a25553985cf1f6b4812b8e54f3e04204cda4e98719dd055627e6b6f581cef420cee378486a7f42c88f519782f285b204121b1a7747f26b2c038b2ba2e1dcb05fc0ec3536a919b1ac1443025952684f25b063a9f359ad9e75cadf3b900a52c455c0ede15b43a426556184d2dda5908ccd3b1260c1de05b63aa8a12347ca1c813f9ee3003ddfcc5be37b423a4b094fc2ee7f301cdc51aca9dcd30365e531f48800f35caa360393fff582b50f8effde038f5bf105b8e64105b15b80ff7112260867c543c1baa368492655792f63d17a6dbe059bc331858635188e19ec8222047de1f8d2d9cc55b6c962fa558c50597d6b0bdb43d55c48679e0b4a3d5688984d25474fa580a36aa58a014c366d0105e7dd36ecaa56357096f7259e72b1cc6db945707c3dd95b4f9fecdaabe7a1ffe9c3d410b93202c3baac9a77d4d566e142e7ea50e4e74f52e2d96b25d7976cdbbf99731b381f9c31af8b343797d2a9ca82cfeb021c79a6edddba0843d49a6bdbf0b56815180fd6c18a82348b0e588f0cedbed0b895732b327b6c9a543bfe6c58f1575cc2eafbbbddc88e28803d4f73fade943b3e6a4beb685c3ab31f46c7bf815b25c3e8cb403c522c5a5f463c0f475d8b4a084c009550cfe78cafae18a845867040d0245fa54621cf5208dede069dcba50c0d97be41cf64ea381ccc48415671a41e5a6c53ad981452579f4ccfb9e1ccb76efaea4611184209390c7476bc4c2edb2ce1e49c3791c94272f99dac48a6cd64e2c753b5d71065911b935f6a1ca1c4e5a7ee4ae71df349b2b4d7c723f20fcc96c641de26d0d62f91bac4780744e576da6e8fca6e8b6747303fcf86f8809138cdf82f64b993be969d20d884025d6d9d22aa6d25c8b2e5ad65645af9a050ce551e3b290dc0dda0a59315a8b5e3bff756e3ed70c969529774c9d04894980166276750e561c8c35dec12dea8edcc903de46d5216cbeac59e92a5fdaaadcf79c09e83b393d18e77529ef858e5fe378bf17c8cebcd991f29a52c56ce8d170c0e096bfa4cbd6765b4c0a96149fe500e86b18f1618aa0448983f9dfc2b82e827cab6b0dfa41493a1783c51bc1dd26e1476ea79f7381d10824923322e250110b9112d80e635e0904e781a9dd31a2bd838063a13efb36797eacbd57641a67fd50db09cc02c4191af99d881b05e12c3da991b877863ac004d24d507eb9ca021d2376baa1093fd08c4812b5d4d593613571e30dc509ad1e9e3dc529a245af1440c743557157dbee4ddee78f83cb5a94b225279646c09cd483bfea3c81ba253919bbe15edba9fd2a37449b2cbdefefb462a160eda535d1a8ec0f9f0900481f87cb1c3d3b0d7e40ad2a4fe96db314c5ad3955306229b5169a391c0fa0c5e7fab1e17e4e5e670b01de7cf6abd4d80f070db5dd7e9de82c13afe9b26f15aa99f4e65d3c2cf2959720fd5bac3137761ccdf50f4e4282b2eb469572af38b0d34366731457e2d98fdc82ef1077029c67ed6de6b858bb7ab6b12196d54f23cbc2b1fea464c050ab6f799c56c6069107cb50e95225ecad79d66b632889c35b779f1fd7bd0fe47c125d58f094c9a9cf8e7e103f9365c5b1c20759bab92734381db7d0a831a9cb20bba4aef0a6bdba35881c984f23d62b5eaea197273dcf682d637d8cc0744cee3d44ce5464c83bbfd6938e1c38f0fde1386198b1daae7d5a30b0a3e2d5d216a24fcb41defa190c7b2efc33114a25eae139f1636c59da033336d86b3e68eea4534d47e8984ea1c9c086a0c3af8d2497feb51f913769cd07bad874b9aae88191879c62cda9f1c36e387ab2daee81cde6dd1e9f75adbf8b25eae03fc8d3e28fc8c66c487b3083af7d2f44b3aa44ed0f2aeba97d6451f1873b7a4d389c8aa5cc3c29971c86db1d6d81ff1c6be3c82e031110ac8fe6dc9f0f8684abcd70038eedfda2cdec8e26223ed1e22143bc38efbf30d0d0ca8281c831471f606921e94a139dcdeca4d3977c0d9b3ab11a93632a0cd8b5ffe4ed341b7f01dc3f005d6d8bd9bab3656047523c3d1b715039985a7d2a66119f5752abcbf668dca1846239a6da7966e639426c8c41d6ed28c76c817cf79992b3c31f573c9cc02bd21c20274f8dec2eb0e888081fb3dc0b9f8ccf91f7558063bc5e5ebb37a73ce0424b584cf1c05e246c874072256ad8560c4e7254dab00db567d11960801abecc8aaed526a66688448fcd088ddd877bd200a86c4aa1cea4b6a0d6c6be2e60a560f9f324925e0ab0d99b8218fcbff6e6156f68fdf33f96ed4a394dda369c01cf8525cf88f1ef831e1148d1c54e9ad206f5bffdae6f73ee0c713f9a6e2a45040061d3384fd71ecfee917f84550e878525d784990b94a63b16a6acd0cd166669e6aa101e5cd22ce0707fdf066535c39b35f5f531a669ecb0824fcf912410bfd163d8f4f372f3105e7d4d7f8587d563f599b7f84e2debb5562b946d9e65969f49cfe0498bb83979e1fbfece783a8918574e7e37f4dc0c4a7ac3a9ce1e6e79dd0afb10f92db1d2b26a4760444205bb3cee1d653fd1a6c2a6d2ca4eca72c443982e4ea53e8b517b00837f059f85c4a77ca6bdbb9b01abadd1e68cec9203b4e219bdb418660f391d0e843bc89047d97cb63e540787013d7a10c8342db8ad679d6a9bae2aa7f8ca1eabf45de482d13a6288893b98a0a1a79816ecdd23ead40fa12d185ebf6bdbe6a95c296e74338b2c909b9e18a15d9419e5b99209236caba850e7a7414d994a9d15088b2778ed75f1e0ca9bbb429fdab0c6fe6cbbe8f3b41e58aab7bb3371bf5523cffe6b55aa08b7702695b48c21fe623738065210d7f774d0a0d0995f1417e2f6952d349b76ff016e9b59ba2d7537b2ed2d1a030302f192e5ee2fc0efea26a6150d793bb900d2f7a9dff9c943a5779bee73a1e0d25e895d923e83228e9a9f71d1c054e7b7cccf33ed81cbfa23a7bf0819ee7e7d1b88af0020a46de6c0297310ef4eb537e817b93c4e424c7dc78238038284b1dddbefa61fe3d55868668213b4c2d9df76d36fdb460e210c5c08c406ee4108cd1eeaf14026e0002d2766fd23a11731b4748d6e57869150dd6012a991827c4e080be790fd4c8c6d52851d7e40e2094a916b58fe62f1dead2eedd96366f0bdb40d35c72d2f3b1d7c871e044106e71a68d9cff7783a50a114eafde909c5611df1efaebdddbd5486c63f24e2ae17831538aa25d0ff7668c50ed99dd78ba6c344bf72455c849cde45d8c7145cd585174afc7e817a836ef14331fe5b44f9c97464394c3d9cb2e85a823b793f5a7bcb6f00636a0abe2f5e9591f2c4b112c4255c87933713c6add4ee772047359f7d2bbe08dc5acb743b2fd2efcc2d919bade319fec26e016ec68f5ed8abdcf91063491110ad1a21eea1a7e4bd9285827e3fa26b88791111b189a6edbf070b29a999b505e2c2e6aaf81d5f00c2ae6c0652a5efd3e868b69e3f2fb605161fd0db35f6512c5911e562aa9fd4374d86ac3cc6cc9e30384aebfadc689ed0f04cb0d2dd3196256235d962ac9ba0db12dca506b8bf004b170559b48fb729f5b3a5b2b4ecb9e4f6b9db2f6dcaad813bc7bdf4e146552a8036244d1d95edc1c6976c50c827bb63d3efd2d2b6b3b347a90113d2e2016bb97c3f7cd0f1aa50dae31da227292eaecae75a886149605abc88796e23ee8c2d45af63f7f40065272d3f32796bda452ccffd9dfcf32859249aedcce17f1b7ee535088818b28c078f229df28689f3c687ea3bb4e520c98bd127ed4cbadf20be07f9f81d4d8faeee9d46364cf2b60980adad305755fc312bfdd2c78b5a216c9a0971343d497d695a254ee1c4ffff1ec5c81d1a9950ae9f9931fa08f2fc6f22bbecb4660e141d9ba15251245fedb5a020fc0c91920708cfcc5429c07c87931254c4f13a99dd909a1ffb26d10ace504bfd9ae32b06800811f10f9a97a66d621e01330d8fc05571735140bb7b60fa84d680553b9cec2a9404ec6f7267080671ef930eb7c4bfcd08db9a6c9d06052f73ae2e6478e558625965277bc703ad293f122439c90f2cb6a2bf81d95904bae0bcec5e0278a3502761ea54e9f995da869e6b96d7fe7a80b5727920d66ce535c1beb23f087cac960ce362c0cec9dc1182e40197ab49d4ec06071e44d305ede05d7e93f44e26c029626ac1a1fb9ccc662b82a0ac4686aaa1eeeeb2ce0945d1d50a3993a82195221cde7d6d7a280573c98bd9accc394a2d62e31fffbbdfb38a051f7f26d37da03bb6313316c2728b766fbfb4e2f832e776581cea25031dd7b972ac8fbf63627e1214209d2d41c47b33d6da86260d0020a4ac7931935e8a472a305943c8ddc888c4ca025dd64b6eccd5dec1ad526458613db3cfb10a41d4424b99e4f55f7deb66300a7abd61862fabeb95f81084b6e3070aba7bf2e1ab11aeb1a3aa3d16e3ce9c0c13cb4ce807d41060ba298367b88cb95612aa826e29b45d60aa573a18a18fdfb410bd966c88f92ea2cedffb58a72fa08700a7fa097218232c3b405b3e8d084a8e02a9811d84c3dcb73858c3ed33c5bfac7c160e8cc113fe009efce6e41fbd165341ac88675bceb3411e7823e2ea8aaa2f977928f64b16196682c4cf049b9b35bdad13e528dd4e2762c054aee3fbcf7b211f4fb6136bf8238a89cbdeb5f89b6633721525527d6c10759de930e0d46dc3205f25f0f3a2360ad203009b2d8956f66df3b88d269b12c5e4924039add1115ea4ad1a42d3fd025e62a36f75c077da6d80571e81da02383737fbf0d8fb78a3b6ec063131d26d24195343eb503772af5a6ca36f1f0fefd4c0494596f755d8fa630b61b7f2a482a8d500deec269c4beda3461a3593fc304e0f8f9a23dd95b157265d387808c99f1abe68f318c5c77caf33fbaa7ef428e80a48dcc0c304c10ed731308aa3f918bd289fd5ef9ac00f060fa0507e09a86b6874593f9514c578e55bfcaae64b9608a821d4c4f6c609887b50c553ddbfaf3081c2f9d7650eef038acc4d3c4eaf80cf9c3a77f7a27a0dba839008df69d967ef2f071a85b5977668b9b17944208edc68dceaabbe52946743cd99332082f1607fe0f4acb0642dbbf9a9f0d5318e3f02fbae9c2daf8c80cebb41fd724e204dc88b2696bdba1c4e9c7fa3e3e7d7f8d7b5f1024ecfbfea37570a6caabac478eb6d511e1a5309ab09e8adaab71f65df11053154087fbeb6dd7fcdb1c0ae3ebc0f037c343259b9764b5e23d0986364afa36ec639d0e40e2f9fc2177cb3ad25e937b738b68fa9ea6309cd043e1bc6b2da835676acd8819c5604e140580ffc7bdc8cbda5cdd1f9db3cff5100faa1b2ad8f0364f1729e3d169f8aa03a4c0683e0a6a6a49f308fced52ba2b4e784782ef28a690f4063894b20fa04ae3130aa690c970d3fbadbd55d2e51211f3aa4e441410e45bfb4ae0ea62d5dac41684e212f3adcc719e41266dc4b85e71fc030812a9a02f9c51eb245d64ef16095e63e9bb5ca54035697f33a8029c050573a776bdc5cf7b7edf51270eab57e08d5d8f0ad2d4680b9c232ad75fc58c25959d10e5301239cc906357ed1d89afe9f49fe8f4fd38b25b51342ca152ccf503aa9c23c9b3c0ad1fd0d4da837ff53bdca8778aa647ee6c91f11c8c304eb17da38c67ff404d6e29280e164a47378a356c55a1369b74e726fdb12c69a5596834d0f3490b83c11352bd81dfaa8c3771dc7762965b625486a97da699fe537510e9b77e4243357c98cf5d42af2006b04b64fe18e946ce7e104a29fc0ff319193bda8e85578e91afddbac202ee476bfc8dc563a114217fd96d2975d2df1a56776be2b461644774371df2ffd544c5bf023362d8dea0f06b26ac9fe1972262c3d096d913917bd929dbfc8785773bf70836385019521bf174a1be5d272f828f6de2d12aed865c4ae8f03d85617bdffb9dcabcc52a70cf45802f38f50009aa1bdc34c3c2ddfee90aaabbf76ad61fe8f6166bbf16f3729f823a4d9ff76c89d854969fe245a2e82459e3ab154bb86ff1a0777ae6cd466e565587c8fbebe83aa4a4e8943f5b543c86a7f1207560276bd73d998cc5b0d8bec8e17b4b1b0c709112c1be183ce90679cf54d9b7a9e7c8173d15b4b5a9edf7eeccf541ddd04aea50fa5c60e756a9978a998c08441d4fac5c5fa0b1972084d640251319dec767116819bc2b121d14f0dd17e94b3441ed6c4b8c554fd300b1b8faee58497f6882cd06d62bf75913c7218bbca21a23c7b6b8e9f38ac15566a6a65141eb10e9ee6cfb19ffdd87a1b78499d338691bfd743f9b6ce20da959576caf06c122199bfec5f6270de641c120bb01af38db99e37d3ab044da06c38ff1a117f48f03421dde4fa80829952e620aab630f4bc2719cbf0ce516fb314d16f87a649803132a0c48d59b0682831070be0c476cc30f5308b6a7953db88d56f836bd4d28f59ded57e563cc33f94cb4290101afb6ff3679a72e58de62667ac75c95a6590298dabfb4d366af53fb25851fbdee5d5ad180fcf3b</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
+  </div>
+</article>
+
+
+
+<div style="border: 1px #2bbc8a;padding: 100px;text-align: center;border-radius: 5px;">
+    <img src="/about/wx_public.jpg" width="280" alt="">
+</div>
+
+
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    let gitalk = new Gitalk({
+        clientID: 'e47c5d37e969e470f60b',
+        clientSecret: '82b90182f62c79794f62979f6841b4199281b01d',
+        repo: 'ws4.github.io',
+        owner: 'ws4',
+        admin: "ws4",
+        id: '2021-08-07T21-49-06',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&text=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&is_video=false&description=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=shiro反序列化绕WAF之未知HTTP请求方法&body=Check out this article: http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&name=shiro反序列化绕WAF之未知HTTP请求方法&description=有东西被加密了, 请输入密码查看."><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2017 ~ 2021 c0ny1
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
