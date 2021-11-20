@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/inject-code.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/weblogic-run-result.png">
 <meta property="og:image" content="http://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/calc.png">
-<meta property="og:updated_time" content="2019-08-27T16:34:00.387Z">
+<meta property="og:updated_time" content="2021-11-20T15:16:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="weblogic“伪随机”目录生成算法探究">
 <meta name="twitter:description" content="0x01 背景说明我们在渗透测试过程中，可以很容易发现weblogic的    server name一旦被修改，其web应用有一个目录就会发生改变，导致我们在部署war拿shell时受阻。 比如bea_wls_internal这个weblogic自带web应用的web目录物理路径为： weblogic10.3.6.0\user_projects\domains\base_domain\serve">
@@ -164,10 +164,10 @@
   <div class="content" itemprop="articleBody">
     <h2 id="0x01-背景说明"><a href="#0x01-背景说明" class="headerlink" title="0x01 背景说明"></a>0x01 背景说明</h2><p>我们在渗透测试过程中，可以很容易发现weblogic的    <code>server name</code>一旦被修改，其web应用有一个目录就会发生改变，导致我们在部署war拿shell时受阻。</p>
 <p>比如bea_wls_internal这个weblogic自带web应用的web目录物理路径为：</p>
-<p><strong>weblogic10.3.6.0\user_projects\domains\base_domain\servers\AdminServer\tmp_WL_internal\bea_wls_internal\9j4dqk\war</strong></p>
+<p><strong>weblogic10.3.6.0\user_projects\domains\base_domain\servers\AdminServer\tmp\_WL_internal\bea_wls_internal\9j4dqk\war</strong></p>
 <p>PS：为了后面的讨论，这里统一下概念，域名为<code>base_domain</code>,<code>server name</code>为<code>AdminServer</code>,web应用名为<code>bea_wls_internal</code>,伪随机目录为<code>9j4dqk</code>。</p>
 <p>这时如果<code>server name</code>修改为<code>c0ny1</code>的话，经过测试其伪随机目录会变成<code>qn64ct</code>，即该web应用物理路径变为：</p>
-<p><strong>weblogic10.3.6.0\user_projects\domains\base_domain\servers\c0ny1\tmp_WL_internal\bea_wls_internal\qn64ct\war</strong></p>
+<p><strong>weblogic10.3.6.0\user_projects\domains\base_domain\servers\c0ny1\tmp\_WL_internal\bea_wls_internal\qn64ct\war</strong></p>
 <h2 id="0x02-真随机-or-伪随机？"><a href="#0x02-真随机-or-伪随机？" class="headerlink" title="0x02 真随机 or 伪随机？"></a>0x02 真随机 or 伪随机？</h2><p>在此前我一直以为改目录是随机的无法。直到我做了下面的测试，将两个域的<code>server name</code>都改为<code>c0ny1</code>。</p>
 <p><img src="/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/test1.png" alt="bea_wls_internal随机目录变化"></p>
 <p><img src="/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/test2.png" alt="bea_wls9_async_reponses随机目录变化"></p>

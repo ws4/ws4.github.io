@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/</loc>
+    
+    <lastmod>2021-11-20T15:16:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://gv7.me/articles/2021/some-extensions-of-spring-bean-rce-under-weblogic/</loc>
     
-    <lastmod>2021-10-10T14:37:30.326Z</lastmod>
+    <lastmod>2021-10-10T14:37:58.093Z</lastmod>
     
   </url>
   
@@ -215,13 +222,6 @@
     <loc>http://gv7.me/articles/2019/refactoring-sqlmap4burp/</loc>
     
     <lastmod>2019-09-02T18:42:18.324Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/</loc>
-    
-    <lastmod>2019-08-27T16:34:00.387Z</lastmod>
     
   </url>
   
