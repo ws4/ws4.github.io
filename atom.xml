@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://gv7.me/"/>
-  <updated>2021-12-31T06:14:39.938Z</updated>
+  <updated>2022-01-20T03:17:42.267Z</updated>
   <id>http://gv7.me/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>忆魁兄</title>
+    <link href="http://gv7.me/articles/2022/remember-my-brother-qui/"/>
+    <id>http://gv7.me/articles/2022/remember-my-brother-qui/</id>
+    <published>2022-01-20T02:07:43.000Z</published>
+    <updated>2022-01-20T03:17:42.267Z</updated>
+    
+    <content type="html"><![CDATA[<p>早上起来做早餐，发现窗外的北京城下起了鹅毛大雪。让我突然想起大学一个“有味道”的人以及他的事。真是飞雪窗边过，故人心上来。下文是大学时写的与他的记忆，且仅有此篇，毕业后也再没他的消息。</p><p><img src="/articles/2022/remember-my-brother-qui/snow-outside-the-window.jpeg" alt="窗边飞雪"></p><p>魁兄，小我一届，爱诗喜酒嗜编程，是我目前认识的最有才情的程序猿。原先虽然同处一个工作室，然生活并无交集。</p><p>真正认识是在一年冬天的夜晚，工作室三大学霸因获得奖学金而请通宵唱歌，而我和他正好在邀请之列。</p><p>麦霸们开始争相在点播机前点歌，酒鬼们也用他们坚硬的牙齿翘开一瓶又一瓶黄河啤酒，“烟筒”们自然也没有闲着嘴，叼着黑兰州并互相给对方点火，不时吐出一抹白烟，缭绕在空气中。我就穿梭在这些之间，乐此不彼。</p><p>魁兄到是不识人间烟火，手里握着还没拧开口的白酒，安静的坐在一个被人遗忘的角落，不说话。脸上平静而祥和，到是有点像暮年的老者看着一群年轻人狂欢的寂寞。ktv红红绿绿的灯光，和他似乎有些格格不入。我以为没人跟他说话，于是跟工作室其他男男女女寒暄几番之后。我把酒杯藏在身后向他走去，他身边的学弟们也识趣地给我让出一个位置~</p><p>我：“魁兄，你的酒杯呢？”<br>我瞟了他一眼<br>他淡淡说到：“啤酒不醉人，又不暖心，不喜”。<br>我看了看天花板，叹气道：“那咱来一个冬天的白酒”。<br>他：“甚好”<br>⋯⋯⋯⋯</p><p>我们就这样，在红男绿女的狂欢之中，在杯觥交错之间聊起编程，聊起C语言，python，Linux，还聊起了他的诗和故事。其实平生也是第一次在KTV里讨论编程知识，感觉是有点怪怪，不过相谈甚欢。聊天具体的内容我也不太记得了。只记得那个冬天，一杯白酒温暖了整个夜晚⋯⋯</p><p>时间回到了前天夜里，我照常在学院看书，他突然发消息给我说来取他的诗集，我欣喜不已去他宿舍。他做在窗台边，背景是无尽的夜色。</p><p>他平静的说：现在也写不出诗了，我整理了一些能看的凑成一本小册子，你们将就着看吧！<br>我：为何写不出？<br>他打开窗户，外面的雪飘了进来，划过他的臂膀。他背对我说：没感觉了，或许编程太多，或许环境变了，或许我也不知道为何。</p><p>我默不作声，走到门口。<br>我：魁兄既有雪夜赠书之意，我亦有勾句还汝之情。<br>魁兄也不做声，笑的像个孩子一样，甚是可爱</p><p><img src="/articles/2022/remember-my-brother-qui/zixv.jpeg" alt></p><p><img src="/articles/2022/remember-my-brother-qui/mulu.jpeg" alt></p><p><img src="/articles/2022/remember-my-brother-qui/ying-xiang.jpeg" alt></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;早上起来做早餐，发现窗外的北京城下起了鹅毛大雪。让我突然想起大学一个“有味道”的人以及他的事。真是飞雪窗边过，故人心上来。下文是大学时写的与他的记忆，且仅有此篇，毕业后也再没他的消息。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/2022/remember-my-
+      
+    
+    </summary>
+    
+    
+      <category term="回忆录" scheme="http://gv7.me/tags/%E5%9B%9E%E5%BF%86%E5%BD%95/"/>
+    
+  </entry>
   
   <entry>
     <title>构造java探测class反序列化gadget</title>
@@ -469,31 +493,6 @@
     
     
       <category term="burp" scheme="http://gv7.me/tags/burp/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Weblogic t3反序列化漏洞(CVE-2019-2890)分析</title>
-    <link href="http://gv7.me/articles/2019/cve-2019-2890-vulnerability-analysis/"/>
-    <id>http://gv7.me/articles/2019/cve-2019-2890-vulnerability-analysis/</id>
-    <published>2019-11-04T14:04:07.000Z</published>
-    <updated>2019-11-05T02:13:00.189Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="0x01-漏洞背景"><a href="#0x01-漏洞背景" class="headerlink" title="0x01 漏洞背景"></a>0x01 漏洞背景</h2><p>在WebLogic官方发布的10月份安全补丁中，包含了由Venustech ADLab提交的CVE-2019-2890的修复。该漏洞通过T3协议发送恶意的反序列化数据绕过了Weblogic的黑名单，成功反序列化执行任意命令。通过官方公告可知，该漏洞的利用条件是需要认证。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/965305D2-2F45-4575-9A16-18A076A01A08.png" alt="官方公告"></p><h2 id="0x02-影响范围"><a href="#0x02-影响范围" class="headerlink" title="0x02 影响范围"></a>0x02 影响范围</h2><ul><li>Weblogic 10.3.6.0.0</li><li>Weblogic 12.1.3.0.0</li><li>Weblogic 12.2.1.3.0</li></ul><h2 id="0x03-漏洞分析"><a href="#0x03-漏洞分析" class="headerlink" title="0x03 漏洞分析"></a>0x03 漏洞分析</h2><p>下面以10.3.6.0作为分析版本。问题出现在<code>PersistentContext</code>类上，通过查看继承关系我们知道<code>PersistentContext</code>类实现了序列化接口<code>Serializable</code>。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/E9257EC7-5283-4A10-B5A3-48768E40879D.png" alt="PersistentContext类继承关系"></p><p>我们来看看它的<code>readObject</code>方法，将<code>ObjectInputStream</code>类对象<code>var1</code>传入<code>readSubject</code>方法。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/E970A5E7-E834-400C-9984-5C3507948B64.png" alt="readObject方法"></p><p>跟进<code>readSubject</code>方法发现，会先从<code>var1</code>中读取反序列化数据当中的对象数据。然后调用<code>EncryptionUtil.decrypt</code>方法进行解密，最后解密后的数据被用于反序列化为对象。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/B61188D2-9A6F-4DAC-892B-C1144A88D230.png" alt="readSubject方法"></p><p>至此我们知道<code>PersistenContext</code>序列化数据中还携带了其他对象反序列化后的加密数据。如果我们在序列化<code>PersistentContext</code>时，将恶意对象反序列化数据先加密，然后<code>writeObject</code>，就可以让其携带恶意对象，绕过Weblogic黑名单进行反序列化了。</p><h2 id="0x04-漏洞利用"><a href="#0x04-漏洞利用" class="headerlink" title="0x04 漏洞利用"></a>0x04 漏洞利用</h2><p>根据以上思路，我们编写一个携带恶意对象的<code>PersistenContext</code>类。只需修改下原来代码中的<code>writeSubject</code>方法为如下，其中<code>Poc.getObject()</code>就是我们的恶意对象。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/5FB1320C-A1C4-43F0-96C5-7D21EE70E199.png" alt="修改writeSubject方法代码"></p><p>在<strong>进行序列化之前我们要处理四个问题</strong>。<strong>第一个问题是创建PersistenContext对象报错</strong>。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/57A3655A-F776-49C2-BAA7-0F9F03198140.png" alt="创建PersistenContext对象报错信息"></p><p>这是因为<code>PersistenContext</code>初始化时调用了<code>SecurityServiceManager.isKernelIdentity()</code>进行内核身份判断。<code>isKernelIdentity</code>方法无论如何都会抛出一个<code>NotSupportedException</code>异常，导致我们序列化被终止。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/E816991E-9EA3-468E-85FA-1C9175314834.png" alt="SecurityServiceManager.isKernelIdentity()方法"></p><p>我们可以将其注释掉</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/3E6D0521-8AB3-45E2-B02D-803BBF515919.png" alt="PersistenContext构造方法要修改的代码"></p><p><strong>第二个问题是反序列化PersistenContext类会出现卡死现象</strong>。这是因为<code>PersistenContext</code>等相关的类都会有一个<code>AuthenticatedSubject</code>静态对象要初始化。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/A505C25E-EDF1-412B-8EDE-C7ABE8765F83.png" alt="静态AuthenticatedSubject内核id对象"></p><p>初始化时会进入到如下代码。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/F4F81B39-2D22-4F10-84C2-FF533AB55003.png" alt="导致卡死的代码段"></p><p>我们需要<code>ceClient</code>变量为<code>true</code>，否则会一直进循环执行<code>ceSubjectManagerLock.wait()</code>进行等待，无法序列化！而<code>ceClient</code>是从系统属性<code>com.bea.core.internal.client</code>获取的，所以在序列化之前需要将该属性设置为<code>true</code>。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/89C83A3D-8F6F-4C4E-890B-9090929D60F9.png" alt="ceClient变量的赋值"></p><p><strong>第三个问题是恶意对象没有被加密</strong>。这是因为在调用<code>EncryptionUtil.encrypt</code>方法加密时，会根据<code>Kernel.isServer()</code>为<code>true</code>时才会进行加密，否则返回原数据。<br>因此加密之前需要调用<code>KernelStatus.setIsServer(true)</code>设置状态为<code>true</code>。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/00CBD49C-24DD-45CB-8B96-5C96F59D2543.png" alt="加密时的判断"></p><p><strong>第四个问题，加密时需要<code>SerializedSystemIni.dat</code>文件。</strong> 我们需要目标服务器weblogic当前使用域下该文件放到我们poc的根目录。这也是官方将这个漏洞划分为需要认证的原因。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/0E16C9FC-DF1D-4162-8551-A99F81CDB316.png" alt="加密时需要SerializedSystemIni.dat文件"></p><p>解决完这四个问题，就可以将<code>PersistenContext</code>对象反序列化为文件了。最后通过t3协议发送反序列化数据给Weblogic，即可执行任意命令。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/B861234A-24EA-49C9-BAD8-B2E0749EF2E3.png" alt="序列化PersistenContext对象为文件"><br><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/364E764C-5247-4FB5-9225-DDD9290E9660.png" alt="漏洞利用演示"></p><h2 id="0x05-补丁分析"><a href="#0x05-补丁分析" class="headerlink" title="0x05 补丁分析"></a>0x05 补丁分析</h2><p>通过对比，发现最新补丁在反序列化时，使用<code>WSFilteringObjectInputStream</code>对要反序列化的对象进行过滤。</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/751120F6-1CBF-46CE-B226-A4B45C1D29F1.png" alt="补丁修复处"></p><p><code>WSFilteringObjectInputStream</code>实现了Weblogic下的过滤接口 <code>FilteringObjectInputStream</code>。在其<code>resolveClass</code>方法中，检查要反序列化的类是不是<code>Subject</code>的子类，不是则会抛出一个非法类异常，反序列化终止！</p><p><img src="/articles/2019/cve-2019-2890-vulnerability-analysis/597CFF7E-38BA-4A02-B977-53D5B3DE5282.png" alt="补丁修复的方式"></p><h2 id="0x06-分析总结"><a href="#0x06-分析总结" class="headerlink" title="0x06 分析总结"></a>0x06 分析总结</h2><p>这个漏洞需要满足以下两个条件，才能触发成功,较为鸡肋。</p><ol><li>Weblogic开启t3协议</li><li>可以获取到<code>SerializedSystemIni.dat</code>文件</li></ol><p>但是在实际环境中，如果部署在weblogic的站点存在<code>任意文件下载</code>或者<code>任意文件读取</code>，那么配合上该漏洞即可执行任意命令。</p><h2 id="0x07-参考文章"><a href="#0x07-参考文章" class="headerlink" title="0x07 参考文章"></a>0x07 参考文章</h2><ul><li><a href="https://www.oracle.com/security-alerts/cpuoct2019.html" target="_blank" rel="noopener">Oracle Critical Patch Update Advisory - October 2019</a></li><li><a href="https://mp.weixin.qq.com/s/BW1d_NTsmXoSoOYAt8T2RQ" target="_blank" rel="noopener">WebLogic 反序列化漏洞(CVE-2019-2890)分析</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;0x01-漏洞背景&quot;&gt;&lt;a href=&quot;#0x01-漏洞背景&quot; class=&quot;headerlink&quot; title=&quot;0x01 漏洞背景&quot;&gt;&lt;/a&gt;0x01 漏洞背景&lt;/h2&gt;&lt;p&gt;在WebLogic官方发布的10月份安全补丁中，包含了由Venustech ADLa
-      
-    
-    </summary>
-    
-      <category term="漏洞分析" scheme="http://gv7.me/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/"/>
-    
-    
-      <category term="weblogic" scheme="http://gv7.me/tags/weblogic/"/>
     
   </entry>
   
