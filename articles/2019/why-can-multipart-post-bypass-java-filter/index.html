@@ -10,24 +10,24 @@
 <meta name="keywords" content="网络安全,渗透测试,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
 <meta property="og:type" content="article">
 <meta property="og:title" content="上传包可“绕过”Java过滤器的检查？">
-<meta property="og:url" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="0x01 背景说明月初和southwind0师傅做代码审计时，发现了一个比较奇葩的问题。系统设置了全局的XSS过滤器，在其他功能点上生效了，但在一个公告发布功能没有被过滤。southwind0师傅通过对比数据包发现公告发布数据包是上传包（也就是我们常见的上传POST请求）。后来我经过编写测试代码，发现过滤器确实无法过滤上传数据包的参数值。 这让我不禁思考 *”上传包可绕过Java过滤器?”*，如果">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/testdemo.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/CommonsMultipartResolver.parseRequest.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/FileUploadBase.parseRequest.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/FileItem.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/CommonsFileUploadSupport.parseFileItems.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/HandlerMethodInvoker.resolveRequestParam.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/ServletWebRequest.getParameterValues.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/DefaultMultipartHttpServletRequest.getParameterValues.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/DefaultMultipartHttpServletRequest.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/testdemo.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/CommonsMultipartResolver.parseRequest.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/FileUploadBase.parseRequest.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/FileItem.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/CommonsFileUploadSupport.parseFileItems.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/HandlerMethodInvoker.resolveRequestParam.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/ServletWebRequest.getParameterValues.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/DefaultMultipartHttpServletRequest.getParameterValues.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/DefaultMultipartHttpServletRequest.png">
 <meta property="og:updated_time" content="2019-03-28T14:26:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="上传包可“绕过”Java过滤器的检查？">
 <meta name="twitter:description" content="0x01 背景说明月初和southwind0师傅做代码审计时，发现了一个比较奇葩的问题。系统设置了全局的XSS过滤器，在其他功能点上生效了，但在一个公告发布功能没有被过滤。southwind0师傅通过对比数据包发现公告发布数据包是上传包（也就是我们常见的上传POST请求）。后来我经过编写测试代码，发现过滤器确实无法过滤上传数据包的参数值。 这让我不禁思考 *”上传包可绕过Java过滤器?”*，如果">
-<meta name="twitter:image" content="http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/testdemo.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/testdemo.png">
     
     
         
@@ -107,16 +107,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&text=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&is_video=false&description=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=上传包可“绕过”Java过滤器的检查？&body=Check out this article: http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&name=上传包可“绕过”Java过滤器的检查？&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&text=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&is_video=false&description=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=上传包可“绕过”Java过滤器的检查？&body=Check out this article: https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&name=上传包可“绕过”Java过滤器的检查？&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -284,16 +284,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&text=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&is_video=false&description=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=上传包可“绕过”Java过滤器的检查？&body=Check out this article: http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&name=上传包可“绕过”Java过滤器的检查？&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&text=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&is_video=false&description=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=上传包可“绕过”Java过滤器的检查？&body=Check out this article: https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&title=上传包可“绕过”Java过滤器的检查？"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/&name=上传包可“绕过”Java过滤器的检查？&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

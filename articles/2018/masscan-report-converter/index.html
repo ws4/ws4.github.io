@@ -10,16 +10,16 @@
 <meta name="keywords" content="网络安全,渗透测试,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
 <meta property="og:type" content="article">
 <meta property="og:title" content="编写masscan报告转换脚本">
-<meta property="og:url" content="http://gv7.me/articles/2018/masscan-report-converter/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2018/masscan-report-converter/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="由于nmap扫描比较慢，有时候需要使用masscan对大段ip进行快速扫描。为了后续方便数据处理，往往需要将数据以xls的形式进行统计，但是masscan只支持xml,json,list等格式输出,并不支持直接输出xls格式。最近有正好这个需求，于是写了个小脚本来转换一下。 一、编码file: masscan-report-converter.py1234567891011121314151617">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2018/masscan-report-converter/convert_result.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/masscan-report-converter/convert_result.png">
 <meta property="og:updated_time" content="2019-02-16T18:05:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编写masscan报告转换脚本">
 <meta name="twitter:description" content="由于nmap扫描比较慢，有时候需要使用masscan对大段ip进行快速扫描。为了后续方便数据处理，往往需要将数据以xls的形式进行统计，但是masscan只支持xml,json,list等格式输出,并不支持直接输出xls格式。最近有正好这个需求，于是写了个小脚本来转换一下。 一、编码file: masscan-report-converter.py1234567891011121314151617">
-<meta name="twitter:image" content="http://gv7.me/articles/2018/masscan-report-converter/convert_result.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2018/masscan-report-converter/convert_result.png">
     
     
         
@@ -99,16 +99,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/masscan-report-converter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/masscan-report-converter/&text=编写masscan报告转换脚本"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/masscan-report-converter/&is_video=false&description=编写masscan报告转换脚本"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=编写masscan报告转换脚本&body=Check out this article: http://gv7.me/articles/2018/masscan-report-converter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/masscan-report-converter/&name=编写masscan报告转换脚本&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/masscan-report-converter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/masscan-report-converter/&text=编写masscan报告转换脚本"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/masscan-report-converter/&is_video=false&description=编写masscan报告转换脚本"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写masscan报告转换脚本&body=Check out this article: https://gv7.me/articles/2018/masscan-report-converter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/masscan-report-converter/&name=编写masscan报告转换脚本&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -231,16 +231,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/masscan-report-converter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/masscan-report-converter/&text=编写masscan报告转换脚本"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/masscan-report-converter/&is_video=false&description=编写masscan报告转换脚本"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=编写masscan报告转换脚本&body=Check out this article: http://gv7.me/articles/2018/masscan-report-converter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/masscan-report-converter/&name=编写masscan报告转换脚本&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/masscan-report-converter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/masscan-report-converter/&text=编写masscan报告转换脚本"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/masscan-report-converter/&is_video=false&description=编写masscan报告转换脚本"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写masscan报告转换脚本&body=Check out this article: https://gv7.me/articles/2018/masscan-report-converter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/masscan-report-converter/&title=编写masscan报告转换脚本"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/masscan-report-converter/&name=编写masscan报告转换脚本&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

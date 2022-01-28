@@ -10,17 +10,17 @@
 <meta name="keywords" content="burp suite">
 <meta property="og:type" content="article">
 <meta property="og:title" content="148处XSS你如何提交给开发修复？">
-<meta property="og:url" content="http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="客户：你上周发的渗透测试报告中说存在有148处XSS。今天开发需要修复，但你的渗透测试报告只列举了三处。开发需要提供所有存在漏洞的地址，才能修复完整。我：其实可以在系统数据提交的入口，对get和post数据包中参数进行过滤就好了。那样就修改一处就可以了。客户：你跟开发说吧！开发：如果在入口处统一对所有数据包进行过滤，可能会导致某些功能无法使用。所以只能一处处改。我：。。。。。。。我：我去看看能不能">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/save_report_issues.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/request_response.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/save_report_issues.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/request_response.png">
 <meta property="og:updated_time" content="2019-02-16T18:06:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="148处XSS你如何提交给开发修复？">
 <meta name="twitter:description" content="客户：你上周发的渗透测试报告中说存在有148处XSS。今天开发需要修复，但你的渗透测试报告只列举了三处。开发需要提供所有存在漏洞的地址，才能修复完整。我：其实可以在系统数据提交的入口，对get和post数据包中参数进行过滤就好了。那样就修改一处就可以了。客户：你跟开发说吧！开发：如果在入口处统一对所有数据包进行过滤，可能会导致某些功能无法使用。所以只能一处处改。我：。。。。。。。我：我去看看能不能">
-<meta name="twitter:image" content="http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/save_report_issues.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/save_report_issues.png">
     
     
         
@@ -100,16 +100,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&text=148处XSS你如何提交给开发修复？"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&is_video=false&description=148处XSS你如何提交给开发修复？"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=148处XSS你如何提交给开发修复？&body=Check out this article: http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&name=148处XSS你如何提交给开发修复？&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&text=148处XSS你如何提交给开发修复？"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&is_video=false&description=148处XSS你如何提交给开发修复？"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=148处XSS你如何提交给开发修复？&body=Check out this article: https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&name=148处XSS你如何提交给开发修复？&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -238,16 +238,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&text=148处XSS你如何提交给开发修复？"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&is_video=false&description=148处XSS你如何提交给开发修复？"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=148处XSS你如何提交给开发修复？&body=Check out this article: http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&name=148处XSS你如何提交给开发修复？&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&text=148处XSS你如何提交给开发修复？"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&is_video=false&description=148处XSS你如何提交给开发修复？"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=148处XSS你如何提交给开发修复？&body=Check out this article: https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&title=148处XSS你如何提交给开发修复？"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/&name=148处XSS你如何提交给开发修复？&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

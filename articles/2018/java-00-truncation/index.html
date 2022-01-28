@@ -10,18 +10,18 @@
 <meta name="keywords" content="00截断">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从代码层面理解java的00截断漏洞">
-<meta property="og:url" content="http://gv7.me/articles/2018/java-00-truncation/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2018/java-00-truncation/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="我们一般研究00截断，基本都是使用php来写的漏洞demo。所以都知道php下的00截断是和move_upload_file()这个函数有关，和这个漏洞相关的CVE有两个（CVE-2006-7243和CVE-2015-2348 ）。但搜索了网上的资料，发现对java的00截断的研究文章甚少。 完全搞不清在java中这个漏洞是和系统，中间件，jdk，还是代码有关？如果是代码问题，那是某个函数存在漏洞">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.6.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.7.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.7.0_80.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.6.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.7.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.7.0_80.png">
 <meta property="og:updated_time" content="2019-02-16T18:06:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从代码层面理解java的00截断漏洞">
 <meta name="twitter:description" content="我们一般研究00截断，基本都是使用php来写的漏洞demo。所以都知道php下的00截断是和move_upload_file()这个函数有关，和这个漏洞相关的CVE有两个（CVE-2006-7243和CVE-2015-2348 ）。但搜索了网上的资料，发现对java的00截断的研究文章甚少。 完全搞不清在java中这个漏洞是和系统，中间件，jdk，还是代码有关？如果是代码问题，那是某个函数存在漏洞">
-<meta name="twitter:image" content="http://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.6.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2018/java-00-truncation/test_in_jdk1.6.png">
     
     
         
@@ -101,16 +101,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/java-00-truncation/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/java-00-truncation/&text=从代码层面理解java的00截断漏洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/java-00-truncation/&is_video=false&description=从代码层面理解java的00截断漏洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=从代码层面理解java的00截断漏洞&body=Check out this article: http://gv7.me/articles/2018/java-00-truncation/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/java-00-truncation/&name=从代码层面理解java的00截断漏洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/java-00-truncation/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/java-00-truncation/&text=从代码层面理解java的00截断漏洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/java-00-truncation/&is_video=false&description=从代码层面理解java的00截断漏洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从代码层面理解java的00截断漏洞&body=Check out this article: https://gv7.me/articles/2018/java-00-truncation/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/java-00-truncation/&name=从代码层面理解java的00截断漏洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -242,16 +242,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/java-00-truncation/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/java-00-truncation/&text=从代码层面理解java的00截断漏洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/java-00-truncation/&is_video=false&description=从代码层面理解java的00截断漏洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=从代码层面理解java的00截断漏洞&body=Check out this article: http://gv7.me/articles/2018/java-00-truncation/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/java-00-truncation/&name=从代码层面理解java的00截断漏洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/java-00-truncation/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/java-00-truncation/&text=从代码层面理解java的00截断漏洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/java-00-truncation/&is_video=false&description=从代码层面理解java的00截断漏洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从代码层面理解java的00截断漏洞&body=Check out this article: https://gv7.me/articles/2018/java-00-truncation/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/java-00-truncation/&title=从代码层面理解java的00截断漏洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/java-00-truncation/&name=从代码层面理解java的00截断漏洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

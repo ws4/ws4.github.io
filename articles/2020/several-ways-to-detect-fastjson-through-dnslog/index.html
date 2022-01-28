@@ -10,17 +10,17 @@
 <meta name="keywords" content="fastjson">
 <meta property="og:type" content="article">
 <meta property="og:title" content="通过dnslog探测fastjson的几种方法">
-<meta property="og:url" content="http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="0x01 背景在渗透测试中遇到json数据一般都会测试下有没有反序列化。然而json库有fastjson,jackson,gson等等。怎么判断后端不是fastjson呢？这就需要构造特定的payload了。 昨天翻看fastjson源码时发现了一些可以构造dns解析且没在黑名单当中的类，于是顺手给官方提了下Issue。有趣的是后续的师傅们讨论还挺热闹的，我也在这次讨论中学习了很多。这篇文章算是对">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/1.png">
-<meta property="og:image" content="http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/2.png">
+<meta property="og:image" content="https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/1.png">
+<meta property="og:image" content="https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/2.png">
 <meta property="og:updated_time" content="2020-03-24T17:55:23.871Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="通过dnslog探测fastjson的几种方法">
 <meta name="twitter:description" content="0x01 背景在渗透测试中遇到json数据一般都会测试下有没有反序列化。然而json库有fastjson,jackson,gson等等。怎么判断后端不是fastjson呢？这就需要构造特定的payload了。 昨天翻看fastjson源码时发现了一些可以构造dns解析且没在黑名单当中的类，于是顺手给官方提了下Issue。有趣的是后续的师傅们讨论还挺热闹的，我也在这次讨论中学习了很多。这篇文章算是对">
-<meta name="twitter:image" content="http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/1.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/1.png">
     
     
         
@@ -100,16 +100,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&text=通过dnslog探测fastjson的几种方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&is_video=false&description=通过dnslog探测fastjson的几种方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=通过dnslog探测fastjson的几种方法&body=Check out this article: http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&name=通过dnslog探测fastjson的几种方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&text=通过dnslog探测fastjson的几种方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&is_video=false&description=通过dnslog探测fastjson的几种方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=通过dnslog探测fastjson的几种方法&body=Check out this article: https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&name=通过dnslog探测fastjson的几种方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -267,16 +267,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&text=通过dnslog探测fastjson的几种方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&is_video=false&description=通过dnslog探测fastjson的几种方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=通过dnslog探测fastjson的几种方法&body=Check out this article: http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&name=通过dnslog探测fastjson的几种方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&text=通过dnslog探测fastjson的几种方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&is_video=false&description=通过dnslog探测fastjson的几种方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=通过dnslog探测fastjson的几种方法&body=Check out this article: https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&title=通过dnslog探测fastjson的几种方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/&name=通过dnslog探测fastjson的几种方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

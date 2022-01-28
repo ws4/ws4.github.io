@@ -10,7 +10,7 @@
 <meta name="keywords" content="漏洞艺术">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XSS中的JS转义和HTML转义">
-<meta property="og:url" content="http://gv7.me/articles/2018/escape-string-in-xss/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2018/escape-string-in-xss/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="今天在给客户做渗透测试时，遇到了一处XSS。虽然很简单，但有点小意思。引发了我对js转义和html转义在XSS中的思考，故做个小笔记记录一下。两个例子都会以仿写现实场景的代码的说明问题。 0x01 一点知识贮备1.1 关于转义&amp;amp;#**;格式的字符串是html的转义字符,\是JS的转义符,转义的目的就是告诉解析器该符号为字符，而不是代码，防止代码出现歧义。 1.2 浏览器解析原则 若果存在h">
 <meta property="og:locale" content="zh-CN">
@@ -97,16 +97,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/escape-string-in-xss/&text=XSS中的JS转义和HTML转义"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/escape-string-in-xss/&is_video=false&description=XSS中的JS转义和HTML转义"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=XSS中的JS转义和HTML转义&body=Check out this article: http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/escape-string-in-xss/&name=XSS中的JS转义和HTML转义&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/escape-string-in-xss/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/escape-string-in-xss/&text=XSS中的JS转义和HTML转义"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/escape-string-in-xss/&is_video=false&description=XSS中的JS转义和HTML转义"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XSS中的JS转义和HTML转义&body=Check out this article: https://gv7.me/articles/2018/escape-string-in-xss/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/escape-string-in-xss/&name=XSS中的JS转义和HTML转义&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -261,16 +261,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/escape-string-in-xss/&text=XSS中的JS转义和HTML转义"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/escape-string-in-xss/&is_video=false&description=XSS中的JS转义和HTML转义"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=XSS中的JS转义和HTML转义&body=Check out this article: http://gv7.me/articles/2018/escape-string-in-xss/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/escape-string-in-xss/&name=XSS中的JS转义和HTML转义&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/escape-string-in-xss/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/escape-string-in-xss/&text=XSS中的JS转义和HTML转义"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/escape-string-in-xss/&is_video=false&description=XSS中的JS转义和HTML转义"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=XSS中的JS转义和HTML转义&body=Check out this article: https://gv7.me/articles/2018/escape-string-in-xss/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/escape-string-in-xss/&title=XSS中的JS转义和HTML转义"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/escape-string-in-xss/&name=XSS中的JS转义和HTML转义&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

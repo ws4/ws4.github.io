@@ -10,23 +10,23 @@
 <meta name="keywords" content="安全开发,woodpecker-framework">
 <meta property="og:type" content="article">
 <meta property="og:title" content="高危漏洞狙击框架:woodpecker-framework">
-<meta property="og:url" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="0x01 简介woodpecker-framework是一款高危漏洞综合利用框架，目的是可以狙击高危漏洞，拿到权限！其设计是由我在日常红队外围打点经验抽象得来。它的每个模块和外围打点的主要流程是一一对应的。 比如遇到一个具体的外围应用，渗透测试的流程是：  探测当前应用所有攻击面和风险点 （信息探测模块） 使用poc探测漏洞是否存在 (精准检测模块) 通过exp拿下webshell (深度利用模块">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/weblogic-info-detector.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2020-148823.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2019-2725.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2020-148823-fixbug.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2020-148823-injectmemshell.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/shiro-payload-generator.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/runtime.exec.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/echo-to-file.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/weblogic-info-detector.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2020-148823.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2019-2725.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2020-148823-fixbug.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/cve-2020-148823-injectmemshell.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/shiro-payload-generator.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/runtime.exec.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/echo-to-file.png">
 <meta property="og:updated_time" content="2021-08-15T09:41:31.951Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高危漏洞狙击框架:woodpecker-framework">
 <meta name="twitter:description" content="0x01 简介woodpecker-framework是一款高危漏洞综合利用框架，目的是可以狙击高危漏洞，拿到权限！其设计是由我在日常红队外围打点经验抽象得来。它的每个模块和外围打点的主要流程是一一对应的。 比如遇到一个具体的外围应用，渗透测试的流程是：  探测当前应用所有攻击面和风险点 （信息探测模块） 使用poc探测漏洞是否存在 (精准检测模块) 通过exp拿下webshell (深度利用模块">
-<meta name="twitter:image" content="http://gv7.me/articles/2021/woodpecker-framework-introduce/weblogic-info-detector.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2021/woodpecker-framework-introduce/weblogic-info-detector.png">
     
     
         
@@ -106,16 +106,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&text=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&is_video=false&description=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=高危漏洞狙击框架:woodpecker-framework&body=Check out this article: http://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&name=高危漏洞狙击框架:woodpecker-framework&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&text=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&is_video=false&description=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=高危漏洞狙击框架:woodpecker-framework&body=Check out this article: https://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&name=高危漏洞狙击框架:woodpecker-framework&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -291,16 +291,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&text=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&is_video=false&description=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=高危漏洞狙击框架:woodpecker-framework&body=Check out this article: http://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2021/woodpecker-framework-introduce/&name=高危漏洞狙击框架:woodpecker-framework&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&text=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&is_video=false&description=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=高危漏洞狙击框架:woodpecker-framework&body=Check out this article: https://gv7.me/articles/2021/woodpecker-framework-introduce/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&title=高危漏洞狙击框架:woodpecker-framework"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2021/woodpecker-framework-introduce/&name=高危漏洞狙击框架:woodpecker-framework&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

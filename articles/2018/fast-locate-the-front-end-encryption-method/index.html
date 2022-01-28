@@ -10,21 +10,21 @@
 <meta name="keywords" content="burp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="快速定位前端加密方法">
-<meta property="og:url" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="相信用过我jsEncrypter这个插件的朋友，都会碰到一个问题。 那就是一些大型网站前端太复杂，以至于无法定位到前端数据加密函数所在的位置。无法定位到加密方法所在，自然就无法编写jsEncrypter的phantomJS脚本了。k哥在今晚给了我很多灵感，让我对这个问题有一个完美的解决方案。以至于现在已是12号的凌晨3点，我仍不舍得搁浅内心零散的想法。窗外稍许的车辆略过的轰鸣，在夜深人静时显得格外">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByonClick.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/FindFunctionFromOnClick.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByEventListeners.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/FindFunctionFromEventListeners.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByKeyword.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/debug.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByonClick.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/FindFunctionFromOnClick.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByEventListeners.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/FindFunctionFromEventListeners.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByKeyword.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/debug.png">
 <meta property="og:updated_time" content="2019-12-21T02:57:06.216Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="快速定位前端加密方法">
 <meta name="twitter:description" content="相信用过我jsEncrypter这个插件的朋友，都会碰到一个问题。 那就是一些大型网站前端太复杂，以至于无法定位到前端数据加密函数所在的位置。无法定位到加密方法所在，自然就无法编写jsEncrypter的phantomJS脚本了。k哥在今晚给了我很多灵感，让我对这个问题有一个完美的解决方案。以至于现在已是12号的凌晨3点，我仍不舍得搁浅内心零散的想法。窗外稍许的车辆略过的轰鸣，在夜深人静时显得格外">
-<meta name="twitter:image" content="http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByonClick.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/LocationByonClick.png">
     
     
         
@@ -104,16 +104,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&text=快速定位前端加密方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&is_video=false&description=快速定位前端加密方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=快速定位前端加密方法&body=Check out this article: http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&name=快速定位前端加密方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&text=快速定位前端加密方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&is_video=false&description=快速定位前端加密方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=快速定位前端加密方法&body=Check out this article: https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&name=快速定位前端加密方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -254,16 +254,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&text=快速定位前端加密方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&is_video=false&description=快速定位前端加密方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=快速定位前端加密方法&body=Check out this article: http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&name=快速定位前端加密方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&text=快速定位前端加密方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&is_video=false&description=快速定位前端加密方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=快速定位前端加密方法&body=Check out this article: https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&title=快速定位前端加密方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/&name=快速定位前端加密方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

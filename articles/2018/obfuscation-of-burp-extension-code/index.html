@@ -10,24 +10,24 @@
 <meta name="keywords" content="burp suite">
 <meta property="og:type" content="article">
 <meta property="og:title" content="混淆Burp插件代码">
-<meta property="og:url" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="说要混淆Burp插件，可能有些小伙伴会说： A:混淆干嘛，大家都这么忙，谁有时间看你的烂代码！ B:现在都鼓励开源，你这么做有悖于开源精神。 …… me:这和开源精神没有冲突，我的理解里，真正的开源精神应该是从内心出发的，而不是受“开源人士”的舆论压力，这是道德绑架。更不能因为大家开源，所以我也开源，为了开源而开源没有意义。况且本文仅仅研究混淆这门技术的原理和魅力！ C:把不开源说得这么清新脱俗，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/obf_dic.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_obf_success.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_before_obf.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_after_obf.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/alltori_folders.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_folders.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/RunAllatori.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/before_obfuscated_code.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_code.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/obf_dic.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_obf_success.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_before_obf.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/ProGuard_after_obf.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/alltori_folders.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_folders.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/RunAllatori.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/before_obfuscated_code.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/after_obfuscated_code.png">
 <meta property="og:updated_time" content="2019-02-16T18:04:56.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="混淆Burp插件代码">
 <meta name="twitter:description" content="说要混淆Burp插件，可能有些小伙伴会说： A:混淆干嘛，大家都这么忙，谁有时间看你的烂代码！ B:现在都鼓励开源，你这么做有悖于开源精神。 …… me:这和开源精神没有冲突，我的理解里，真正的开源精神应该是从内心出发的，而不是受“开源人士”的舆论压力，这是道德绑架。更不能因为大家开源，所以我也开源，为了开源而开源没有意义。况且本文仅仅研究混淆这门技术的原理和魅力！ C:把不开源说得这么清新脱俗，">
-<meta name="twitter:image" content="http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/obf_dic.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/obf_dic.png">
     
     
         
@@ -107,16 +107,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&text=混淆Burp插件代码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&is_video=false&description=混淆Burp插件代码"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=混淆Burp插件代码&body=Check out this article: http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&name=混淆Burp插件代码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&text=混淆Burp插件代码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&is_video=false&description=混淆Burp插件代码"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=混淆Burp插件代码&body=Check out this article: https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&name=混淆Burp插件代码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -318,16 +318,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&text=混淆Burp插件代码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&is_video=false&description=混淆Burp插件代码"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=混淆Burp插件代码&body=Check out this article: http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&name=混淆Burp插件代码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&text=混淆Burp插件代码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&is_video=false&description=混淆Burp插件代码"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=混淆Burp插件代码&body=Check out this article: https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&title=混淆Burp插件代码"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/&name=混淆Burp插件代码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

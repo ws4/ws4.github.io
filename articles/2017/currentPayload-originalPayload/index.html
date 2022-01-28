@@ -10,17 +10,17 @@
 <meta name="keywords" content="插件开发,burp suite">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Burp中的currentPayload和originalPayload">
-<meta property="og:url" content="http://gv7.me/articles/2017/currentPayload-originalPayload/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2017/currentPayload-originalPayload/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="在学习burp suite APIs中的Intruder payload处理器的过程中，一直搞不明白IIntruderPayloadProcess接口中processPayload方法的currentPayload和originalPayload参数有啥区别。虽说从名字上看currentPayload就是当前paylaod，originalPayload是原始payload的意思。翻了一下文档，大">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2017/currentPayload-originalPayload/intruder-payloads-set.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/currentPayload-originalPayload/intruder-attack.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/currentPayload-originalPayload/intruder-payloads-set.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/currentPayload-originalPayload/intruder-attack.png">
 <meta property="og:updated_time" content="2019-02-16T18:07:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Burp中的currentPayload和originalPayload">
 <meta name="twitter:description" content="在学习burp suite APIs中的Intruder payload处理器的过程中，一直搞不明白IIntruderPayloadProcess接口中processPayload方法的currentPayload和originalPayload参数有啥区别。虽说从名字上看currentPayload就是当前paylaod，originalPayload是原始payload的意思。翻了一下文档，大">
-<meta name="twitter:image" content="http://gv7.me/articles/2017/currentPayload-originalPayload/intruder-payloads-set.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2017/currentPayload-originalPayload/intruder-payloads-set.png">
     
     
         
@@ -100,16 +100,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&text=Burp中的currentPayload和originalPayload"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&is_video=false&description=Burp中的currentPayload和originalPayload"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Burp中的currentPayload和originalPayload&body=Check out this article: http://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&name=Burp中的currentPayload和originalPayload&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&text=Burp中的currentPayload和originalPayload"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&is_video=false&description=Burp中的currentPayload和originalPayload"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Burp中的currentPayload和originalPayload&body=Check out this article: https://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&name=Burp中的currentPayload和originalPayload&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -275,16 +275,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&text=Burp中的currentPayload和originalPayload"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&is_video=false&description=Burp中的currentPayload和originalPayload"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Burp中的currentPayload和originalPayload&body=Check out this article: http://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/currentPayload-originalPayload/&name=Burp中的currentPayload和originalPayload&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&text=Burp中的currentPayload和originalPayload"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&is_video=false&description=Burp中的currentPayload和originalPayload"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Burp中的currentPayload和originalPayload&body=Check out this article: https://gv7.me/articles/2017/currentPayload-originalPayload/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&title=Burp中的currentPayload和originalPayload"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/currentPayload-originalPayload/&name=Burp中的currentPayload和originalPayload&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

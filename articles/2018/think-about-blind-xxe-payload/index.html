@@ -10,22 +10,22 @@
 <meta name="keywords" content="网络安全,渗透测试,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Blind XXE经典payload引发的脑洞">
-<meta property="og:url" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="payload1是xxe一个经典payload。一般用于无回显的blind xxe。但是问题来了，为何Payload作者将payload内容分两部分（比如像payload1这样），而不是将所有攻击实体放到一个payload中（比如像payload2这样）。注意：Blind XXE是没有回显的，为了测试方便，我将payload有回显的显示了。 测试代码12345678&amp;lt;?phplibxml_d">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_1.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_2.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/payload_2_x25.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_1.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_2.png">
-<meta property="og:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_3.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_1.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_2.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/payload_2_x25.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_1.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_2.png">
+<meta property="og:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/english_article_xml_3.png">
 <meta property="og:updated_time" content="2019-02-16T18:04:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Blind XXE经典payload引发的脑洞">
 <meta name="twitter:description" content="payload1是xxe一个经典payload。一般用于无回显的blind xxe。但是问题来了，为何Payload作者将payload内容分两部分（比如像payload1这样），而不是将所有攻击实体放到一个payload中（比如像payload2这样）。注意：Blind XXE是没有回显的，为了测试方便，我将payload有回显的显示了。 测试代码12345678&amp;lt;?phplibxml_d">
-<meta name="twitter:image" content="http://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_1.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2018/think-about-blind-xxe-payload/my_payload_1.png">
     
     
         
@@ -105,16 +105,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&text=Blind XXE经典payload引发的脑洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&is_video=false&description=Blind XXE经典payload引发的脑洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Blind XXE经典payload引发的脑洞&body=Check out this article: http://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&name=Blind XXE经典payload引发的脑洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&text=Blind XXE经典payload引发的脑洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&is_video=false&description=Blind XXE经典payload引发的脑洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Blind XXE经典payload引发的脑洞&body=Check out this article: https://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&name=Blind XXE经典payload引发的脑洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -277,16 +277,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&text=Blind XXE经典payload引发的脑洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&is_video=false&description=Blind XXE经典payload引发的脑洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=Blind XXE经典payload引发的脑洞&body=Check out this article: http://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2018/think-about-blind-xxe-payload/&name=Blind XXE经典payload引发的脑洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&text=Blind XXE经典payload引发的脑洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&is_video=false&description=Blind XXE经典payload引发的脑洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Blind XXE经典payload引发的脑洞&body=Check out this article: https://gv7.me/articles/2018/think-about-blind-xxe-payload/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&title=Blind XXE经典payload引发的脑洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2018/think-about-blind-xxe-payload/&name=Blind XXE经典payload引发的脑洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

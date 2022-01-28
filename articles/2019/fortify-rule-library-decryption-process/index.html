@@ -10,23 +10,23 @@
 <meta name="keywords" content="fortify">
 <meta property="og:type" content="article">
 <meta property="og:title" content="fortify规则库解密之旅">
-<meta property="og:url" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="前段时间在学习fortify的规则编写，想充分利用其污点回溯功能来扫描出当下比较新的漏洞，比如fastjson反序列化漏洞。网上有比较好的资料是《fortify安全代码规则编写指南》，但是很缺例子。于是想参考下官方的规则库，但是是加密的，万般无奈只能踏上解密之旅。 0x01 解密思路猜测fortify会和AWVS一样，会将规则库加载到内存当中进行解密，然后再使用其进行代码扫描。基于这个想法，它必然">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/F42189E8-11C8-4825-A49B-58FD79640C35.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/ECBDE745-99FE-40AC-8C13-D1267B9CA5BB.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/8128736C-CBCB-4521-9E67-E33D900E0756.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/0B404A33-CFBB-49CF-BE75-FB2364DEA968.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/DC72BDA4-2492-405B-AC9A-3815A386311A.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/117337DD-962F-4B64-90AF-AC4C98D92F47.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/726FEDA7-ABD4-4EED-9431-B87C034A5F5C.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/dumplings-and-cat.jpeg">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/F42189E8-11C8-4825-A49B-58FD79640C35.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/ECBDE745-99FE-40AC-8C13-D1267B9CA5BB.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/8128736C-CBCB-4521-9E67-E33D900E0756.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/0B404A33-CFBB-49CF-BE75-FB2364DEA968.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/DC72BDA4-2492-405B-AC9A-3815A386311A.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/117337DD-962F-4B64-90AF-AC4C98D92F47.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/726FEDA7-ABD4-4EED-9431-B87C034A5F5C.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/dumplings-and-cat.jpeg">
 <meta property="og:updated_time" content="2019-12-23T17:27:09.428Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="fortify规则库解密之旅">
 <meta name="twitter:description" content="前段时间在学习fortify的规则编写，想充分利用其污点回溯功能来扫描出当下比较新的漏洞，比如fastjson反序列化漏洞。网上有比较好的资料是《fortify安全代码规则编写指南》，但是很缺例子。于是想参考下官方的规则库，但是是加密的，万般无奈只能踏上解密之旅。 0x01 解密思路猜测fortify会和AWVS一样，会将规则库加载到内存当中进行解密，然后再使用其进行代码扫描。基于这个想法，它必然">
-<meta name="twitter:image" content="http://gv7.me/articles/2019/fortify-rule-library-decryption-process/F42189E8-11C8-4825-A49B-58FD79640C35.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2019/fortify-rule-library-decryption-process/F42189E8-11C8-4825-A49B-58FD79640C35.png">
     
     
         
@@ -106,16 +106,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&text=fortify规则库解密之旅"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&is_video=false&description=fortify规则库解密之旅"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=fortify规则库解密之旅&body=Check out this article: http://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&name=fortify规则库解密之旅&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&text=fortify规则库解密之旅"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&is_video=false&description=fortify规则库解密之旅"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=fortify规则库解密之旅&body=Check out this article: https://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&name=fortify规则库解密之旅&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -276,16 +276,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&text=fortify规则库解密之旅"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&is_video=false&description=fortify规则库解密之旅"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=fortify规则库解密之旅&body=Check out this article: http://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/fortify-rule-library-decryption-process/&name=fortify规则库解密之旅&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&text=fortify规则库解密之旅"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&is_video=false&description=fortify规则库解密之旅"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=fortify规则库解密之旅&body=Check out this article: https://gv7.me/articles/2019/fortify-rule-library-decryption-process/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&title=fortify规则库解密之旅"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/fortify-rule-library-decryption-process/&name=fortify规则库解密之旅&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

@@ -1,205 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://gv7.me/articles/2022/remember-my-brother-qui/</loc>
+    <loc>https://gv7.me/articles/2022/remember-my-brother-qui/</loc>
     <lastmod>2022-01-20</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/some-extensions-of-spring-bean-rce-under-weblogic/</loc>
+    <loc>https://gv7.me/articles/2021/some-extensions-of-spring-bean-rce-under-weblogic/</loc>
     <lastmod>2021-12-31</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
+    <loc>https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
     <lastmod>2021-12-31</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/</loc>
+    <loc>https://gv7.me/articles/2019/weblogic-pseudo-random-dir-generation-algorithm-exploration/</loc>
     <lastmod>2021-11-20</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/a-gadget-is-secretly-leaking-your-id/</loc>
+    <loc>https://gv7.me/articles/2021/a-gadget-is-secretly-leaking-your-id/</loc>
     <lastmod>2021-10-10</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/improve-neo-regeorg-compatibility-by-loading-classes/</loc>
+    <loc>https://gv7.me/articles/2021/improve-neo-regeorg-compatibility-by-loading-classes/</loc>
     <lastmod>2021-09-13</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/</loc>
+    <loc>https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/</loc>
     <lastmod>2021-09-05</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/java-deserialized-data-bypasses-waf-through-sleep-chunked/</loc>
+    <loc>https://gv7.me/articles/2021/java-deserialized-data-bypasses-waf-through-sleep-chunked/</loc>
     <lastmod>2021-08-31</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/woodpecker-framework-introduce/</loc>
+    <loc>https://gv7.me/articles/2021/woodpecker-framework-introduce/</loc>
     <lastmod>2021-08-15</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/java-deserialize-data-bypass-waf-by-adding-a-lot-of-dirty-data/</loc>
+    <loc>https://gv7.me/articles/2021/java-deserialize-data-bypass-waf-by-adding-a-lot-of-dirty-data/</loc>
     <lastmod>2021-08-07</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2021/an-idea-of-keeping-persistent-backdoor-in-tomcat-middleware/</loc>
+    <loc>https://gv7.me/articles/2021/an-idea-of-keeping-persistent-backdoor-in-tomcat-middleware/</loc>
     <lastmod>2021-04-23</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/kill-java-web-filter-memshell/</loc>
+    <loc>https://gv7.me/articles/2020/kill-java-web-filter-memshell/</loc>
     <lastmod>2021-01-21</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/filter-servlet-type-memshell-scan-capture-and-kill/</loc>
+    <loc>https://gv7.me/articles/2020/filter-servlet-type-memshell-scan-capture-and-kill/</loc>
     <lastmod>2020-10-13</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/pentestbox-search-tools/</loc>
+    <loc>https://gv7.me/articles/2018/pentestbox-search-tools/</loc>
     <lastmod>2020-09-28</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/</loc>
+    <loc>https://gv7.me/articles/2020/deserialization-of-serialvesionuid-conflicts-using-a-custom-classloader/</loc>
     <lastmod>2020-07-09</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/</loc>
+    <loc>https://gv7.me/articles/2019/enable-ysoserial-to-support-execution-of-custom-code/</loc>
     <lastmod>2020-04-21</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/semi-automatic-mining-request-implements-multiple-middleware-echo/</loc>
+    <loc>https://gv7.me/articles/2020/semi-automatic-mining-request-implements-multiple-middleware-echo/</loc>
     <lastmod>2020-04-19</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/how-to-detect-tomcat-ajp-lfi-more-accurately/</loc>
+    <loc>https://gv7.me/articles/2020/how-to-detect-tomcat-ajp-lfi-more-accurately/</loc>
     <lastmod>2020-03-27</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/</loc>
+    <loc>https://gv7.me/articles/2020/several-ways-to-detect-fastjson-through-dnslog/</loc>
     <lastmod>2020-03-24</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/cve-2020-1938-tomcat-ajp-lfi/</loc>
+    <loc>https://gv7.me/articles/2020/cve-2020-1938-tomcat-ajp-lfi/</loc>
     <lastmod>2020-02-22</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2020/cve-2019-17564-dubbo-http-deserialization-vulnerability/</loc>
+    <loc>https://gv7.me/articles/2020/cve-2019-17564-dubbo-http-deserialization-vulnerability/</loc>
     <lastmod>2020-02-22</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/fortify-rule-library-decryption-process/</loc>
+    <loc>https://gv7.me/articles/2019/fortify-rule-library-decryption-process/</loc>
     <lastmod>2019-12-23</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/CVE-2016-8735/</loc>
+    <loc>https://gv7.me/articles/2018/CVE-2016-8735/</loc>
     <lastmod>2019-12-21</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/</loc>
+    <loc>https://gv7.me/articles/2018/fast-locate-the-front-end-encryption-method/</loc>
     <lastmod>2019-12-21</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/burp-captcha-killer-usage/</loc>
+    <loc>https://gv7.me/articles/2019/burp-captcha-killer-usage/</loc>
     <lastmod>2019-12-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/chunked-coding-converter/</loc>
+    <loc>https://gv7.me/articles/2019/chunked-coding-converter/</loc>
     <lastmod>2019-12-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/cve-2019-2890-vulnerability-analysis/</loc>
+    <loc>https://gv7.me/articles/2019/cve-2019-2890-vulnerability-analysis/</loc>
     <lastmod>2019-11-05</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/</loc>
+    <loc>https://gv7.me/articles/2019/apache-solr-velocity-rce-20191031/</loc>
     <lastmod>2019-11-01</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/</loc>
+    <loc>https://gv7.me/articles/2019/a-widely-circulated-xxe-bug-fix/</loc>
     <lastmod>2019-11-01</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/compile-sqlmap4burp/</loc>
+    <loc>https://gv7.me/articles/2017/compile-sqlmap4burp/</loc>
     <lastmod>2019-10-06</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/refactoring-sqlmap4burp/</loc>
+    <loc>https://gv7.me/articles/2019/refactoring-sqlmap4burp/</loc>
     <lastmod>2019-09-02</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/detection-weblogic-version-by-t3/</loc>
+    <loc>https://gv7.me/articles/2019/detection-weblogic-version-by-t3/</loc>
     <lastmod>2019-08-27</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/quickly-find-jars-that-depend-on-poc-exp/</loc>
+    <loc>https://gv7.me/articles/2019/quickly-find-jars-that-depend-on-poc-exp/</loc>
     <lastmod>2019-05-21</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/oracle-download-auto-login-tampermonkey-script/</loc>
+    <loc>https://gv7.me/articles/2019/oracle-download-auto-login-tampermonkey-script/</loc>
     <lastmod>2019-05-10</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/write-cve-2019-3799-batch-scan-script/</loc>
+    <loc>https://gv7.me/articles/2019/write-cve-2019-3799-batch-scan-script/</loc>
     <lastmod>2019-04-21</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/</loc>
+    <loc>https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/</loc>
     <lastmod>2019-04-04</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/</loc>
+    <loc>https://gv7.me/articles/2019/why-can-multipart-post-bypass-java-filter/</loc>
     <lastmod>2019-03-28</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/break-through-lan-segment-limit/</loc>
+    <loc>https://gv7.me/articles/2019/break-through-lan-segment-limit/</loc>
     <lastmod>2019-03-15</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/</loc>
+    <loc>https://gv7.me/articles/2019/java-xxe-bug-fix-right-and-principle/</loc>
     <lastmod>2019-02-20</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/an-interesting-dark-chain/</loc>
+    <loc>https://gv7.me/articles/2019/an-interesting-dark-chain/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/batch-crack-shadows/</loc>
+    <loc>https://gv7.me/articles/2017/batch-crack-shadows/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/classification-of-burp-apis/</loc>
+    <loc>https://gv7.me/articles/2017/classification-of-burp-apis/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/currentPayload-originalPayload/</loc>
+    <loc>https://gv7.me/articles/2017/currentPayload-originalPayload/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/CVE-2017-7504/</loc>
+    <loc>https://gv7.me/articles/2018/CVE-2017-7504/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/escape-string-in-xss/</loc>
+    <loc>https://gv7.me/articles/2018/escape-string-in-xss/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/ghostscript-rce-20180821/</loc>
+    <loc>https://gv7.me/articles/2018/ghostscript-rce-20180821/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/how-do-sql-inject-web-services/</loc>
+    <loc>https://gv7.me/articles/2017/how-do-sql-inject-web-services/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/</loc>
+    <loc>https://gv7.me/articles/2017/how-do-to-submit-148-xss-vulnerabilities/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/java-00-truncation/</loc>
+    <loc>https://gv7.me/articles/2018/java-00-truncation/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/jsEncrypter/</loc>
+    <loc>https://gv7.me/articles/2017/jsEncrypter/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/jsEncrypter-nodejs-server-script/</loc>
+    <loc>https://gv7.me/articles/2018/jsEncrypter-nodejs-server-script/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/</loc>
+    <loc>https://gv7.me/articles/2018/learning-notes-of-meltdown-and-spectre/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/make-upload-vul-fuzz-dic/</loc>
+    <loc>https://gv7.me/articles/2018/make-upload-vul-fuzz-dic/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/making-the-password-top-100/</loc>
+    <loc>https://gv7.me/articles/2017/making-the-password-top-100/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/masscan-report-converter/</loc>
+    <loc>https://gv7.me/articles/2018/masscan-report-converter/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/obfuscation-of-burp-extension-code/</loc>
+    <loc>https://gv7.me/articles/2018/obfuscation-of-burp-extension-code/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/picture-trojan-horse-making-method/</loc>
+    <loc>https://gv7.me/articles/2017/picture-trojan-horse-making-method/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/</loc>
+    <loc>https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/solve-jsEncrypter-script-error-code-is-not-wrong/</loc>
+    <loc>https://gv7.me/articles/2018/solve-jsEncrypter-script-error-code-is-not-wrong/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/summarize-all-types-of-sql-injection/</loc>
+    <loc>https://gv7.me/articles/2018/summarize-all-types-of-sql-injection/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2018/think-about-blind-xxe-payload/</loc>
+    <loc>https://gv7.me/articles/2018/think-about-blind-xxe-payload/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/tools/</loc>
+    <loc>https://gv7.me/articles/2017/tools/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/</loc>
+    <loc>https://gv7.me/articles/2017/Writing-AWVS-scripts-to-detect-Web-Services/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/tampermonkey-script-autoclicker/</loc>
+    <loc>https://gv7.me/articles/2019/tampermonkey-script-autoclicker/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/java-00-truncation-detail/</loc>
+    <loc>https://gv7.me/articles/2019/java-00-truncation-detail/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2019/study-the-deep-principle-of-xxe-vulnerability-in-java/</loc>
+    <loc>https://gv7.me/articles/2019/study-the-deep-principle-of-xxe-vulnerability-in-java/</loc>
     <lastmod>2019-02-16</lastmod>
   </url>  <url>
-    <loc>http://gv7.me/articles/2017/Aaron-Swartz/</loc>
+    <loc>https://gv7.me/articles/2017/Aaron-Swartz/</loc>
     <lastmod>2017-11-23</lastmod>
   </url>
 </urlset>

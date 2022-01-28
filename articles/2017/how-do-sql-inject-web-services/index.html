@@ -10,30 +10,30 @@
 <meta name="keywords" content="sql注入">
 <meta property="og:type" content="article">
 <meta property="og:title" content="发现Web Services存在注入，无法用sqlmap怎么办？">
-<meta property="og:url" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="如何对Web Services服务进行注入？我们都知道sqlmap等一些工具不能对web services服务进行注入，因为web services使用的是SOAP协议，与我们提传统的http协议有些差异。手工+工具结合的方法完成这次的漏洞利用。下面我们一个案例演示一下，如何利用burp+sqlmap字典进行注入web services。 访问以下地址: 1http://www.xxx.com/s">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/1.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/2.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/3.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/4.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/5.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/6.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/7.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/8.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/9.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/10.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/11.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/12.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/13.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/14.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/15.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/1.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/2.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/3.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/4.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/5.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/6.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/7.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/8.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/9.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/10.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/11.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/12.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/13.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/14.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/15.png">
 <meta property="og:updated_time" content="2019-02-16T18:06:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="发现Web Services存在注入，无法用sqlmap怎么办？">
 <meta name="twitter:description" content="如何对Web Services服务进行注入？我们都知道sqlmap等一些工具不能对web services服务进行注入，因为web services使用的是SOAP协议，与我们提传统的http协议有些差异。手工+工具结合的方法完成这次的漏洞利用。下面我们一个案例演示一下，如何利用burp+sqlmap字典进行注入web services。 访问以下地址: 1http://www.xxx.com/s">
-<meta name="twitter:image" content="http://gv7.me/articles/2017/how-do-sql-inject-web-services/1.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2017/how-do-sql-inject-web-services/1.png">
     
     
         
@@ -113,16 +113,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&text=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&is_video=false&description=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=发现Web Services存在注入，无法用sqlmap怎么办？&body=Check out this article: http://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&name=发现Web Services存在注入，无法用sqlmap怎么办？&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&text=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&is_video=false&description=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=发现Web Services存在注入，无法用sqlmap怎么办？&body=Check out this article: https://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&name=发现Web Services存在注入，无法用sqlmap怎么办？&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -296,16 +296,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&text=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&is_video=false&description=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=发现Web Services存在注入，无法用sqlmap怎么办？&body=Check out this article: http://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/how-do-sql-inject-web-services/&name=发现Web Services存在注入，无法用sqlmap怎么办？&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&text=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&is_video=false&description=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=发现Web Services存在注入，无法用sqlmap怎么办？&body=Check out this article: https://gv7.me/articles/2017/how-do-sql-inject-web-services/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&title=发现Web Services存在注入，无法用sqlmap怎么办？"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/how-do-sql-inject-web-services/&name=发现Web Services存在注入，无法用sqlmap怎么办？&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

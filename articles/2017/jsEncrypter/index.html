@@ -10,20 +10,20 @@
 <meta name="keywords" content="Burp Suite">
 <meta property="og:type" content="article">
 <meta property="og:title" content="编写加密传输爆破插件jsEncrypter">
-<meta property="og:url" content="http://gv7.me/articles/2017/jsEncrypter/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2017/jsEncrypter/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="我曾经听某大牛所过两句话： 1231. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。2. 当一个系统的用户超过1000+,那么弱口令一定存在！  不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。 当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/liucheng.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/tab.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/server.png">
-<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/test.gif">
-<meta property="og:image" content="http://gv7.me/articles/2017/jsEncrypter/crack.gif">
+<meta property="og:image" content="https://gv7.me/articles/2017/jsEncrypter/liucheng.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/jsEncrypter/tab.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/jsEncrypter/server.png">
+<meta property="og:image" content="https://gv7.me/articles/2017/jsEncrypter/test.gif">
+<meta property="og:image" content="https://gv7.me/articles/2017/jsEncrypter/crack.gif">
 <meta property="og:updated_time" content="2019-02-16T18:05:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编写加密传输爆破插件jsEncrypter">
 <meta name="twitter:description" content="我曾经听某大牛所过两句话： 1231. 我们能入侵最先进的系统，却不能阻止用户使用弱口令。2. 当一个系统的用户超过1000+,那么弱口令一定存在！  不管这两句话是否属实，但都说明了一个问题，弱口令虽然简单，但是很难完全消除。因为它的问题不是出现在技术层面，而是在人性！所以每次渗透测试我都比较注重弱口令的检测。 当一个系统没有对登录次数进行限制时，我们就可以考虑进行爆破了。在我经验中，爆破遇到了">
-<meta name="twitter:image" content="http://gv7.me/articles/2017/jsEncrypter/liucheng.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2017/jsEncrypter/liucheng.png">
     
     
         
@@ -103,16 +103,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/jsEncrypter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/jsEncrypter/&text=编写加密传输爆破插件jsEncrypter"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/jsEncrypter/&is_video=false&description=编写加密传输爆破插件jsEncrypter"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=编写加密传输爆破插件jsEncrypter&body=Check out this article: http://gv7.me/articles/2017/jsEncrypter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/jsEncrypter/&name=编写加密传输爆破插件jsEncrypter&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/jsEncrypter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/jsEncrypter/&text=编写加密传输爆破插件jsEncrypter"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/jsEncrypter/&is_video=false&description=编写加密传输爆破插件jsEncrypter"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写加密传输爆破插件jsEncrypter&body=Check out this article: https://gv7.me/articles/2017/jsEncrypter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/jsEncrypter/&name=编写加密传输爆破插件jsEncrypter&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -296,16 +296,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/jsEncrypter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/jsEncrypter/&text=编写加密传输爆破插件jsEncrypter"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/jsEncrypter/&is_video=false&description=编写加密传输爆破插件jsEncrypter"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=编写加密传输爆破插件jsEncrypter&body=Check out this article: http://gv7.me/articles/2017/jsEncrypter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/jsEncrypter/&name=编写加密传输爆破插件jsEncrypter&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/jsEncrypter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/jsEncrypter/&text=编写加密传输爆破插件jsEncrypter"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/jsEncrypter/&is_video=false&description=编写加密传输爆破插件jsEncrypter"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写加密传输爆破插件jsEncrypter&body=Check out this article: https://gv7.me/articles/2017/jsEncrypter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/jsEncrypter/&title=编写加密传输爆破插件jsEncrypter"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/jsEncrypter/&name=编写加密传输爆破插件jsEncrypter&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

@@ -10,17 +10,17 @@
 <meta name="keywords" content="油猴脚本">
 <meta property="og:type" content="article">
 <meta property="og:title" content="小玩具01:编写WSIS自动投票油猴脚本">
-<meta property="og:url" content="http://gv7.me/articles/2019/tampermonkey-script-autoclicker/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2019/tampermonkey-script-autoclicker/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="这是1月9号的事了，kang哥在群里发了一个消息，说是需要大家帮忙WSIS奖投票。让每位同事都投一遍。我看了下投票步骤说明文档，其实挺麻烦的。最主要的是足足有18项，需要一个个的点击才能完成。旁边的JackyTsuuuy大佬慢悠悠的蠕动着他性感的小胡须，说道可以尝试使用js自动点击完成这18项选择，还提供了最朴素的几行代码。在他几次怂恿下决定实现这一想法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2019/tampermonkey-script-autoclicker/positioning-elements.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/tampermonkey-script-autoclicker/show.gif">
+<meta property="og:image" content="https://gv7.me/articles/2019/tampermonkey-script-autoclicker/positioning-elements.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/tampermonkey-script-autoclicker/show.gif">
 <meta property="og:updated_time" content="2019-02-16T18:03:26.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="小玩具01:编写WSIS自动投票油猴脚本">
 <meta name="twitter:description" content="这是1月9号的事了，kang哥在群里发了一个消息，说是需要大家帮忙WSIS奖投票。让每位同事都投一遍。我看了下投票步骤说明文档，其实挺麻烦的。最主要的是足足有18项，需要一个个的点击才能完成。旁边的JackyTsuuuy大佬慢悠悠的蠕动着他性感的小胡须，说道可以尝试使用js自动点击完成这18项选择，还提供了最朴素的几行代码。在他几次怂恿下决定实现这一想法。">
-<meta name="twitter:image" content="http://gv7.me/articles/2019/tampermonkey-script-autoclicker/positioning-elements.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2019/tampermonkey-script-autoclicker/positioning-elements.png">
     
     
         
@@ -100,16 +100,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&text=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&is_video=false&description=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=小玩具01:编写WSIS自动投票油猴脚本&body=Check out this article: http://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&name=小玩具01:编写WSIS自动投票油猴脚本&description=&lt;p&gt;这是1月9号的事了，kang哥在群里发了一个消息，说是需要大家帮忙WSIS奖投票。让每位同事都投一遍。我看了下投票步骤说明文档，其实挺麻烦的。最主要的是足足有18项，需要一个个的点击才能完成。旁边的JackyTsuuuy大佬慢悠悠的蠕动着他性感的小胡须，说道可以尝试使用js自动点击完成这18项选择，还提供了最朴素的几行代码。在他几次怂恿下决定实现这一想法。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&text=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&is_video=false&description=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=小玩具01:编写WSIS自动投票油猴脚本&body=Check out this article: https://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&name=小玩具01:编写WSIS自动投票油猴脚本&description=&lt;p&gt;这是1月9号的事了，kang哥在群里发了一个消息，说是需要大家帮忙WSIS奖投票。让每位同事都投一遍。我看了下投票步骤说明文档，其实挺麻烦的。最主要的是足足有18项，需要一个个的点击才能完成。旁边的JackyTsuuuy大佬慢悠悠的蠕动着他性感的小胡须，说道可以尝试使用js自动点击完成这18项选择，还提供了最朴素的几行代码。在他几次怂恿下决定实现这一想法。&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -293,16 +293,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&text=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&is_video=false&description=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=小玩具01:编写WSIS自动投票油猴脚本&body=Check out this article: http://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/tampermonkey-script-autoclicker/&name=小玩具01:编写WSIS自动投票油猴脚本&description=&lt;p&gt;这是1月9号的事了，kang哥在群里发了一个消息，说是需要大家帮忙WSIS奖投票。让每位同事都投一遍。我看了下投票步骤说明文档，其实挺麻烦的。最主要的是足足有18项，需要一个个的点击才能完成。旁边的JackyTsuuuy大佬慢悠悠的蠕动着他性感的小胡须，说道可以尝试使用js自动点击完成这18项选择，还提供了最朴素的几行代码。在他几次怂恿下决定实现这一想法。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&text=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&is_video=false&description=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=小玩具01:编写WSIS自动投票油猴脚本&body=Check out this article: https://gv7.me/articles/2019/tampermonkey-script-autoclicker/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&title=小玩具01:编写WSIS自动投票油猴脚本"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/tampermonkey-script-autoclicker/&name=小玩具01:编写WSIS自动投票油猴脚本&description=&lt;p&gt;这是1月9号的事了，kang哥在群里发了一个消息，说是需要大家帮忙WSIS奖投票。让每位同事都投一遍。我看了下投票步骤说明文档，其实挺麻烦的。最主要的是足足有18项，需要一个个的点击才能完成。旁边的JackyTsuuuy大佬慢悠悠的蠕动着他性感的小胡须，说道可以尝试使用js自动点击完成这18项选择，还提供了最朴素的几行代码。在他几次怂恿下决定实现这一想法。&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

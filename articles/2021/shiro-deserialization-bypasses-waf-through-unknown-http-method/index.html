@@ -10,20 +10,20 @@
 <meta name="keywords" content="绕WAF">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shiro反序列化绕WAF之未知HTTP请求方法">
-<meta property="og:url" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="0x01 背景当下WAF对shiro的防护，确实比较严格。对rememberMe的长度进行限制，甚至解密payload检查反序列化class。本周我遇到一个场景，就是这种情况。使用之前的方法rememberMe=加密payload+==垃圾数据也失败了，这个方法之前有大佬分享过，我就不再赘述了。我最终使用未知HTTP请求方法解决战斗。  0x02 过程当时我的思考是shiro的payload在he">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/blocked-by-waf.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/bypass-waf.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/test-for-del-rememberme.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/test-for-add-rememberme.png">
-<meta property="og:image" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/debug-shiro-rememberme.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/blocked-by-waf.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/bypass-waf.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/test-for-del-rememberme.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/test-for-add-rememberme.png">
+<meta property="og:image" content="https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/debug-shiro-rememberme.png">
 <meta property="og:updated_time" content="2021-09-05T14:34:15.967Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shiro反序列化绕WAF之未知HTTP请求方法">
 <meta name="twitter:description" content="0x01 背景当下WAF对shiro的防护，确实比较严格。对rememberMe的长度进行限制，甚至解密payload检查反序列化class。本周我遇到一个场景，就是这种情况。使用之前的方法rememberMe=加密payload+==垃圾数据也失败了，这个方法之前有大佬分享过，我就不再赘述了。我最终使用未知HTTP请求方法解决战斗。  0x02 过程当时我的思考是shiro的payload在he">
-<meta name="twitter:image" content="http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/blocked-by-waf.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/blocked-by-waf.png">
     
     
         
@@ -103,16 +103,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&text=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&is_video=false&description=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=shiro反序列化绕WAF之未知HTTP请求方法&body=Check out this article: http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&name=shiro反序列化绕WAF之未知HTTP请求方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&text=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&is_video=false&description=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=shiro反序列化绕WAF之未知HTTP请求方法&body=Check out this article: https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&name=shiro反序列化绕WAF之未知HTTP请求方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -245,16 +245,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&text=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&is_video=false&description=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=shiro反序列化绕WAF之未知HTTP请求方法&body=Check out this article: http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&name=shiro反序列化绕WAF之未知HTTP请求方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&text=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&is_video=false&description=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=shiro反序列化绕WAF之未知HTTP请求方法&body=Check out this article: https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&title=shiro反序列化绕WAF之未知HTTP请求方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2021/shiro-deserialization-bypasses-waf-through-unknown-http-method/&name=shiro反序列化绕WAF之未知HTTP请求方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

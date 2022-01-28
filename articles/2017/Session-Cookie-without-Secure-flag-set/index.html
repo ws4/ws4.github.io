@@ -10,18 +10,18 @@
 <meta name="keywords" content="漏洞原理,漏洞修复">
 <meta property="og:type" content="article">
 <meta property="og:title" content="坑死我的HTTPOnly">
-<meta property="og:url" content="http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="&amp;emsp;&amp;emsp;我们在做渗透测试使用AWVS对网站进行扫描时，经常会扫描出Session Cookie without Secure flag set漏洞。由于是低危，而且很难被利用，所以我们常常会忽略掉它，不去研究它的原理关心它的细节。当真正让我们要去修复这些小漏洞时，尴尬的事情就发生了：这么不起眼的漏洞，劳资都没能正确修复！！！  0x01叙事&amp;emsp;&amp;emsp;在研究该漏洞原理与">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/crazy.jpg">
+<meta property="og:image" content="https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/crazy.jpg">
 <meta property="og:image" content="http://i1.bvimg.com/602334/b0787d9db2d4aa57.png">
 <meta property="og:image" content="http://i1.bvimg.com/602334/46bd20af8fd156ca.png">
 <meta property="og:updated_time" content="2019-02-16T18:04:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="坑死我的HTTPOnly">
 <meta name="twitter:description" content="&amp;emsp;&amp;emsp;我们在做渗透测试使用AWVS对网站进行扫描时，经常会扫描出Session Cookie without Secure flag set漏洞。由于是低危，而且很难被利用，所以我们常常会忽略掉它，不去研究它的原理关心它的细节。当真正让我们要去修复这些小漏洞时，尴尬的事情就发生了：这么不起眼的漏洞，劳资都没能正确修复！！！  0x01叙事&amp;emsp;&amp;emsp;在研究该漏洞原理与">
-<meta name="twitter:image" content="http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/crazy.jpg">
+<meta name="twitter:image" content="https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/crazy.jpg">
     
     
         
@@ -101,16 +101,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&text=坑死我的HTTPOnly"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&is_video=false&description=坑死我的HTTPOnly"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=坑死我的HTTPOnly&body=Check out this article: http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&name=坑死我的HTTPOnly&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&text=坑死我的HTTPOnly"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&is_video=false&description=坑死我的HTTPOnly"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=坑死我的HTTPOnly&body=Check out this article: https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&name=坑死我的HTTPOnly&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -284,16 +284,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&text=坑死我的HTTPOnly"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&is_video=false&description=坑死我的HTTPOnly"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=坑死我的HTTPOnly&body=Check out this article: http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&name=坑死我的HTTPOnly&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&text=坑死我的HTTPOnly"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&is_video=false&description=坑死我的HTTPOnly"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=坑死我的HTTPOnly&body=Check out this article: https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&title=坑死我的HTTPOnly"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2017/Session-Cookie-without-Secure-flag-set/&name=坑死我的HTTPOnly&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

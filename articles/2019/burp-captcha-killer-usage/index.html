@@ -10,25 +10,25 @@
 <meta name="keywords" content="burp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用burp插件captcha-killer识别图片验证码">
-<meta property="og:url" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="0x01 开发背景说起对存在验证码的登录表单进行爆破，大部分人都会想到PKav HTTP Fuzzer，这款工具在前些年确实给我们带来了不少便利。反观burp一直没有一个高度自定义通杀大部分图片验证码的识别方案，于是抽了点闲暇的时间开发了captcha-kille，希望burp也能用上各种好用的识别码技术。其设计理念是只专注做好对各种验证码识别技术接口的调用！说具体点就是burp通过同一个插件，就">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step1-1.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step1-2.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step2-1.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step2-2.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step2-3.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step3-1.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step3-2.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step4-1.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step4-2.png">
-<meta property="og:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step4-3.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step1-1.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step1-2.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step2-1.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step2-2.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step2-3.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step3-1.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step3-2.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step4-1.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step4-2.png">
+<meta property="og:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step4-3.png">
 <meta property="og:updated_time" content="2019-12-16T18:37:31.053Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用burp插件captcha-killer识别图片验证码">
 <meta name="twitter:description" content="0x01 开发背景说起对存在验证码的登录表单进行爆破，大部分人都会想到PKav HTTP Fuzzer，这款工具在前些年确实给我们带来了不少便利。反观burp一直没有一个高度自定义通杀大部分图片验证码的识别方案，于是抽了点闲暇的时间开发了captcha-kille，希望burp也能用上各种好用的识别码技术。其设计理念是只专注做好对各种验证码识别技术接口的调用！说具体点就是burp通过同一个插件，就">
-<meta name="twitter:image" content="http://gv7.me/articles/2019/burp-captcha-killer-usage/step1-1.png">
+<meta name="twitter:image" content="https://gv7.me/articles/2019/burp-captcha-killer-usage/step1-1.png">
     
     
         
@@ -108,16 +108,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&text=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&is_video=false&description=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=使用burp插件captcha-killer识别图片验证码&body=Check out this article: http://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&name=使用burp插件captcha-killer识别图片验证码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&text=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&is_video=false&description=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用burp插件captcha-killer识别图片验证码&body=Check out this article: https://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&name=使用burp插件captcha-killer识别图片验证码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -316,16 +316,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&text=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&is_video=false&description=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=使用burp插件captcha-killer识别图片验证码&body=Check out this article: http://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/burp-captcha-killer-usage/&name=使用burp插件captcha-killer识别图片验证码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&text=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&is_video=false&description=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=使用burp插件captcha-killer识别图片验证码&body=Check out this article: https://gv7.me/articles/2019/burp-captcha-killer-usage/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&title=使用burp插件captcha-killer识别图片验证码"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/burp-captcha-killer-usage/&name=使用burp插件captcha-killer识别图片验证码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

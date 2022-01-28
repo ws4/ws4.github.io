@@ -10,17 +10,17 @@
 <meta name="keywords" content="burp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="编写Burp分块传输插件绕WAF">
-<meta property="og:url" content="http://gv7.me/articles/2019/chunked-coding-converter/index.html">
+<meta property="og:url" content="https://gv7.me/articles/2019/chunked-coding-converter/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
 <meta property="og:description" content="分块传输绕WAF在年初的《利用分块传输吊打所有WAF》中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入Transfer-Encoding: chunkedHTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://gv7.me/articles/2019/chunked-coding-converter/repeater-chunked-coding.gif">
-<meta property="og:image" content="http://gv7.me/articles/2019/chunked-coding-converter/sqlmap-bypassWAF.gif">
+<meta property="og:image" content="https://gv7.me/articles/2019/chunked-coding-converter/repeater-chunked-coding.gif">
+<meta property="og:image" content="https://gv7.me/articles/2019/chunked-coding-converter/sqlmap-bypassWAF.gif">
 <meta property="og:updated_time" content="2019-12-16T17:37:02.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编写Burp分块传输插件绕WAF">
 <meta name="twitter:description" content="分块传输绕WAF在年初的《利用分块传输吊打所有WAF》中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入Transfer-Encoding: chunkedHTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！">
-<meta name="twitter:image" content="http://gv7.me/articles/2019/chunked-coding-converter/repeater-chunked-coding.gif">
+<meta name="twitter:image" content="https://gv7.me/articles/2019/chunked-coding-converter/repeater-chunked-coding.gif">
     
     
         
@@ -100,16 +100,16 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/chunked-coding-converter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/chunked-coding-converter/&text=编写Burp分块传输插件绕WAF"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/chunked-coding-converter/&is_video=false&description=编写Burp分块传输插件绕WAF"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=编写Burp分块传输插件绕WAF&body=Check out this article: http://gv7.me/articles/2019/chunked-coding-converter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/chunked-coding-converter/&name=编写Burp分块传输插件绕WAF&description=&lt;p&gt;分块传输绕WAF在年初的&lt;a href=&#34;https://www.anquanke.com/post/id/169738&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;《利用分块传输吊打所有WAF》&lt;/a&gt;中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入&lt;code&gt;Transfer-Encoding: chunked&lt;/code&gt;HTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/chunked-coding-converter/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/chunked-coding-converter/&text=编写Burp分块传输插件绕WAF"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/chunked-coding-converter/&is_video=false&description=编写Burp分块传输插件绕WAF"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写Burp分块传输插件绕WAF&body=Check out this article: https://gv7.me/articles/2019/chunked-coding-converter/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/chunked-coding-converter/&name=编写Burp分块传输插件绕WAF&description=&lt;p&gt;分块传输绕WAF在年初的&lt;a href=&#34;https://www.anquanke.com/post/id/169738&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;《利用分块传输吊打所有WAF》&lt;/a&gt;中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入&lt;code&gt;Transfer-Encoding: chunked&lt;/code&gt;HTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -255,16 +255,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://gv7.me/articles/2019/chunked-coding-converter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://gv7.me/articles/2019/chunked-coding-converter/&text=编写Burp分块传输插件绕WAF"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://gv7.me/articles/2019/chunked-coding-converter/&is_video=false&description=编写Burp分块传输插件绕WAF"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=编写Burp分块传输插件绕WAF&body=Check out this article: http://gv7.me/articles/2019/chunked-coding-converter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://gv7.me/articles/2019/chunked-coding-converter/&name=编写Burp分块传输插件绕WAF&description=&lt;p&gt;分块传输绕WAF在年初的&lt;a href=&#34;https://www.anquanke.com/post/id/169738&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;《利用分块传输吊打所有WAF》&lt;/a&gt;中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入&lt;code&gt;Transfer-Encoding: chunked&lt;/code&gt;HTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2019/chunked-coding-converter/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2019/chunked-coding-converter/&text=编写Burp分块传输插件绕WAF"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2019/chunked-coding-converter/&is_video=false&description=编写Burp分块传输插件绕WAF"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=编写Burp分块传输插件绕WAF&body=Check out this article: https://gv7.me/articles/2019/chunked-coding-converter/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/chunked-coding-converter/&title=编写Burp分块传输插件绕WAF"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/chunked-coding-converter/&name=编写Burp分块传输插件绕WAF&description=&lt;p&gt;分块传输绕WAF在年初的&lt;a href=&#34;https://www.anquanke.com/post/id/169738&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;《利用分块传输吊打所有WAF》&lt;/a&gt;中学习到了，不过没有深入研究。最近在T00ls上看到大佬们在编写sqlmap的tamp脚本，过程中遇到了比较难解决的一个问题，对sqlmap数据包加入&lt;code&gt;Transfer-Encoding: chunked&lt;/code&gt;HTTP头。本周尝试通过编写Burp插件来解决这个问题，同时也为了方便在Burp上快速测试分块传输是否能绕过waf。我们开始吧！&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
