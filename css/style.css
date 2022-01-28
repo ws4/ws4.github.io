@@ -347,7 +347,13 @@ body h3 {
   font-weight: bold;
   font-size: 0.9rem;
 }
-body h4,
+body h4 {
+  display: inline;
+  color: #eee;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
 body h5,
 body h6 {
   display: inline;
@@ -1276,7 +1282,6 @@ article .content .caption {
 }
 @media (min-width: 39rem) {
   #footer {
-    display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
