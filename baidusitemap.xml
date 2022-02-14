@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://gv7.me/articles/2022/remember-my-brother-qui/</loc>
+    <lastmod>2022-02-14</lastmod>
+  </url>  <url>
     <loc>https://gv7.me/articles/2022/rwctf-4th-desperate-cat-ascii-jar-writeup/</loc>
-    <lastmod>2022-02-13</lastmod>
+    <lastmod>2022-02-14</lastmod>
   </url>  <url>
     <loc>https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
     <lastmod>2022-02-13</lastmod>
-  </url>  <url>
-    <loc>https://gv7.me/articles/2022/remember-my-brother-qui/</loc>
-    <lastmod>2022-01-20</lastmod>
   </url>  <url>
     <loc>https://gv7.me/articles/2021/some-extensions-of-spring-bean-rce-under-weblogic/</loc>
     <lastmod>2021-12-31</lastmod>

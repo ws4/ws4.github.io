@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gv7.me/articles/2022/remember-my-brother-qui/</loc>
+    
+    <lastmod>2022-02-14T06:49:44.985Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gv7.me/articles/2022/rwctf-4th-desperate-cat-ascii-jar-writeup/</loc>
     
-    <lastmod>2022-02-13T22:32:03.222Z</lastmod>
+    <lastmod>2022-02-14T06:49:13.953Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
     
     <lastmod>2022-02-13T07:51:05.714Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gv7.me/articles/2022/remember-my-brother-qui/</loc>
-    
-    <lastmod>2022-01-20T03:17:42.267Z</lastmod>
     
   </url>
   
