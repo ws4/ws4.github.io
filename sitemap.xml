@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gv7.me/articles/2022/rwctf-4th-desperate-cat-ascii-jar-writeup/</loc>
+    
+    <lastmod>2022-02-13T22:32:03.222Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
+    
+    <lastmod>2022-02-13T07:51:05.714Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gv7.me/articles/2022/remember-my-brother-qui/</loc>
     
     <lastmod>2022-01-20T03:17:42.267Z</lastmod>
@@ -12,13 +26,6 @@
     <loc>https://gv7.me/articles/2021/some-extensions-of-spring-bean-rce-under-weblogic/</loc>
     
     <lastmod>2021-12-31T06:16:17.577Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
-    
-    <lastmod>2021-12-31T06:14:39.938Z</lastmod>
     
   </url>
   
