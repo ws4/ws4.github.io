@@ -6,23 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="0x00 背景最进小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来">
+    <meta name="description" content="0x00 背景最近小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命令就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范">
 <meta name="keywords" content="漏洞利用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring cloud gateway通过SPEL注入内存马">
 <meta property="og:url" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
-<meta property="og:description" content="0x00 背景最进小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来">
+<meta property="og:description" content="0x00 背景最近小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命令就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/netty-memshell.jpeg">
 <meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/handlerMapping.png">
 <meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/get-RequestMappingHandlerMapping.png">
 <meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/inject-spring-requestmapping-memshell.png">
 <meta property="og:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/spring-requestmapping-memshell.png">
-<meta property="og:updated_time" content="2022-03-08T17:33:54.792Z">
+<meta property="og:updated_time" content="2022-03-10T06:36:14.300Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring cloud gateway通过SPEL注入内存马">
-<meta name="twitter:description" content="0x00 背景最进小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来">
+<meta name="twitter:description" content="0x00 背景最近小火的漏洞CVE-2022-22947虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命令就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！ spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范">
 <meta name="twitter:image" content="https://gv7.me/articles/2022/the-spring-cloud-gateway-inject-memshell-through-spel-expressions/netty-memshell.jpeg">
     
     
@@ -159,7 +159,7 @@
   
 
   <div class="content" itemprop="articleBody">
-    <h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00 背景"></a>0x00 背景</h2><p>最进小火的漏洞<code>CVE-2022-22947</code>虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！</p>
+    <h2 id="0x00-背景"><a href="#0x00-背景" class="headerlink" title="0x00 背景"></a>0x00 背景</h2><p>最近小火的漏洞<code>CVE-2022-22947</code>虽然原理简单，但是实战利用还是有点小麻烦。目前公开的利用是每执行一条命令就得注册一条路由，refresh一下网关，最后在访问这个路由。先不说步骤较多，就是频繁刷新会影响业务。实战当中注入一个内存马才是硬道理！</p>
 <p>spring cloud gateway的web服务是netty+spring构建的，netty的web服务没有遵循servlet规范来设计。这也导致了构造它的内存马，与常规中间件有所不同，从某种程度来讲是这是一种新类型的内存马。</p>
 <p>下面以vulhub中的<code>spring cloud gateway 3.1.0</code>作为环境，来分享下构造netty层和spring层的内存马，其他版本思路相同。</p>
 <h2 id="0x01-高可用Payload"><a href="#0x01-高可用Payload" class="headerlink" title="0x01 高可用Payload"></a>0x01 高可用Payload</h2><p>Spring cloud gateway对payload的稳定性要求比较高，一旦报错是由可能会影响业务的。所以在开始之前，我们需要先构造一个”优质”的SPEL执行java字节码的payload。</p>
