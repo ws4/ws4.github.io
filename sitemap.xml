@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gv7.me/gossip/index.html</loc>
+    
+    <lastmod>2022-08-11T15:48:39.640Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gv7.me/recruitment/index.html</loc>
     
     <lastmod>2022-03-16T09:34:28.834Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>https://gv7.me/articles/2021/some-extensions-of-spring-bean-rce-under-weblogic/</loc>
     
     <lastmod>2021-12-31T06:16:17.577Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gv7.me/gossip/index.html</loc>
-    
-    <lastmod>2021-12-19T14:14:47.461Z</lastmod>
     
   </url>
   
