@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
+    
+    <lastmod>2023-01-13T02:41:02.041Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gv7.me/gossip/index.html</loc>
     
     <lastmod>2022-12-23T13:43:59.493Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>https://gv7.me/recruitment/index.md.bak.html</loc>
     
     <lastmod>2022-03-16T09:34:28.834Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/</loc>
-    
-    <lastmod>2022-03-16T09:27:09.519Z</lastmod>
     
   </url>
   

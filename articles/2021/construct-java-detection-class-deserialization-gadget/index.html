@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/the-principle-of-java-deserialization-bomb.png">
 <meta property="og:image" content="https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/find-class-by-bomb-test1.png">
 <meta property="og:image" content="https://gv7.me/articles/2021/construct-java-detection-class-deserialization-gadget/find-class-by-bomb-test2.png">
-<meta property="og:updated_time" content="2022-03-16T09:27:09.519Z">
+<meta property="og:updated_time" content="2023-01-13T02:41:02.041Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="构造java探测class反序列化gadget">
 <meta name="twitter:description" content="0x01 背景你是否遇到过这样的情况，黑盒环境下有一个序列化入口。你将ysoserial所有gadget的测试了一遍，均无法RCE。由于没有报错信息，你根本无法确定是下面那个原因导致。  没有gadget依赖的jar suid不一致 jar版本不在漏洞版本 gadget使用的class进入了黑名单 ……  单纯的盲测，工作量将非常大。如果我们有一个通用的探测某个class是否存在的gadget，这">
@@ -331,7 +331,7 @@
 <li>判断java版本是否低于&lt;7u104（该版本可以00截断）</li>
 <li>……</li>
 </ol>
-<p>其他类型的反序列化gadget也是一样的思路,小tips是否可以变成利器，看挥舞它的人。</p>
+<p>其他类型(Xstream/Fastjson/SnakeYaml…)的反序列化gadget也是一样的思路,小tips是否可以变成利器，看挥舞它的人。</p>
 <h2 id="0x08-参考文章"><a href="#0x08-参考文章" class="headerlink" title="0x08 参考文章"></a>0x08 参考文章</h2><ul>
 <li><a href="https://blog.csdn.net/nevermorewo/article/details/100100048" target="_blank" rel="noopener">反序列化炸弹</a></li>
 <li><a href="https://blog.csdn.net/fnmsd/article/details/115672540?spm=1001.2014.3001.5501" target="_blank" rel="noopener">Java反序列化机制拒绝服务的利用与防御</a></li>
@@ -426,7 +426,7 @@
 
         
         <footer id="footer">
-    Copyright &copy; 2017 ~ 2022 c0ny1
+    Copyright &copy; 2017 ~ 2023 c0ny1
 </footer>
 
     </div>
