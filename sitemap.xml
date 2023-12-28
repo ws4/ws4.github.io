@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://gv7.me/links/index.html</loc>
+    
+    <lastmod>2023-12-28T08:29:33.258Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://gv7.me/gossip/index.html</loc>
     
     <lastmod>2023-02-22T16:15:17.982Z</lastmod>
@@ -152,13 +159,6 @@
     <loc>https://gv7.me/articles/2020/semi-automatic-mining-request-implements-multiple-middleware-echo/</loc>
     
     <lastmod>2020-04-19T20:01:41.214Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://gv7.me/links/index.html</loc>
-    
-    <lastmod>2020-04-02T06:02:55.208Z</lastmod>
     
   </url>
   
