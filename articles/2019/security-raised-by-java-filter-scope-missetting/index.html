@@ -6,20 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="问题：过滤器作用范围设置为/或/*一样么？ 安全人员可能觉得不一样，毕竟从对通配符的认识来说，/代表的只是根目录，/*代表所有。 开发人员可能觉得一样，根据平常的开发经验，并未发现两者的差别。 其实呢，这两种认识都不正确，更确切地说前者说的不够正确。具体许我慢慢道来。 0x01 问题背景回想起之前做的代码审计时，发现项目设置全局过滤器时，有的设置为/，有的设置为/*。在自己模糊印象里，在校学jsp">
+    <meta name="description" content="有东西被加密了, 请输入密码查看.">
 <meta name="keywords" content="信息安全,代码审计,漏洞艺术,漏洞挖掘,漏洞复现,漏洞利用,漏洞修复">
 <meta property="og:type" content="article">
 <meta property="og:title" content="过滤器作用范围&#x2F;和&#x2F;*引发的安全问题">
 <meta property="og:url" content="https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/index.html">
 <meta property="og:site_name" content="回忆飘如雪">
-<meta property="og:description" content="问题：过滤器作用范围设置为/或/*一样么？ 安全人员可能觉得不一样，毕竟从对通配符的认识来说，/代表的只是根目录，/*代表所有。 开发人员可能觉得一样，根据平常的开发经验，并未发现两者的差别。 其实呢，这两种认识都不正确，更确切地说前者说的不够正确。具体许我慢慢道来。 0x01 问题背景回想起之前做的代码审计时，发现项目设置全局过滤器时，有的设置为/，有的设置为/*。在自己模糊印象里，在校学jsp">
+<meta property="og:description" content="有东西被加密了, 请输入密码查看.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/show.gif">
-<meta property="og:updated_time" content="2019-04-04T20:41:08.000Z">
+<meta property="og:updated_time" content="2024-01-02T03:09:58.593Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="过滤器作用范围&#x2F;和&#x2F;*引发的安全问题">
-<meta name="twitter:description" content="问题：过滤器作用范围设置为/或/*一样么？ 安全人员可能觉得不一样，毕竟从对通配符的认识来说，/代表的只是根目录，/*代表所有。 开发人员可能觉得一样，根据平常的开发经验，并未发现两者的差别。 其实呢，这两种认识都不正确，更确切地说前者说的不够正确。具体许我慢慢道来。 0x01 问题背景回想起之前做的代码审计时，发现项目设置全局过滤器时，有的设置为/，有的设置为/*。在自己模糊印象里，在校学jsp">
-<meta name="twitter:image" content="https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/show.gif">
+<meta name="twitter:description" content="有东西被加密了, 请输入密码查看.">
     
     
         
@@ -83,7 +81,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/articles/2019/write-cve-2019-3799-batch-scan-script/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" href="/articles/2019/oracle-download-auto-login-tampermonkey-script/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" href="/articles/2019/why-can-multipart-post-bypass-java-filter/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -108,12 +106,12 @@
   <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&title=过滤器作用范围/和/*引发的安全问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&title=过滤器作用范围/和/*引发的安全问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&title=过滤器作用范围/和/*引发的安全问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&name=过滤器作用范围/和/*引发的安全问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&name=过滤器作用范围/和/*引发的安全问题&description=有东西被加密了, 请输入密码查看."><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     <div id="toc">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-问题背景"><span class="toc-number">1.</span> <span class="toc-text">0x01 问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-实验测试"><span class="toc-number">2.</span> <span class="toc-text">0x02 实验测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-最后总结"><span class="toc-number">3.</span> <span class="toc-text">0x03 最后总结</span></a></li></ol>
+      
     </div>
   </span>
 </div>
@@ -157,27 +155,15 @@
   
 
   <div class="content" itemprop="articleBody">
-    <p><strong>问题：过滤器作用范围设置为/或/*一样么？</strong></p>
-<p>安全人员可能觉得不一样，毕竟从对通配符的认识来说，<code>/</code>代表的只是根目录，<code>/*</code>代表所有。</p>
-<p>开发人员可能觉得一样，根据平常的开发经验，并未发现两者的差别。</p>
-<p>其实呢，这两种认识都不正确，更确切地说前者说的不够正确。具体许我慢慢道来。</p>
-<h2 id="0x01-问题背景"><a href="#0x01-问题背景" class="headerlink" title="0x01 问题背景"></a>0x01 问题背景</h2><p>回想起之前做的代码审计时，发现项目设置全局过滤器时，有的设置为<code>/</code>，有的设置为<code>/*</code>。<br>在自己模糊印象里，在校学jsp时确实感觉两者是一样的。但作为安全人员，还是不禁好奇，于是查资料写代码实验，终于发现他们的不同。在我明白了它们的不同之后，我调查了下周边做安全和开发的朋友，结果清一色的认为它们一样。</p>
-<h2 id="0x02-实验测试"><a href="#0x02-实验测试" class="headerlink" title="0x02 实验测试"></a>0x02 实验测试</h2><p>我们以防御XSS漏洞的demo来实验，过滤器使用上篇文章的代码。</p>
-<p><strong>存在XSS漏洞的jsp页面代码</strong></p>
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;% out.write(request.getParameter(<span class="string">"str"</span>));%&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>web.xml中过滤器配置</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CrossSiteScriptFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>me.gv7.filter.XssFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>CrossSiteScriptFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- &lt;url-pattern&gt;/*&lt;/url-pattern&gt; --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dispatcher</span>&gt;</span>REQUEST<span class="tag">&lt;/<span class="name">dispatcher</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p><img src="/articles/2019/security-raised-by-java-filter-scope-missetting/show.gif" alt="演示"></p>
-<p>通过演示的结果我们知道：</p>
-<ol>
-<li><code>/*</code>才是真正意义上的过滤所有请求</li>
-<li><code>/</code>并非真正意义上的过滤所有请求，它过滤除jsp页面之外的请求</li>
-</ol>
-<h2 id="0x03-最后总结"><a href="#0x03-最后总结" class="headerlink" title="0x03 最后总结"></a>0x03 最后总结</h2><p>一般项目采用MVC架构之后，基本不会有程序猿继续在jsp文件写后端处理代码。然而这个世界很奇怪，正如墨菲定律说的那样，觉得不可能的往往会发生。而我们更不能把安全寄托于人性上，所以全局安全过滤器请设置作用范围为<code>/*</code>。</p>
-<p>当我们在进行代码审计发现全局过滤器的作用范围为<code>/</code>,则可以着重检查jsp文件中是否包含后端处理代码，毕竟其不在过滤器保护范围内。</p>
-
+    <div id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码看着不太对, 请再试试." data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容.">
+  <div class="hbe-input-container">
+  <input type="password" id="hbePass" placeholder="" />
+    <label for="hbePass">您好, 这里需要密码,文章优先在公众号分享.</label>
+    <div class="bottom-line"></div>
+  </div>
+  <script id="hbeData" type="hbeData" data-hmacdigest="f805ba35cf6448c228669b32a6f9458e982241cf0ef64dbfaeecd046b59cb5d8">977839a231f437d38335f38ddc2d2ffca97358dd99a58f5fdaa93c4f3d7a620af95d8281e322154fc261bda8ee863d9194b5b3ba680f64549f7a98e877464a17e84c64eeea3a35190e69a1a15376619ccfb5fa350e6a04bbcc5ac17cfc941331b1bd5713281ba41aaa32b2fe73e1915600f944f817276264f6e6376df2577bafdbc468964ca22a06e918ee0f034c14df29631d00ffc7bb395b46074ccc6d018dc2af723ec14438e3bf4a0001fa8f07ecf235cd15300d5dc3e945da23a659d7df993fee3e2bb45c6b5613d84ecc9a9233dc9e5433dfe4e9eac66fc661b4d7f90a54412b02dfb16a967c6faf22f87f0576bf11c30bb4ef1b44789d1cfe72ae55ebdbbf39e280c53570d7422f47c20e944442ff39680253185450368b9a80fd10ecada92f0ffb845775c553afde98626a8fe09e6f7879ae7a125d3479a1f89f7e56f769c45c6b7fe794980ab0ddcad9daa16d09b7f2aceead253de2c9cb8011caca40bd9a7c3e2261084f40ca15e29909106d47c53d2a02e9e0b4dd83536cfe025784862f6ea16eb8b7c8c4e459f588810163f8f189fb7619fee7e365aa1483c5b19885c323a75a834bf768e73cd9f15b11da83c8e5bb65e699bd34972863dd9a68cc04c400050c9cd101a4c7375420a17f4f68270977191710ba7a7495c67c0a0a48a28915ac9d658bf1f73df48fb8b21cb5f15d455dd6d3ebeb7eb59710eab1e8eab8ffc79477ccd8542635bc9859313ec1ac0572d73de8d59b5b62e2ae59d2800235d855e86128541cd8ea07969c6a66b03de210024da9b1bb8f3bcc93d08a1f87b10b553ab44bd22722512aef484fc52f0be30cca67b240dbba91d3bacc2f7a5f4d42d97742796e7b3adceb3d520f475fecf8245886280852257ff613c2364d9e76ce3d40bb7d3991191e31fc63ed986ca01baceb7301e51673521e2d99cf2da1e2d3de4375c9e8727248352057dd6c9bc5824cd6ee6e2dc797fb8db82f31e1d7eaba4f7b6d18c6dc2b20b0d42c2f901331a3896b373871bbc2ccb8e950731742dc56e4a3310f3665b9006aa6a0cddb7b4a752e0d0fe2efb7b5cf103e34c4623efcde3f990257e5e581fda6c5f98396e2ac9993dbef6b8ec78078f9f4031ee7036109e1ee7ee595162509fd0d280b3dcc64b268760c684580872318190a566ff5434ea1e44e5ab357536a67ec562ae0d9d94712f58ea2eecb4b0a677412c26fbcab618b8c1242563fbb578aad6ddd47715d0632b287233104fa80e7db124a52eafde445f195a65ebe1674033045b879ed4cc575e46f0b1d0c0e0e6421f18faeef4ac3b2abb7a1a18eaf74832491176bf584a8309853aa71195e6f9e23e532fe2daaf984588497a1b33fd455036292266305e1f4e0339c8a2d774bd81449e38ab5c72f2a68cc8416a2bf651609d2fad82f27cf72f6cdc325d56bf1321da0ac023e1ac1ef65a9b93e519e54a06515d990831aaa87be27606d884509ada90956093fa4ad78de973fc4c47570b3d6f633e89c08f0aae646dab2098a9b7b76418665369c3641cd17806ae514af33d19723a21f7c6bcbe921b0a1f838b5cd7c3687b5935d814b98f4c15717d72acdf2d81ba313363602ce9d5f4357efe8f70201fd934c7c44e6ea44eca6368dccc3481e3680c79b92b11c444d392bfc1fa62e867f3fd23f1a0074925edff9fb0ed19bb89c3d1e07515d3032ff27db301e9b6cc9419cb72a07f96a9b72df8b07f3835f9c2c03f271700fdacc8c29916d66f925a3d703680c0c8e5c670457589d0597ace502637f39d27fe5716e3e09bff1c0dd260907031a05fe290e71425e1b886408b6a08dd651a79654e43163bb23991bb6718035f7079d5f68f97722d76c6c1ba948f80fa7e1336bd30ac61ace0e0640f4b67442e0c10e6494058f4654a23fb29e65df9afd6688cd27e538d696697c24c012bfc6ed5eef13db5f61302353a9ede7b3bc540f7071286313dc83d83be711cbbe35f3e1d547e1aa75ebf96eb4ab6df36d3e8992e503011138a105c6d042d68227d32e27aa26f7d09b6aeb553ff5a2a1f582c7e7ee4ea5df75c9ab48fd2ab30aa79727182d8329c00cf769fc9f444e9662f60f574adf0fd3c8a37caac5ffcaf808f3c6cea0cf0664213ca1debf9a82cd3c574892117d09ee99033dffffced0d042ee7168f321529f37da77c96a38017a0474aab71e4924a763a173f47f5fa18df1bbb8429fa147c9bd5c74c76d16f7d4b6b2a06d2f451649e18717a1de5eed9762625dc1681fac41c8dc8c7d16b2461d10388031e0e86c92333da6d33007e442a9e05c2da085fe7ee0a5d34f5111266986444b92519fd445fc2f9e8171f4d469e3a0104b68e0a34285de44550f09e37748472d197ac3075422039c2baab4f807d401a96f5616da7c6943fc1da172921ad734405e4bd0475036d77d655bef28245eaba95fe7c9dda20169b7055702fcd839acc4d812f04d0b6d24f09360221c82e2070fdd6fe715b1a24a157112ddb95a16d88e63aa8651aa7b245a4058e66e7c630880f35f8f6f0e860e15aeb7756fabb237b320cf219f5cb5cee9824531ecf432266171a34738010d617f9ec861439f49e60972ebe9e8522bd04ffb10c30eb32d7d16ade16dbfff698a066dd79d4724b09ebc638d4446322dd977eb285b07241e761d3b8660917d4d882495e6aa7360968b0ac9e5cdf0ce04499eca9df5c90c140188c41c56e8da4988aff7586c614d910c5b51d48d4310cf14de876db41901a65a51d98fb798e2ca5596bbed4d142530dda4d22447cf8f26df46612a8bccda39c72f3efef42ea0c948aa11bd285db3e2eb30acf355dddfd3c6b8f4caac11edd42861b96877f62bcbd6f6dd7061a39ceb962a14d1291f8e764745582818684daa695e617a64ca5f60553fce3abb7b8dc4e07d70eed2dc391b88baaae4c81110bf6ef4cd6106b13a697841567f2b79ac5da8a13f6d311b045a9cdcb1bcaa27eeea673aaca9265e545c23199d22e0a5ef61453815dbbcbbf0485dcec0c7f9821eba52091ade22e2f2d4acacf791cc28a804e041c9b9580cf01f66ce5b27f6a727bc18fc06872b241823c28e1c2a685d23c9c5b6714f1bd1b82221739bb124a99d4ddc45ad59a5ca6082ea85d6d3c78945d415c361ef8b6c8360b591c259ef0432c8bfd24a8a79c5f482de66f90e5b1fc8603819a29d3f9a6e0bc21f894ff9188bbd52d6f34949d504255f711971aff9789d9940afd33bd5fb64ad014d31fa365b009098ec8c192bc8cfa45ee910574a285b1564f0741014b1270032c462a91473c78af0ca0c7cedf4de36482533a061f4e8bba552f5447abd97dabdebcdb20f0fa0657134f21b33980931a3c71a4042f43554154ebd9e15d19ee50abb64fbcd183287373793ca11b73e2c9d6e2770a841479b8bc2839a31abccd2bda91424bde697bbdf74689ac398659d5c045a6804410b098321d299664f4e4aa8f2a394dd81ef7e769c8a139a5a80f2b49e15c1cf69fd670462c780be98f50e1a7c03a40561342709f272152b755a6869e0026b845d29fdfb7ecbae6d23456839c86ecb1929f53b6280317612ea010eae9945c9790060e00075940ffb64f361c87938f10c293876d19b2d03c3282f1b7b82ac9d7a28c8492772453b50233114d938e0e7a4bddfb8c67457d591570410d95c1498bdbe0708fac013d7ae33c7f8a211743059ec80559246738b302a6afd5c7c2d37fcc1fd9c2203d66eef5279484bd6951aa28df7eb5a23acad41ff103dd95dddf748358f57654f6b09aaed98dd5acabb9bf26da1e3db98b62f0e4e78291d3287bff993e16d8e64e934fa8d7f88453958194d8a22809274df1bc7e7b72008502b6be5b703957afe8d144cc2d49a2357f60e728072bca667973dd9d7cd3efdbecbfdfa131ae1be7cb2ad6a41199762dd28cc12cac1574efb0e5e4df54414413086123fb7487c3362d14bc7dde867c0ea0196db8dee3c48acaf4ca2923a0653cc44855aeeddcb33848e5b0dc3f8c732d677d16e27007891772bfa8d623d78fcf9d9e15ba93d8268242586a301bad69e31120e64d2714788d614c472a04a8ba95f5cc0b13c8b1e1569143d3a52499fd085039e131f797cdf05566c4a1863cb91236e2946e15e745135f0357408359444ca4a842c6f58920e168b043fc0e9f1bf61490550c7472492244ffb43d2860a0d6122f0925e8fa53d5d56c736724d738da5c0d8e840c7de7da8ed7fddffc50e4d70acca32c1e2ac22ff295afdaa0664ddec8b3a4d274c67bdc84c95ed48fdb78001a53a7f117a466c7333b149a83bad4a96091751cd91a2a7c8d1a2a3a7c5cf90185bbf22508d651a6ca7e9624572bea663de56d97c2d929758aa61c3387d81ae522f4bf155d141879b82d15e1a0f3db3114bb67fc8affada5eae299f058988b8104c27c919d9d307d2f8f6e55c5f995f2f86d4ec696a95b446542d36e611ce03278dac01418d78e3c50e6c2f21b37d166125ddc906836b74ad8fe308a8de334a00e23b732d3029ddd4c4a652de7e951288f2df2b9a7c1f068f946d2759fcfe528292b8f192c8007c8272015d965d8dc436088249f595a4f5ef0ec3df6c3df5a1298b97c6847e76f1f36b0cfa8403c90b4c2d2e8975a8d1702959c4f2ee23a47c5ee7b86db35e1a8e173978fbdadb8364933d0f68a8961137810009c18d58f142bdea0d7949d61656001a5cf48521dbb385158f166aa3f436eb1fcfb38b18a0c229f2edd22208024166cc3c99849b46baec7b8724b0d4c7e295a0f99f9f3b835483f6754bced0a3c1e0be961b5381e644a02017ce14e17cd35bc001ad6d25ffe2813732dae6b3b421993d8cfcc1bde6471a528c8a9d8899f49ed5267593b8746cb63ec4cd8755839ed8e131c83d41e7b2fe60f28a226ea3c0f3b698a7766b738378868ae6b26f286be2faa89349205ae11478dc7d425369e89f9e57ca7ed933844892ff37066ad846c4dacd2389572a80bba82543b7bfe37ec2f3f73b149cb09fad73e8a7899c586ded2330a8ecb7d96d0f6a772963e1f160c46bb9516f756b43c8db81d308f5ed05ae407e5055615dacae728f33e63f1233985a45b594640b06af66bc7fbf2ffd929f0963cd6ea0747482222c7726bbfb83195cf266ea805d7d9612ef4f52fc8bdc6cb02a55c8cbb0d72ebe2e60d7084def0966f165ba31a5c1a3e086fa7d8fe16d87d1894119d526dbf1cabde90711eb32dae31a16bd583b08b2650aa6a8ef401bad1bbf22d72152fcbc5486fbe3f10924e98f0bdc80fca4c8dba07e559f7c1b1614c865b8dd9f603ed66e528945fe69d75b9a41cef4afeec99549af6d3a8a0a56d6dcac76ca73b873f30769ab101326d66c6dbeb334b2da596578f0c99749842bd78651023312d87617c0a6f611bf8c582fb5205189c67b844bff86df172927d0e161c56af9974909a8da7e2af4d093b45452ad9b2f9052fd9c402136b225f6d26d0257673eed92a549f122fa8a43f4ce203aadfc2dbeb810445dc6aa2f75d3c9d1e95314ab3fa814dac4d8cbf9679ec83693e541468ce337f8286fee058da5254f4fd81503b4165e503d8e48c45bed71147ae8f6afd72e792fad16cbeea91e1a473a402a70b8b59720cb56cdc56143facc833cf3d42112fa154ee141d65d32d21db7aaec2dbfc5c9acf721f7be20b21d9a38c3c8f79c062dd89a56b11ba0b1f9bebb037d77ab73de10d65d219d56cce091977bcba6c4ac4ec42415c9463720acfaf2b0756f0aea367b369ecf8cbf3585b2dd906029610d2e4894c13c87132467f40b0d53cec80fef245c67941c8ef6e4964bfb11ceddc90b3a16ef57d1ef73c466619328b742902f573116b252b147075813525a09b06566b64e8b50283a830ebb07b7ce111b0289b809188e75430ff18d6bade15375c6d27e3f5cb675b011bcd49054f1ccaf639b13b46d242786551de6391794b08b7a06675e6834f0683a74d24e71d2ffc30a1be280441f76d4e8cf12346905d0834056e077c9fa3d3c14e0916c639e2e1cca7cecc1c4c5b8dbb6f3ba366c633768dc08c13fa18bbb05bd18ad72cbc196ac7d9cb7ccc3ba43064a582c7f62a7df6651cd501dfe57e4677bfe6523f7a2f0dbd3e8d22bef28762798db539ae1ef251220609066a1b054c4c2bb48dc39cbe6e87a34e72bfabef5cc877a8428da424aaa5f8a4847ae3863ca60034e1edfb4321f2637e0a659dfa7923dc34e3df574640506ba875450dd0ba472ca9d908ae64aff51d9e0cbdf2f55550041ea74916041388ecb9afb5de1b0f1396726bfdca301a8a96342d92832edc0c70276a7e8b7da8136ac62a3117c8050ce1e316c4c1e6b94e4da33494d6ac908a0a0eb75c21d06f78f228c16c7713ac5bd166558533c1552d71709effbc1b2748ed1e91cdc7e7401c08edc2ef745f83a0d93c8508f45b5c411731aaa345bec1b66f834de5a688975dc3523729458fef16a35214f7de568ef50b5124c378405d02d2c11d0a42aadadc30c14d23d3708e44bfdb9e2ddc5ab8d4e9406848859aaa7f320b528359e5345bc39a9482d69cafed27211a71e965308ccbc338399a7cd8828b1</script>
+</div>
+<script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
   </div>
 </article>
 
@@ -235,7 +221,7 @@
     </div>
 
     <div id="toc-footer" style="display: none">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x01-问题背景"><span class="toc-number">1.</span> <span class="toc-text">0x01 问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x02-实验测试"><span class="toc-number">2.</span> <span class="toc-text">0x02 实验测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x03-最后总结"><span class="toc-number">3.</span> <span class="toc-text">0x03 最后总结</span></a></li></ol>
+      
     </div>
 
     <div id="share-footer" style="display: none">
@@ -249,7 +235,7 @@
   <li><a class="icon" href="http://reddit.com/submit?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&title=过滤器作用范围/和/*引发的安全问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&title=过滤器作用范围/和/*引发的安全问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
   <li><a class="icon" href="http://digg.com/submit?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&title=过滤器作用范围/和/*引发的安全问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&name=过滤器作用范围/和/*引发的安全问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://gv7.me/articles/2019/security-raised-by-java-filter-scope-missetting/&name=过滤器作用范围/和/*引发的安全问题&description=有东西被加密了, 请输入密码查看."><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -266,7 +252,7 @@
 
         
         <footer id="footer">
-    Copyright &copy; 2017 ~ 2023 c0ny1
+    Copyright &copy; 2017 ~ 2024 c0ny1
 </footer>
 
     </div>
